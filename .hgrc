@@ -1,0 +1,80 @@
+# example user config (see 'hg help config' for more info)
+
+[ui]
+# name and email, e.g.
+# username = Jane Doe <jdoe@example.com>
+username =
+interface = curses
+
+# We recommend enabling tweakdefaults to get slight improvements to
+# the UI over time. Make sure to set HGPLAIN in the environment when
+# writing scripts!
+# tweakdefaults = True
+
+# uncomment to disable color in command output
+# (see 'hg help color' for details)
+color = yes
+merge = meld
+# uncomment to disable command output pagination
+# (see 'hg help pager' for details)
+# paginate = never
+
+[color]
+custom.yellow = yellow
+custom.author = bold
+custom.red = red
+custom.green = green
+
+[extensions]
+# churn =
+extdiff =
+strip =
+record =
+hgext.convert =
+progress = 
+color = 
+hgk = 
+graphlog =
+purge = 
+#hgext.mercurial_keyring = 
+color =
+
+[color]
+mode=terminfo
+color.lightgray = 250
+color.darkgray = 239
+status.modified = darkgray bold lightgray_background
+
+[alias]
+icm = commit -i
+latest = log --limit 5
+origin = log -r $1 -b $2
+compare = extdiff -p meld -r $1:$2  "set:**.$3"
+sync = pull -v && hg update -v
+history = st --rev 'p1(first(branch($1)))::$1'
+par-branch = log -r "parents(min(branch(.)))"
+show = log -pr
+switch-to = update -C -r
+_blame =annotate -l --user --number
+log = log --template "{label('custom.yellow',rev)} | {branch}  | {date|shortdate} | {author}\n{desc}\n\n"
+_log = log -r $1 --template "{label('custom.yellow',rev)} | {branch} | {date|shortdate} | {desc|strip|firstline}\n{file_dels % '  - {label('custom.red',file)}\n'}{file_adds % '  + {label('custom.green',file)}\n'}{file_mods % '  ~ {label('custom.yellow',file)}\n'}\n"
+
+[hooks]
+commit = echo committed $HG_NODE
+
+[convert]
+hg.saverev=false
+
+[path]
+conmans=https://cmsuite.
+
+[auth]
+hg.schemes = 
+hg.prefix = 
+hg.username = 
+#unsafe to use password use keyring
+hg.password =
+
+
+[tortoisehg]
+vdiff = kdiff3
