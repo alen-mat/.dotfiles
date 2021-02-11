@@ -1,0 +1,10 @@
+## code --list-extensions | xargs -L 1 echo code --install-extension
+
+code --install-extension ankitpati.vscodium-amoled
+code --install-extension christian-kohler.path-intellisense
+code --install-extension eamodio.gitlens
+code --install-extension esbenp.prettier-vscode
+code --install-extension llvm-vs-code-extensions.vscode-clangd
+code --install-extension ms-python.python
+code --install-extension PKief.material-icon-theme
+code --install-extension redhat.vscode-xml

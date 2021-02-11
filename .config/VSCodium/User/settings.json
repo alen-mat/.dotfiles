@@ -4,9 +4,9 @@
   "emmet.showAbbreviationSuggestions": false,
   "editor.multiCursorModifier": "ctrlCmd",
   "editor.formatOnPaste": false,
-  "workbench.colorTheme": "Just Black",
+  "workbench.colorTheme": "AMOLED",
   "window.zoomLevel": -1,
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.iconTheme": "material-icon-theme",
   "editor.fontLigatures": true,
   "terminal.integrated.fontSize": 24,
   "files.autoSave": "off",
@@ -38,7 +38,7 @@
   "workbench.startupEditor": "newUntitledFile",
   "editor.suggestSelection": "first",
   "[javascript]": {
-    "editor.defaultFormatter": "HookyQR.beautify"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
     "editor.defaultFormatter": "HookyQR.beautify"
@@ -106,6 +106,6 @@
     "upvote"
   ],
   "editor.lineHeight": 0,
-  "editor.fontSize": 20,
+  "editor.fontSize": 18,
   "terminal.integrated.fontFamily": "monospace"
 }

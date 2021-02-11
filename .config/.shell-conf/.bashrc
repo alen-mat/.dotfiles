@@ -1,5 +1,7 @@
 unset GREP_OPTIONS
 
+export EDITOR=vim
+
 export __WS='~/WorkSpace'
 
 export TERM=xterm-color
@@ -106,6 +108,11 @@ function mkcd()
 	mkdir $1 && cd $1
 }
 
+alias mv='mv -i -v'  
+alias rm='rm -i -v'  
+alias cp='cp -i -v'
+alias grep='grep --color=auto'
+alias ..='cd ..'
 # -------
 # Aliases
 # -------
