@@ -1,0 +1,102 @@
+unset GREP_OPTIONS
+
+#HOST_NAME=minima
+
+#source ~/.nvm/nvm.sh
+#nvm use stable
+
+_PS_THEME_="cg"
+
+txtred='\e[0;31m'    #Red 
+txtcyan='\e[0;36m'   #Cyan
+txtgrn='\e[0;32m'    #Green
+txtprpl='\e[0;35m'   #Purple
+txtbrn='\e[0;33m'    #Brown
+txtlgry='\e[0;37m'   #Grey
+txtlblue='\e[1;34m'  #Blue
+txtlgreen='\e[1;32m' #Light Green
+txtlcyan='\e[1;36m'  #Light Cyan
+txtlred='\e[1;31m'   #Light Red 
+txtlprpl='\e[1;35m'  #Light Purple
+txtylw='\e[1;33m'    #Yellow
+txtwhite='\e[1;37m'  #White
+
+bldgrn='\e[1;32m' #Bold Green
+bldpur='\e[1;35m' #Bold Purple
+
+txtrst='\e[0m'    #Text Reset
+
+hg_info(){
+  local HG_PROMPT_PREFIX
+  local HG_PROMPT_SUFFIX
+  local HG_PROMPT_DIRTY
+  local HG_PROMPT_CLEAN
+
+  if [[ -d .hg ]] || $(hg summary > /dev/null 2>&1); then
+      HG_PROMPT_SYMBOL="$txtgrn☿"
+      HG_PROMPT_PREFIX="${HG_PROMPT_SYMBOL} $(hg id -n):$(hg id -i) | "
+      HG_PROMPT_SUFFIX="$(hg id -b)"
+  fi
+  echo "${HG_PROMPT_PREFIX}${HG_PROMPT_SUFFIX}"
+}
+
+function termtitle() {
+ printf "\033]0;$*\007"; 
+}
+
+emojis=("👾" "🌐" "🎲" "🌍" "🐉" "🌵")
+
+EMOJI=${emojis[$RANDOM % ${#emojis[@]} ]}
+
+print_before_the_prompt () {
+    dir=$PWD
+    home=$HOME
+    dir=${dir/"$HOME"/"~"}
+    printf "\n $txtred%s: $bldpur%s $txtgrn%s\n$txtrst" "$HOST_NAME" "$dir" #"$(vcprompt)"
+}
+
+function set_PS(){
+  if [ "$_PS_THEME_" = "cg" ]; then
+    PS1="$EMOJI > "
+    PS2=">> "
+  elif [ "$_PS_THEME_" = "other" ]; then
+    PS1=":$(awk) > "
+    PS2=">> "
+  fi
+}
+
+function mkcd()
+{
+  mkdir $1 && cd $1
+}
+
+fucntion awd(){
+    w='\w'; IFS=/ read -a a <<< "${w@P}"    
+    ((c=${#a[@]}-1))                        
+    for e in "${a[@]::$c}"; do              
+        [[ $e =~ ^\. ]]&&l=2||l=1           
+        printf '%s/' "${e:0:$l}"            
+        done; echo "${a[$c]}"               
+}
+
+function run-app(){
+  nohup $1 > /dev/null &
+}
+
+#fortune | cowsay -f tux
+if [ $(ps -o comm= -p $$) = "zsh" ] ;then
+   precmd() { print_before_the_prompt;}
+elif [ $(ps -o comm= -p $$) = "bash" ] ;then
+  PROMPT_COMMAND=print_before_the_prompt
+  PROMPT_COMMAND="history -a; history -c; history -r; PROMPT_COMMAND"
+  shopt -s autocd
+  shopt -s histappend
+  if [ command -v bind &> /dev/null ];then
+    bind '"\e[A": history-search-backward'
+    bind '"\e[B": history-search-forward'
+  fi
+fi
+
+set_PS
+
+
