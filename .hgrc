@@ -14,16 +14,18 @@ interface = curses
 # uncomment to disable color in command output
 # (see 'hg help color' for details)
 color = yes
-merge = meld
+merge =  internal:fail
 # uncomment to disable command output pagination
 # (see 'hg help pager' for details)
 # paginate = never
 
-[color]
-custom.yellow = yellow
-custom.author = bold
-custom.red = red
-custom.green = green
+[merge-tools]
+meld.priority = 1
+meld.premerge = False
+meld.args = $local $other $base
+
+[merge-patterns]
+#** = meld
 
 [extensions]
 # churn =
@@ -31,36 +33,87 @@ extdiff =
 strip =
 record =
 hgext.convert =
-progress = 
-color = 
-hgk = 
+progress =
+color =
+hgk =
 graphlog =
-purge = 
-#hgext.mercurial_keyring = 
+purge =
+#hgext.mercurial_keyring =
 color =
 
 [color]
+custom.yellow = yellow
+custom.author = bold
+custom.red = red
+custom.green = green
+
 mode=terminfo
 color.lightgray = 250
 color.darkgray = 239
 status.modified = darkgray bold lightgray_background
 
+custom.yellow = yellow
+custom.author = bold
+custom.red = red
+custom.green = green
+#Custom colours
+color.orange=202
+color.lightyellow=191
+color.darkorange=220
+color.brightyellow=226
+
+#Colours for each label
+log.branch=cyan
+log.summary=lightyellow
+log.description=lightyellow
+log.bookmark=green
+log.tag=darkorange
+log.activebookmark = green bold underline
+
+changeset.public=orange bold
+changeset.secret=blue bold
+changeset.draft=brightyellow bold
+
+desc.here=bold blue_background
+
+[templates]
+short={label('custom.yellow',rev)} | {branch}  | {date|shortdate} | {author}\n{desc}\n\n
+medi={label('custom.yellow',rev)}:{label('custom.yellow',node|short)} | {branch} | {date|shortdate} | {author}\n\n[MSG]:\n{splitlines(desc) % ' -> {line}\n'}\n{_files_}
+_files_={file_dels % '  - {label('custom.red',file)}\n'}{file_adds % '  + {label('custom.green',file)}\n'}{file_mods % '  ~ {label('custom.yellow',file)}\n'}\n
+wip = '{label("log.branch", ifeq(branch, "default", "", branch))} {label("changeset.{phase}", rev)} {label("grep.user", author|user)}{label("log.tag", if(tags," {tags}"))} {bookmarks % "{ifeq(bookmark, currentbookmark, label('log.activebookmark', bookmark), label('log.bookmark', bookmark))} "}\n{label(ifcontains(rev, revset('parents()'), 'desc.here'),desc|firstline)}'
+wbrch = '{label("log.branch",
+                 ifeq(branch, "default",
+                      "",
+                      branch))}'
+wcset = '{label("changeset.{phase}",
+                rev)}'
+wuser = '{label("grep.user",
+              author|user)}'
+wtags = '{label("log.tag",
+              if(tags," {tags}"))}'
+wbook = '{bookmarks % "{ifeq(bookmark, currentbookmark,
+                             label('log.activebookmark', bookmark),
+                             label('log.bookmark', bookmark))} "}'
+wdesc = '{label(ifcontains(rev, revset('parents()'), 'desc.here'),
+              desc|firstline)}'
+changeset = '{wbrch} {wcset} {wuser} {wtags} {wbook}\n{wdesc}'
+
 [alias]
 icm = commit -i
-latest = log --limit 5
 origin = log -r $1 -b $2
 compare = extdiff -p meld -r $1:$2  "set:**.$3"
-sync = pull -v && hg update -v
 history = st --rev 'p1(first(branch($1)))::$1'
 par-branch = log -r "parents(min(branch(.)))"
 show = log -pr
 switch-to = update -C -r
 _blame =annotate -l --user --number
-log = log --template "{label('custom.yellow',rev)} | {branch}  | {date|shortdate} | {author}\n{desc}\n\n"
-_log = log -r $1 --template "{label('custom.yellow',rev)} | {branch} | {date|shortdate} | {desc|strip|firstline}\n{file_dels % '  - {label('custom.red',file)}\n'}{file_adds % '  + {label('custom.green',file)}\n'}{file_mods % '  ~ {label('custom.yellow',file)}\n'}\n"
+wip = log --graph --rev=wip --template=wip
+
+[revsetalias]
+wip = (parents(not public()) or not public() or . or head()) and (not obsolete() or unstable()^) and not closed()
 
 [hooks]
-commit = echo committed $HG_NODE
+commit = echo "\n[COMMIT] $HG_NODE \n\n $(hg log -r$HG_NODE --template=medi)"
 
 [convert]
 hg.saverev=false
@@ -69,12 +122,31 @@ hg.saverev=false
 conmans=https://cmsuite.
 
 [auth]
-hg.schemes = 
-hg.prefix = 
-hg.username = 
+hg.schemes =
+hg.prefix =
+hg.username =
 #unsafe to use password use keyring
 hg.password =
 
+[email]
+#from = user@domain.com
+
+[smtp]
+#host = smtp.gmail.com
+#username = user@gmail.com
+#password = sure
+#port = 587
+#tls = true
+
+[web]
+#baseurl = http://dev/...
+
+[notify]
+#sources = serve push pull bundle
+#test = False
+#config = /path/to/subscription/file
+#template = \ndetails:   {baseurl}{webroot}/rev/{node|short}\nchangeset: {rev}:{node|short}\nuser:      {author}\ndate:      {date|date}\ndescription:\n{desc}\n
+#maxdiff = 300
 
 [tortoisehg]
 vdiff = kdiff3
