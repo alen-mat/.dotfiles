@@ -1,4 +1,6 @@
 ;;
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
+(load-theme 'material t)
 (setq user-full-name    "hooo"
       user-mail-address "hooooooo")
 ;;(message-box ".emacs.d/init.el says hello")
