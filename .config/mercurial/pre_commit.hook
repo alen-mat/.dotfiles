@@ -1,0 +1,26 @@
+#!/bin/bash
+source ~/.bashrc
+export PATH="$PATH:/bin"
+pull(){
+  if [ -f "${repo_root/.hg/changes.hg}" ]; then	
+   	hg incoming --bundle ${repo_root}/.hg/changes.hg    
+   	hg log -R ${repo_root}/.hg/changes.hg -b $(hg id -b)
+   	hg pull ${repo_root}/.hg/changes.hg
+   else
+	  hg pull
+   fi
+   hg update
+}
+js_check(){
+   hg status -m -T '{path}\n'| while read line || [[ -n $line ]]; do 
+    if [[ $line == *\.js ]] ; then
+      eslint ${line}
+    fi
+  done;
+}
+if [[ -d .hg ]] || $(hg summary > /dev/null 2>&1); then
+   repo_root=$(hg root)
+   js_check
+   pull
+fi
+
