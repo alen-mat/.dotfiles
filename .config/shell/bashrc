@@ -26,7 +26,7 @@ bldpur='\e[1;35m' #Bold Purple
 
 txtrst='\e[0m'    #Text Reset
 
-hg_info(){
+function hg_info(){
   local HG_PROMPT_PREFIX
   local HG_PROMPT_SUFFIX
   local HG_PROMPT_DIRTY
@@ -48,7 +48,7 @@ emojis=("👾" "🌐" "🎲" "🌍" "🐉" "🌵")
 
 EMOJI=${emojis[$RANDOM % ${#emojis[@]} ]}
 
-print_before_the_prompt () {
+function print_before_the_prompt () {
     dir=$PWD
     home=$HOME
     dir=${dir/"$HOME"/"~"}
@@ -70,13 +70,32 @@ function mkcd()
   mkdir $1 && cd $1
 }
 
-fucntion awd(){
+function awd(){
     w='\w'; IFS=/ read -a a <<< "${w@P}"    
     ((c=${#a[@]}-1))                        
     for e in "${a[@]::$c}"; do              
         [[ $e =~ ^\. ]]&&l=2||l=1           
         printf '%s/' "${e:0:$l}"            
         done; echo "${a[$c]}"               
+}
+function switch_py(){
+  local re='^[0-9]+$' 
+  if ! [[ $1 =~ $re ]] ; then
+     echo "error: Not a number" >&2;
+     return;
+  fi
+  if [ "$1" -lt 2 ] || [ "$1" -gt 3 ];then
+     echo "Sorry only 2 or 3"
+     return;
+  fi
+  local version=$(python -c 'import sys; print(sys.version_info[:][0])')
+  if [ "$version" -eq "$1" ]; then
+     echo "Already in version ${1}";
+  else
+     echo "Creating symlink for python${1}"
+     sudo ln -s /usr/bin/python${1} /usr/bin/__newlink
+     sudo mv /usr/bin/__newlink /usr/bin/python
+  fi
 }
 
 function run-app(){
