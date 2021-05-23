@@ -174,7 +174,7 @@ mode "resize" {
 }
 
 bindsym $mod+r mode "resize"
-bindsym Control+space exec bash -e ~/.config/polybar/basic-theme/scripts/app_launcher.sh
+bindsym Control+space exec bash -e ~/.config/rofi/applets/app_launcher.sh
 #Setting up  gap in i3
 # In order to use gaps you need to disable window titlebars. You can also use any non-zero value if you'd like to have a border
 for_window [class=".*"] border pixel 0
