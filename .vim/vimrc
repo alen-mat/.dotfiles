@@ -29,6 +29,9 @@ set visualbell
 set cmdheight=2
 set number
 
+set guicursor+=n-v-c:blinkon0
+autocmd InsertEnter,InsertLeave * set cul!
+
 "FINDING FILES
 "Search through sub folders
 "Tab-completion for file related tasks
