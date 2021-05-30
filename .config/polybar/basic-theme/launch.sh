@@ -15,8 +15,16 @@ while pgrep -u $UID -x polybar >/dev/null; do sleep 1; done
 echo "-----Top Bar-----" | tee -a /tmp/top-bar-poly.log
 # echo "---Bottom Bar---" | tee -a /tmp/bottom-bar-poly.log
 
-##debugging polybar
-polybar -l info -q top -c "$DIR"/config.ini -r 2>&1 | cat >> /tmp/top-bar-poly.log & disown
+if type "xrandr"; then
+  for m in $(xrandr --query | grep " connected" | cut -d" " -f1); do
+    MONITOR=$m polybar -l info -q top -c "$DIR"/config.ini & #-r 2>&1 | cat >> /tmp/top-bar-poly.log & disown
+  done
+else
+ polybar -l info -q top -c "$DIR"/config.ini &#-r 2>&1 | cat >> /tmp/top-bar-poly.log & disown
+ #polybar --reload example &
+fi
+#debugging polybar
+#polybar -l info -q top -c "$DIR"/config.ini -r 2>&1 | cat >> /tmp/top-bar-poly.log & disown
 
 #nohup polybar -l info -q bottom -c "$DIR"/config.ini -r > /tmp/bottom-bar-poly.log & 
 
