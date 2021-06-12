@@ -9,6 +9,7 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+set $alt Mod1
 set $mod Mod4
 
 # Font for window titles. Will also be used by the bar unless a different font
@@ -93,10 +94,10 @@ bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
 # toggle tiling / floating
-bindsym $mod+Shift+space floating toggle
+bindsym $alt+Shift+space floating toggle
 
 # change focus between tiling / floating windows
-bindsym $mod+space focus mode_toggle
+bindsym $alt+space focus mode_toggle
 
 # focus the parent container
 bindsym $mod+a focus parent
@@ -175,7 +176,7 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 #-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
-bindsym Control+space exec --no-startup-id bash -e ~/.config/rofi/applets/app_launcher.sh
+bindsym $mod+space exec --no-startup-id bash -e ~/.config/rofi/applets/app_launcher.sh
 bindsym $mod+b exec --no-startup-id bash -e ~/.config/rofi/applets/bluetooth-manager.sh
 bindsym $mod+n exec --no-startup-id bash -e ~/.config/rofi/applets/network-manager.sh
 # Media controls

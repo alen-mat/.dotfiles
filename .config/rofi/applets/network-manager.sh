@@ -17,7 +17,7 @@ WIRELESS_INTERFACES_PRODUCT=()
 WLAN_INT=0
 function notification() {
 	if [[ "$NOTIFICATIONS_INIT" == "on" ]]; then
-		dunstify -r $1 -u $2 $3 "$4" -i "$5"
+		dunst -r $1 -u $2 $3 "$4" -i "$5"
 	fi
 }
 function initialization() {
@@ -66,13 +66,13 @@ function rofi_menu() {
 		rofi -dmenu -location "$LOCATION" -yoffset "$Y_AXIS" -xoffset "$X_AXIS" -font "$FONT" \
 		-theme $DIR/../styles/networkmanager.rasi \
 		-a "0" -lines "$LINES" -width -"$WIDTH" \
-		-p "${WIRELESS_INTERFACES_PRODUCT[WLAN_INT]}[${WIRELESS_INTERFACES[WLAN_INT]}]")
+		-p "${WIRELESS_INTERFACES_PRODUCT[WLAN_INT]}[${WIRELESS_INTERFACES[WLAN_INT]}] - $(curl -s https://ipinfo.io/ip)")
 	else
 		SELECTION=$(echo -e "$WIFI_LIST\n~Scan\n~Manual\n$WIFI_SWITCH\n$WIRE_SWITCH\n~Status\n~Restart Network" | uniq -u | \
 		rofi -dmenu -location "$LOCATION" -yoffset "$Y_AXIS" -xoffset "$X_AXIS" -font "$FONT" \
 		-theme $DIR/../styles/networkmanager.rasi \
 		-a "0" -lines "$LINES" -width -"$WIDTH" \
-		-p "${WIRELESS_INTERFACES_PRODUCT[WLAN_INT]}[${WIRELESS_INTERFACES[WLAN_INT]}]")
+		-p "${WIRELESS_INTERFACES_PRODUCT[WLAN_INT]}[${WIRELESS_INTERFACES[WLAN_INT]}] - $(curl -s https://ipinfo.io/ip)")
 	fi
 	SSID_SELECTION=$(echo "$SELECTION" | sed  "s/\s\{2,\}/\|/g" | awk -F "|" '{print $1}')
 	selection_action
