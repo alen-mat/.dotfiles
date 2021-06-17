@@ -41,6 +41,9 @@ purge =
 #hgext.mercurial_keyring =
 color =
 
+[extdiff]
+cmd.vdiff=meld
+
 [color]
 custom.yellow = yellow
 custom.author = bold
