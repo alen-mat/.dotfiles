@@ -179,6 +179,7 @@ bindsym $mod+r mode "resize"
 bindsym $mod+space exec --no-startup-id bash -e ~/.config/rofi/applets/app_launcher.sh
 bindsym $mod+b exec --no-startup-id bash -e ~/.config/rofi/applets/bluetooth-manager.sh
 bindsym $mod+n exec --no-startup-id bash -e ~/.config/rofi/applets/network-manager.sh
+bindsym $mod+p exec --no-startup-id bash -e ~/.config/rofi/applets/powermenu.sh
 # Media controls
 #bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +2%
 #bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -2%
@@ -204,7 +205,7 @@ bindsym Control+$mod+Up exec --no-startup-id bash -e $HOME/.local/bin/brightness
 #-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 #Setting up  gap in i3
 # In order to use gaps you need to disable window titlebars. You can also use any non-zero value if you'd like to have a border
-for_window [class=".*"] border pixel 0
+for_window [class=".*"] border pixel 3
 #gaps [inner|outer|horizontal|vertical|top|left|bottom|right] <px>
 #gaps inner|outer|horizontal|vertical|top|right|bottom|left current|all set|plus|minus|toggle <px>
 #workspace <ws> gaps [inner|outer|horizontal|vertical|top|left|bottom|right] <px>
@@ -213,7 +214,7 @@ for_window [class=".*"] border pixel 0
 #gaps outer current plus 5
 #gaps horizontal current plus 40
 #gaps outer current toggle 60
-gaps inner 4
+gaps inner 3
 gaps outer 0
 #binding modes to manipulate gaps at runtime.
 set $mode_gaps Gaps: (o)uter, (i)nner, (h)orizontal, (v)ertical, (t)op, (r)ight, (b)ottom, (l)eft
@@ -357,13 +358,14 @@ hide_edge_borders smart_no_gaps
 
 # Start i3bar to display a workspace bar (plus the system information i3status
 # finds out, if available)
-bar {
+#bar {
 #        status_command i3status
-}
+#}
 #Compton Compositor
 exec_always --no-startup-id picom -b
 #polybar
 exec_always --no-startup-id .config/polybar/basic-theme/launch.sh
-
+#clipboard
+exec_always --no-startup-id parcellite
 #wallpaper
 exec_always --no-startup-id nitrogen --restore
