@@ -1,4 +1,10 @@
-;;
+;;GUI elements
+(menu-bar-mode -1)
+(tool-bar-mode -1)
+(scroll-bar-mode -1)
+(global-display-line-numbers-mode 1)
+(global-visual-line-mode t)
+
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'material t)
 (setq user-full-name    "hooo"
@@ -6,7 +12,37 @@
 ;;(message-box ".emacs.d/init.el says hello")
 ;;For better or for worse
 (setq enable-local-variables :safe)
-;;
+
+;;Fonts
+(set-face-attribute 'default nil
+  :font "Source Code Pro"
+  :height 110
+  :weight 'medium)
+(set-face-attribute 'variable-pitch nil
+  :font "Source Code Pro"
+  ;;:font "Ubuntu Nerd Font"
+  :height 120
+  :weight 'medium)
+(set-face-attribute 'fixed-pitch nil
+  :font "Source Code Pro"
+  :height 110
+  :weight 'medium)
+;; Makes commented text and keywords italics.
+;; This is working in emacsclient but not emacs.
+;; Your font must have an italic face available.
+(set-face-attribute 'font-lock-comment-face nil
+  :slant 'italic)
+(set-face-attribute 'font-lock-keyword-face nil
+  :slant 'italic)
+
+;; Uncomment the following line if line spacing needs adjusting.
+(setq-default line-spacing 0.12)
+
+;; Needed if using emacsclient. Otherwise, your fonts will be smaller than expected.
+(add-to-list 'default-frame-alist '(font . "Source Code Pro-11"))
+;; changes certain keywords to symbols, such as lamda!
+(setq global-prettify-symbols-mode t)
+
 ;;Load packages
 (require 'package)
 ;;Repositories
@@ -26,6 +62,7 @@
   (require 'use-package))
 (require 'bind-key)
 (setq use-package-always-ensure t);; :ensure t ;; install the evil package if not installed
+
 ;; load evil
 (use-package evil
   :init ;; tweak evil's configuration before loading it
@@ -39,6 +76,7 @@
   (evil-mode))
   ;; example how to map a command in normal mode (called 'normal state' in evil)
   ;;(define-key evil-normal-state-map (kbd ", w") 'evil-window-vsplit))
+
 (use-package auto-package-update
   :config
   ;; Delete residual old versions
@@ -48,6 +86,7 @@
   ;; Update installed packages at startup if there is an update pending.
   (auto-package-update-maybe))
 ;; Making it easier to discover Emacs key presses.
+
 (use-package which-key
   :diminish
   :config (which-key-mode)
@@ -79,20 +118,27 @@
 ;;     :fetcher git
 ;;     :url "https://github.com/quelpa/quelpa-use-package.git"))
 ;;  (require 'quelpa-use-package))
+
 (use-package info+
   :disabled
   :quelpa (info+ :fetcher wiki :url "https://www.emacswiki.org/emacs/info%2b.el"))
 ;;Inherit the terminal's environment variables
+
 (use-package exec-path-from-shell
   :init
   (when (memq window-system '(mac ns x))
     (exec-path-from-shell-initialize)))
 ;;
+
 (use-package org
   :ensure org-plus-contrib
   :config (require 'ox-extra)
           (ox-extras-activate '(ignore-headlines)))
-;;
+
+;;DOM Mod line
+(use-package doom-modeline)
+(doom-modeline-mode 1)
+
 ;;Org Mod Config
 ;;Default mode
 (setq initial-major-mode 'org-mode)
@@ -120,7 +166,11 @@
 
 ;; Pressing ENTER on a link should follow it.
 (setq org-return-follows-link t)
-;;
+
+;;Zoom Text
+(global-set-key (kbd "C-=") 'text-scale-increase)
+(global-set-key (kbd "C--") 'text-scale-decrease)
+
 ;;Loading custom file
 (setq custom-file "~/.emacs.d/custom.el")
-(ignore-errors (load custom-file)) ;;
+(ignore-errors (load custom-file))
