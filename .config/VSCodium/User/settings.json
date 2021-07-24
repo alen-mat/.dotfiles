@@ -106,12 +106,14 @@
   "editor.lineHeight": 0,
   "editor.fontSize": 18,
   "terminal.integrated.fontFamily": "monospace",
-  "workbench.colorTheme": "Radical",
+  "workbench.colorTheme": "Deepdark Material Theme | Default Version",
   "workbench.sideBar.location": "right",
   "window.zoomLevel": -1,
   "editor.wrappingIndent": "deepIndent",
 	"editor.insertSpaces": false,
 	"prettier.vueIndentScriptAndStyle": true,
 	"prettier.withNodeModules": true,
-	"redhat.telemetry.enabled": false
+	"redhat.telemetry.enabled": false,
+	"clangd.path": "/home/alen/.config/VSCodium/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/12.0.0/clangd_12.0.0/bin/clangd",
+	"C_Cpp.intelliSenseEngine": "Disabled"
 }
