@@ -177,7 +177,7 @@ mode "resize" {
 bindsym $mod+r mode "resize"
 #-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_-_
 bindsym $mod+space exec --no-startup-id bash -e ~/.config/rofi/applets/app_launcher.sh
-bindsym $mod+b exec --no-startup-id bash -e ~/.config/rofi/applets/bluetooth-manager.sh
+bindsym $mod+b exec ~/.config/rofi/applets/bluetooth-manager.sh
 bindsym $mod+n exec --no-startup-id bash -e ~/.config/rofi/applets/network-manager.sh
 bindsym $mod+p exec --no-startup-id bash -e ~/.config/rofi/applets/powermenu.sh
 #bindsym $alt+Shift+l exec --no-startup-id bash -e betterlockscreen -l
