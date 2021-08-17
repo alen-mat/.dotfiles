@@ -161,13 +161,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm ,xK_p ),spawn "~/.config/rofi/applets/app_launcher.sh" )
 
     -- bluetooth menu
-    , (("M-<[>"),spawn "~/.config/rofi/applets/bluetooth-manager.sh" )
+    , ((modm ,xK_bracketleft),spawn "~/.config/rofi/applets/bluetooth-manager.sh" )
 
     -- Network
-    , (("M-<]>"),spawn ("~/.config/rofi/applets/network-manager.sh" ))
+    , ((modm ,xK_bracketright),spawn ("~/.config/rofi/applets/network-manager.sh" ))
 
     -- launch power menu
-    , (("M-<;>"), spawn ("~/.config/rofi/applets/powermenu.sh"))
+    , ((modm ,xK_semicolon), spawn ("~/.config/rofi/applets/powermenu.sh"))
 
     -- Lock
     , ((modm .|. shiftMask, xK_x), spawn "betterlockscreen -l")
