@@ -8,7 +8,7 @@
   (add-to-list 'package-archives '("org" . "http://orgmode.org/elpa/") t))
 (unless (assoc-default "nongnu" package-archives)
   (add-to-list 'package-archives '("nongnu" . "https://elpa.nongnu.org/nongnu/") t))
-  
+
 (setq use-package-verbose t)
 (setq use-package-always-ensure t)
 
@@ -111,9 +111,12 @@
   :ensure org-plus-contrib
   :config (require 'ox-extra)
           (ox-extras-activate '(ignore-headlines)))
-  
-(use-package org-bullets)
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))  
+
+(use-package org-bullets
+  :hook (org-mode-hook . (lambda () (org-bullets-mode 1))))
+
+(use-package nov
+  :mode ("\\.epub\\'" . nov-mode))
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(provide 'install-pkg)  
+(provide 'install-pkg)

@@ -1,7 +1,7 @@
 ;;http://pages.sachachua.com/.emacs.d/Sacha.html
 ;;https://www.reddit.com/r/emacs/comments/3q50do/best_way_organization_config_files_in_the_emacs/
 ;;https://github.com/tonini/emacs.d/blob/master/init.el
-
+(setq debug-on-error t)
 (setq message-log-max 10000)
 
 (setq load-prefer-newer t)
