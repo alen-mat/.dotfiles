@@ -11,6 +11,7 @@ import XMonad.Config.Desktop
 import XMonad.Config.Azerty
 import XMonad.Util.Run(spawnPipe)
 import XMonad.Actions.SpawnOn
+import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
 import XMonad.Actions.CycleWS
 import XMonad.Hooks.UrgencyHook
@@ -133,6 +134,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Swap the focused window with the previous window
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
 
+    -- Full screen
+    , ((modm, xK_f), sendMessage $ Toggle FULL)
+
     -- Shrink the master area
     , ((modm,               xK_h     ), sendMessage Shrink)
 
@@ -198,6 +202,13 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xF86XK_AudioNext), spawn $ "playerctl next")
     , ((0, xF86XK_AudioPrev), spawn $ "playerctl previous")
     , ((0, xF86XK_AudioStop), spawn $ "playerctl stop")
+    , ((0, xF86XK_HomePage), spawn "brave")
+    , ((0, xF86XK_Search), spawn "dmsearch")
+    , ((0, xF86XK_Mail), runOrRaise "thunderbird" (resource =? "thunderbird"))
+    , ((0, xF86XK_Calculator), runOrRaise "qalculate-gtk" (resource =? "qalculate-gtk"))
+    , ((0, xF86XK_Eject), spawn "toggleeject")
+    , ((0, xK_Print), spawn "dmscrot")
+
     ]
     ++
 
@@ -252,7 +263,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 myLayout = tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = smartSpacing 5 $ Tall nmaster delta ratio
+     tiled   = smartSpacing 5
+               $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+               $ Tall nmaster delta ratio
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -284,6 +297,7 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , className =? "vlc"            --> doFloat
     , resource  =? "desktop_window" --> doIgnore
+    , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  --> doFloat
     , resource  =? "kdesktop"       --> doIgnore ]
 
 ------------------------------------------------------------------------
