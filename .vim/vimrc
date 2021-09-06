@@ -63,6 +63,8 @@ command! MakeTags !ctags -R .
 "
 command FileSyn execute "vnew | r !file_sync # "
 command FormatJSON execute "%!json_pp"
+command FormatXML execute "%!python -c 'import sys; import xml.dom.minidom; s=sys.stdin.read(); print(xml.dom.minidom.parseString(s).toprettyxml())'"
+
 "BUILD INTEGRATION
 "set makeprg= <__COMMAND__>
 

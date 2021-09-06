@@ -1,4 +1,5 @@
 nitrogen --restore &
+mpd &
 picom &
 ~/.config/polybar/basic-theme/launch.sh
 parcellite &

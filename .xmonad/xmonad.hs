@@ -297,6 +297,7 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , className =? "vlc"            --> doFloat
     , resource  =? "desktop_window" --> doIgnore
+    , title =? "Picture in picture" --> doFloat
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  --> doFloat
     , resource  =? "kdesktop"       --> doIgnore ]
 
