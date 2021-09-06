@@ -1,0 +1,50 @@
+add_newline = true
+
+[character]
+success_symbol = "[➜](bold green)"
+
+[package]
+format = "via [🎁 $version](208 bold) "
+
+[[battery.display]]
+threshold = 10
+style = "bold red"
+discharging_symbol = "💀 "
+
+[java]
+symbol = "☕" 
+
+[python]
+symbol = "🐍 "
+pyenv_version_name = true
+python_binary = ["./venv/bin/python", "python", "python3", "python2"]
+
+[cmd_duration]
+min_time = 500
+format = "underwent [$duration](bold yellow)"
+
+[nodejs]
+format = "via [🤖 $version](bold green) "
+
+[status]
+style = "bg:blue"
+symbol = "🔴"
+format = '[\[$symbol $common_meaning$signal_name$maybe_int\]]($style) '
+map_symbol = true
+disabled = false
+
+[time]
+disabled = false
+format = '🕙[\[ $time \]]($style) '
+time_format = "%T"
+utc_time_offset = "-5"
+time_range = "10:00:00-14:00:00"
+
+[username]
+style_user = "white bold"
+style_root = "black bold"
+format = "user: [$user]($style) "
+disabled = false
+show_always = true
+
+
