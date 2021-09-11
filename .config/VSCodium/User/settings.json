@@ -78,7 +78,7 @@
         ],
         "settings": {
           "fontStyle": "italic",
-          "foreground": "#ff1493"
+          "foreground": "#11f0d2"
         }
       },
       {
@@ -106,8 +106,8 @@
   "editor.lineHeight": 0,
   "editor.fontSize": 18,
   "terminal.integrated.fontFamily": "monospace",
-  "workbench.colorTheme": "Deepdark Material Theme | Default Version",
-  "workbench.sideBar.location": "right",
+  "workbench.colorTheme": "Bearded Theme Vivid Black",
+  "workbench.sideBar.location": "left",
   "window.zoomLevel": -1,
   "editor.wrappingIndent": "deepIndent",
 	"editor.insertSpaces": false,

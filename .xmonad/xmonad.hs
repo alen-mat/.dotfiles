@@ -176,6 +176,9 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Lock
     , ((modm .|. shiftMask, xK_x), spawn "betterlockscreen -l")
 
+    -- Emacs
+    , ((modm .|. shiftMask, xK_h), spawn "emacsclient --create-frame")
+
     --MULTIMEDIA KEYS
 
     -- Mute volume
