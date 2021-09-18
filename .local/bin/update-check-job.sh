@@ -4,7 +4,8 @@ dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 NOTIFY_ICON=~/.icons/Vimix/symbolic/status/software-update-available-symbolic.svg
 
 UPDATES=$($dir/checkupdates 2>/dev/null | wc -l);
-echo "${UPDATES}"
+echo "${UPDATES}" > /tmp/pkg2update.txt
+hash polybar-msg 2>/dev/null && polybar-msg hook pacman-packages 2
 
 if hash notify-send &>/dev/null; then
     if (( $UPDATES > 50 )); then

@@ -6,3 +6,4 @@ parcellite &
 emacs --bg-daemon
 #bluetooth 
 pactl load-module module-bluetooth-discover
+~/.local/bin/update-check-job.sh
