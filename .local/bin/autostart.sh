@@ -3,6 +3,7 @@ mpd &
 picom &
 ~/.config/polybar/basic-theme/launch.sh
 parcellite &
+redshift &
 emacs --bg-daemon
 #bluetooth 
 pactl load-module module-bluetooth-discover
