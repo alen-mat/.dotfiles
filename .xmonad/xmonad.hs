@@ -1,45 +1,60 @@
-import System.IO
-import System.Exit
+import Control.Monad ( join, when )
+import Control.Monad (liftM2)
 
-import XMonad
-import XMonad.Hooks.SetWMName
-import XMonad.Hooks.DynamicLog
-import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.EwmhDesktops
-import XMonad.Hooks.ManageHelpers(doFullFloat, doCenterFloat, isFullscreen, isDialog)
-import XMonad.Config.Desktop
-import XMonad.Config.Azerty
-import XMonad.Util.Run(spawnPipe)
-import XMonad.Actions.SpawnOn
-import XMonad.Actions.WindowGo (runOrRaise)
-import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
-import XMonad.Actions.CycleWS
-import XMonad.Hooks.UrgencyHook
-import qualified Codec.Binary.UTF8.String as UTF8
-import XMonad.Actions.Navigation2D
-
-import XMonad.Layout.BinarySpacePartition
-import XMonad.Layout.Spacing
-import XMonad.Layout.Gaps
-import XMonad.Layout.ResizableTile
-import XMonad.Layout.Fullscreen (fullscreenFull)
-import XMonad.Layout.Cross(simpleCross)
-import XMonad.Layout.Spiral(spiral)
-import XMonad.Layout.ThreeColumns
-import XMonad.Layout.MultiToggle
-import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.IndependentScreens
-
-
-import XMonad.Layout.CenteredMaster(centerMaster)
+import Data.Maybe (maybeToList)
 
 import Graphics.X11.ExtraTypes.XF86
-import qualified XMonad.StackSet as W
-import qualified Data.Map as M
-import qualified Data.ByteString as B
-import Control.Monad (liftM2)
+
+import System.Exit
+import System.IO
+
+import XMonad
+import XMonad.Actions.CycleWS
+import XMonad.Actions.Navigation2D
+import XMonad.Actions.SpawnOn
+import XMonad.Actions.WindowGo (runOrRaise)
+
+import XMonad.Config.Azerty
+import XMonad.Config.Desktop
+
+import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.EwmhDesktops ( ewmh, ewmhDesktopsEventHook)
+import XMonad.Hooks.ManageDocks
+import XMonad.Hooks.ManageHelpers (doFullFloat, doCenterFloat, isFullscreen, isDialog)
+import XMonad.Hooks.SetWMName
+import XMonad.Hooks.UrgencyHook
+
+import XMonad.Layout.BinarySpacePartition
+import XMonad.Layout.BoringWindows (boringWindows, focusUp, focusDown)
+import XMonad.Layout.CenteredMaster (centerMaster)
+import XMonad.Layout.Cross (simpleCross)
+import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook, fullscreenSupport, fullscreenFull)
+import XMonad.Layout.Gaps
+import XMonad.Layout.IndependentScreens
+import XMonad.Layout.LayoutModifier (ModifiedLayout)
+import XMonad.Layout.Maximize (maximize, maximizeRestore)
+import XMonad.Layout.Minimize(minimize)
+import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle.Instances
+import XMonad.Layout.NoBorders
+import XMonad.Layout.PerWorkspace
+import XMonad.Layout.Renamed
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.SimpleFloat
+import XMonad.Layout.Spacing ( Spacing, spacingRaw, Border(Border) )
+import XMonad.Layout.Spiral (spiral)
+import XMonad.Layout.ThreeColumns
+
+import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
+import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.SpawnOnce
+
+import qualified Codec.Binary.UTF8.String as UTF8
 import qualified DBus as D
 import qualified DBus.Client as D
+import qualified Data.ByteString as B
+import qualified Data.Map as M
+import qualified XMonad.StackSet as W
 
 normBord = "#4f4f4f"
 focdBord = "#00B19F"
@@ -90,6 +105,12 @@ myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
 myNormalBorderColor  = "#dddddd"
 myFocusedBorderColor = "#ff0000"
 
+
+toggleFullScreen = do
+      sendMessage $ Toggle $ FULL
+      sendMessage $ ToggleGap U
+
+
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
@@ -135,8 +156,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
 
     -- Full screen
-    , ((modm, xK_f), sendMessage $ Toggle FULL)
-
+    , ((modm, xK_f), sendMessage $Toggle FULL)
+    , ((modm .|. shiftMask, xK_f), toggleFullScreen)
     -- Shrink the master area
     , ((modm,               xK_h     ), sendMessage Shrink)
 
@@ -156,7 +177,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     -- Use this binding with avoidStruts from Hooks.ManageDocks.
     -- See also the statusBar function from Hooks.DynamicLog.
     --
-    -- , ((modm              , xK_b     ), sendMessage ToggleStruts)
+    , ((modm              , xK_b     ), sendMessage ToggleStruts)
 
     -- Restart xmonad
     , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
@@ -195,11 +216,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     -- Decrease brightness
     , ((0, xF86XK_MonBrightnessDown), spawn $ "xbacklight -dec 5")
-
-  --  , ((0, xF86XK_AudioPlay), spawn $ "mpc toggle")
-  --  , ((0, xF86XK_AudioNext), spawn $ "mpc next")
-  --  , ((0, xF86XK_AudioPrev), spawn $ "mpc prev")
-  --  , ((0, xF86XK_AudioStop), spawn $ "mpc stop")
 
     , ((0, xF86XK_AudioPlay), spawn $ "playerctl play-pause && ~/.local/bin/player-notify")
     , ((0, xF86XK_AudioNext), spawn $ "playerctl next && ~/.local/bin/player-notify")
@@ -252,6 +268,24 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
+--Keeps window on top of polybar
+addNETSupported :: Atom -> X ()
+addNETSupported x   = withDisplay $ \dpy -> do
+    r               <- asks theRoot
+    a_NET_SUPPORTED <- getAtom "_NET_SUPPORTED"
+    a               <- getAtom "ATOM"
+    liftIO $ do
+       sup <- (join . maybeToList) <$> getWindowProperty32 dpy a_NET_SUPPORTED r
+       when (fromIntegral x `notElem` sup) $
+         changeProperty32 dpy r a_NET_SUPPORTED a propModeAppend [fromIntegral x]
+
+addEWMHFullscreen :: X ()
+addEWMHFullscreen   = do
+    wms <- getAtom "_NET_WM_STATE"
+    wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
+    mapM_ addNETSupported [wms, wfs]
+
+
 ------------------------------------------------------------------------
 -- Layouts:
 
@@ -263,10 +297,16 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = tiled ||| Mirror tiled ||| Full
+mySpacing :: Integer -> l a -> ModifiedLayout Spacing l a
+mySpacing i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
+
+fullscreenLayout = renamed [PrependWords "fullscreen"]
+                   ( smartBorders $ Full )
+
+defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = smartSpacing 5
+     tiled   = mySpacing 5
                $ mkToggle (NOBORDERS ?? FULL ?? EOT)
                $ Tall nmaster delta ratio
 
@@ -279,6 +319,11 @@ myLayout = tiled ||| Mirror tiled ||| Full
      -- Percent of screen to increment by when resizing panes
      delta   = 3/100
      tiled_ratio = 1/2
+
+myLayout =  gaps [(U,38), (D,0), (R,0), (L,0)] defaultLayouts ||| fullscreenLayout
+
+-- Set default layout per workSpace
+-- myLayout = onWorkspaces ["4"] simpleFloat $ defaultLayouts
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -302,7 +347,8 @@ myManageHook = composeAll
     , resource  =? "desktop_window" --> doIgnore
     , title =? "Picture in picture" --> doFloat
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  --> doFloat
-    , resource  =? "kdesktop"       --> doIgnore ]
+    , resource  =? "kdesktop"       --> doIgnore
+    , isFullscreen -->  doFullFloat]
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -314,7 +360,7 @@ myManageHook = composeAll
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 myEventHook = do
-               handleEventHook myBaseConfig <+> fullscreenEventHook
+               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -333,7 +379,7 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-  spawn "~/.local/bin/autostart.sh"
+  spawnOnce "~/.local/bin/autostart.sh"
   setWMName "XMonad"
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -348,8 +394,8 @@ main = do
       D.requestName dbus (D.busName_ "org.xmonad.Log")
           [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
 
-
-      xmonad . ewmh $ defaults
+      xmonad $ fullscreenSupport $ docks $ ewmh defaults
+      --xmonad $ewmh defaults $ docks
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
@@ -373,9 +419,9 @@ defaults = def {
         mouseBindings      = myMouseBindings,
 
       -- hooks, layouts
-        layoutHook         = gaps [(U,39), (D,0), (R,0), (L,0)] $ myLayout,
-        manageHook         = manageSpawn <+> myManageHook <+> manageHook myBaseConfig,
+        layoutHook         = myLayout,
+        manageHook         = manageSpawn <+> manageDocks <+> myManageHook <+> manageHook myBaseConfig,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
-        startupHook        = myStartupHook
+        startupHook        = myStartupHook >> addEWMHFullscreen
     }
