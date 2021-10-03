@@ -1,4 +1,5 @@
 (require 'package)
+
 (setq package-enable-at-startup nil)
 (unless (assoc-default "melpa" package-archives)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t))
@@ -94,7 +95,8 @@
 (use-package org
   :ensure org-plus-contrib
   :config (require 'ox-extra)
-          (ox-extras-activate '(ignore-headlines)))
+          (ox-extras-activate '(ignore-headlines))
+          (org-mode-config))
 
 ;;DOM Mod line
 (use-package doom-modeline)
@@ -107,16 +109,14 @@
   :if my/laptop-p
   :mode ("\\.\\(njk\\|md\\)\\'" . markdown-mode))
 
-(use-package org
-  :ensure org-plus-contrib
-  :config (require 'ox-extra)
-          (ox-extras-activate '(ignore-headlines)))
-
 (use-package org-bullets
   :hook (org-mode-hook . (lambda () (org-bullets-mode 1))))
 
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
+
+(use-package rainbow-mode
+  :delight)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'install-pkg)

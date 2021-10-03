@@ -27,15 +27,17 @@
 (setq emacs-custom-config-dir  (concat (file-name-as-directory user-emacs-directory) "config"))
 (setq file-mode-config-dir  (concat (file-name-as-directory emacs-custom-config-dir) "modes"))
 
+(add-to-list 'load-path (expand-file-name file-mode-config-dir))
+(require 'org-config)
+(require 'cc-config)
+
 (add-to-list 'load-path (expand-file-name emacs-custom-config-dir))
 (require 'ui)
 (require 'key-binding)
 (require 'install-pkg)
 (require 'utils)
+(require 'org-preview-html)
 
-(add-to-list 'load-path (expand-file-name file-mode-config-dir))
-(require 'org-config)
-(require 'cc-config)
 ;;(add-to-list 'load-path "~/.emacs.d/config/")
 ;;Loading custom file
 ;;(setq custom-file "~/.emacs.d/custom.el")
