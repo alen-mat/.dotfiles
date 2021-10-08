@@ -215,7 +215,7 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xF86XK_MonBrightnessUp),  spawn $ "xbacklight -inc 5")
 
     -- Decrease brightness
-    , ((0, xF86XK_MonBrightnessDown), spawn $ "xbacklight -dec 5")
+    , ((0, xF86XK_MonBrightnessDown), spawn $ "xbacklight -dec 2")
 
     , ((0, xF86XK_AudioPlay), spawn $ "playerctl play-pause && ~/.local/bin/player-notify")
     , ((0, xF86XK_AudioNext), spawn $ "playerctl next && ~/.local/bin/player-notify")
@@ -226,8 +226,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xF86XK_Mail), runOrRaise "thunderbird" (resource =? "thunderbird"))
     , ((0, xF86XK_Calculator), runOrRaise "qalculate-gtk" (resource =? "qalculate-gtk"))
     , ((0, xF86XK_Eject), spawn "toggleeject")
-    , ((0, xK_Print), spawn "dmscrot")
 
+    , ((0, xK_Print), spawn "flameshot full -p ~/Pictures/Screenshots")
+    , ((controlMask, xK_Print), spawn "flameshot full -c")
+    , ((controlMask, xK_Print), spawn "flameshot full -c")
+    , ((controlMask .|. shiftMask, xK_Print), spawn "flameshot gui")
     ]
     ++
 

@@ -1,10 +1,10 @@
 nitrogen --restore &
 mpd &
 picom &
-~/.config/polybar/basic-theme/launch.sh
+~/.config/polybar/sleek/launch.sh
 parcellite &
-redshift &
 emacs --bg-daemon
 #bluetooth 
+flameshot &
 pactl load-module module-bluetooth-discover
 ~/.local/bin/update-check-job.sh

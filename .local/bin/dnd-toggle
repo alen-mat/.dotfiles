@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+end_dnd() {
+	dunstctl set-paused false;
+	notify-send "Do Not Disturb" "Do Not Disturb mode ended. Notifications will be shown."; 
+}
+main() {
+  local dnd=$(dunstctl is-paused)
+  if [ "$dnd" == true ];then 
+		end_dnd
+	else
+		dunstctl set-paused true;
+	fi
+}
+main "$@"
