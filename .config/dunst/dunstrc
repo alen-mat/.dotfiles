@@ -4,7 +4,7 @@
 [global]
 monitor = 0
 follow = mouse
-geometry = "500x30-7+40"
+geometry = "300x30-7+40"
 indicate_hidden = yes
 shrink = no
 separator_height = 4
@@ -20,7 +20,7 @@ line_height = 4
 corner_radius = 0
 markup = full
 plain_text = no
-format = "<small>%a</small>: <big><b>%s</b></big>\n<small>%b</small>"
+format = "<big><b>%s</b></big>\n<small>%b</small>"
 alignment = left
 show_age_threshold = 60
 word_wrap = yes

@@ -1,8 +1,8 @@
 #!/bin/bash
 # NON COMPOSED COVER TEMPORARY PATH
 album_art=$(playerctl metadata | grep -i "arturl"|awk -F$'              '  'BEGIN {OFS = FS}{ print $2 }')
-album=$(playerctl metadata | grep -i "album"|awk -F$'               '  'BEGIN {OFS = FS}{ print $2 }') 
-title=$(playerctl metadata | grep -i "title"|awk -F$'               '  'BEGIN {OFS = FS}{ print $2 }')
-artist=$(playerctl metadata | grep -i "artist"|awk -F$'              '  'BEGIN {OFS = FS}{ print $2 }')
+album=$(playerctl metadata --format "{{ album }}")
+title=$(playerctl metadata --format "{{ title }}")
+artist=$(playerctl metadata --format "{{ artist }}")
 
 notify-send "$title - $album" "$artist" -i $album_art -u low 
