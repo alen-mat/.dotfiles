@@ -115,3 +115,4 @@ eval "$(starship init zsh)"
 # Add Jbang to environment
 alias j!=jbang
 export PATH="$HOME/.jbang/bin:$PATH"
+[[ -f  ~/.cache/wal/sequences ]] && cat ~/.cache/wal/sequences
