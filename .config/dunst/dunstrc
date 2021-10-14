@@ -11,7 +11,7 @@ separator_height = 4
 separator_color = auto
 padding = 10
 horizontal_padding = 10
-frame_width = 0
+frame_width = 1
 transparency = 0
 sort = yes
 idle_threshold = 120
@@ -41,7 +41,7 @@ class = Dunst
 idle_threshold = 5
 dmenu = /usr/bin/rofi -dmenu -p "Open URL"
 browser = /usr/bin/firefox --new-tab
-frame_color = "#N"
+frame_color = "#f00f0f"
 frame_width = 0
 
 [shortcuts]
