@@ -75,3 +75,5 @@ alias \
 	gpsh='git push' \
 	gss='git status -s' \
 	gs='echo ""; echo "*********************************************"; echo -e "   DO NOT FORGET TO PULL BEFORE COMMITTING"; echo "*********************************************"; echo ""; git status'
+
+alias j!=jbang

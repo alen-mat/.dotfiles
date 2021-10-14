@@ -14,11 +14,13 @@ export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
 export PATH="$PATH:${$(find ~/.local/bin -type d -printf %p:)%%:}"
 export PATH="$PATH:$__R3N/scripts/"
 export PATH="$PATH:$__APPS/meld-3.20.2/bin/"
+export PATH="$PATH:~/.local/bin"
+export PATH="$PATH:~/Apps/jdk-15.0.1/bin"
+export PATH="$HOME/.jbang/bin:$PATH"
 
-unsetopt PROMPT_SP
+export LANG=en_US.UTF-8
 
 # Default programs:
-#export EDITOR="nvim"
 export EDITOR=vim
 export TERMINAL="terminator"
 export BROWSER="firefox"
