@@ -45,7 +45,7 @@ bat(){
 }
 
 tun(){
-	[[ -z '$(ifconfig | grep -E "(vpn|tun)")' ]] && echo -e "VPN "
+	[[ ! -z '$(ifconfig | grep -E "(vpn|tun)")' ]] && echo -e "VPN "
 }
 
 # cache the output of apm(8), no need to call that every second.
