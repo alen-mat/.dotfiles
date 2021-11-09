@@ -68,7 +68,7 @@ winType  = "#c678dd"
 --shiftMask= shift key
 
 myBaseConfig = desktopConfig
-myTerminal      = "alacritty"
+myTerminal      = "kitty"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -309,7 +309,8 @@ fullscreenLayout = renamed [PrependWords "fullscreen"]
 defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = mySpacing 5
+     -- modify myspacing value for gaps
+     tiled   = mySpacing 0
                $ mkToggle (NOBORDERS ?? FULL ?? EOT)
                $ Tall nmaster delta ratio
 
