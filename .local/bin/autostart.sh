@@ -1,7 +1,10 @@
+#!/usr/bin/env sh
 nitrogen --restore &
 mpd &
 picom &
-~/.config/polybar/sleek/launch.sh
+if [ -z "$1" ] && [ $1 == "bar" ]; then
+	~/.config/polybar/sleek/launch.sh
+fi
 parcellite &
 emacs --bg-daemon &
 #bluetooth 
