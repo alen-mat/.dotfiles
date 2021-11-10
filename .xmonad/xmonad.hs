@@ -113,6 +113,7 @@ toggleFullScreen = do
 
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
+-- https://wiki.linuxquestions.org/wiki/XF86_keyboard_symbols
 --
 myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
@@ -229,7 +230,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
     , ((0, xK_Print), spawn "flameshot full -p ~/Pictures/Screenshots")
     , ((controlMask, xK_Print), spawn "flameshot full -c")
-    , ((controlMask, xK_Print), spawn "flameshot full -c")
     , ((controlMask .|. shiftMask, xK_Print), spawn "flameshot gui")
     ]
     ++
@@ -309,7 +309,6 @@ fullscreenLayout = renamed [PrependWords "fullscreen"]
 defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
-     -- modify myspacing value for gaps
      tiled   = mySpacing 0
                $ mkToggle (NOBORDERS ?? FULL ?? EOT)
                $ Tall nmaster delta ratio
