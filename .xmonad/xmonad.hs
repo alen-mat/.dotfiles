@@ -1,7 +1,15 @@
-import Control.Monad ( join, when )
-import Control.Monad (liftM2)
+-- This xmonad monster is an amalgam of
+--Default xmonad config
+--https://gitlab.com/dwt1/dotfiles
+--https://github.com/Axarva/dotfiles-2.0
+--https://github.com/xintron/configs/blob/22a33b41587c180172392f80318883921c543053/.xmonad/lib/Config.hs#L199
+--https://github.com/xintron/xmonad-log
 
+import Control.Monad ( join, when, replicateM_,liftM2)
+
+import Data.Foldable ( traverse_ )
 import Data.Maybe (maybeToList)
+import Data.List (elemIndex)
 
 import Graphics.X11.ExtraTypes.XF86
 
@@ -10,19 +18,26 @@ import System.IO
 
 import XMonad
 import XMonad.Actions.CycleWS
+import XMonad.Actions.DynamicProjects ( Project(..), dynamicProjects, switchProjectPrompt)
+import XMonad.Actions.DynamicWorkspaces ( removeWorkspace )
+import XMonad.Actions.FloatKeys ( keysAbsResizeWindow, keysResizeWindow)
 import XMonad.Actions.Navigation2D
+import XMonad.Actions.RotSlaves (rotSlavesUp)
 import XMonad.Actions.SpawnOn
 import XMonad.Actions.WindowGo (runOrRaise)
+import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Config.Azerty
 import XMonad.Config.Desktop
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops ( ewmh, ewmhDesktopsEventHook)
+import XMonad.Hooks.FadeInactive ( fadeInactiveLogHook )
+import XMonad.Hooks.InsertPosition ( Focus(Newer), Position(Below), insertPosition)
 import XMonad.Hooks.ManageDocks
-import XMonad.Hooks.ManageHelpers (doFullFloat, doCenterFloat, isFullscreen, isDialog)
+import XMonad.Hooks.ManageHelpers ( (-?>), composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, isInProperty)
 import XMonad.Hooks.SetWMName
-import XMonad.Hooks.UrgencyHook
+import XMonad.Hooks.UrgencyHook ( UrgencyHook(..), withUrgencyHook)
 
 import XMonad.Layout.BinarySpacePartition
 import XMonad.Layout.BoringWindows (boringWindows, focusUp, focusDown)
@@ -45,16 +60,23 @@ import XMonad.Layout.Spacing ( Spacing, spacingRaw, Border(Border) )
 import XMonad.Layout.Spiral (spiral)
 import XMonad.Layout.ThreeColumns
 
+import XMonad.Prompt ( XPConfig(..), amberXPConfig, XPPosition(CenteredAt))
+
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
-import XMonad.Util.Run (spawnPipe)
+import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating, defaultFloating, namedScratchpadAction, namedScratchpadManageHook)
+import XMonad.Util.NamedActions ((^++^), NamedAction (..), addDescrKeys', addName, showKm, subtitle)
+import XMonad.Util.Run (safeSpawn,spawnPipe)
 import XMonad.Util.SpawnOnce
+import XMonad.Util.WorkspaceCompare ( getSortByIndex )
 
 import qualified Codec.Binary.UTF8.String as UTF8
+import qualified Control.Exception as E
 import qualified DBus as D
 import qualified DBus.Client as D
 import qualified Data.ByteString as B
 import qualified Data.Map as M
 import qualified XMonad.StackSet as W
+import qualified XMonad.Util.NamedWindows as W
 
 normBord = "#4f4f4f"
 focdBord = "#00B19F"
@@ -98,7 +120,15 @@ myModMask       = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-myWorkspaces    = ["1","2","3","4","5","6","7","8","9"]
+webWs = "1" --"web"
+ossWs = "2" --"oss"
+devWs = "3" --"dev"
+comWs = "4" --"com"
+wrkWs = "5" --"wrk"
+sysWs = "6" --"sys"
+etcWs = "7" --"etc"
+myWorkspaces :: [WorkspaceId]
+myWorkspaces = [webWs,ossWs,devWs,comWs,wrkWs,sysWs,etcWs,"8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -115,141 +145,121 @@ toggleFullScreen = do
 -- Key bindings. Add, modify or remove key bindings here.
 -- https://wiki.linuxquestions.org/wiki/XF86_keyboard_symbols
 --
-myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
 
-    -- launch a terminal
-    [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
+showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
+showKeybindings x = addName "Show Keybindings" . io $
+  E.bracket (spawnPipe $ getAppCommand yad) hClose (\h -> hPutStr h (unlines $ showKm x))
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
-
-    -- close focused window
-    , ((modm .|. shiftMask, xK_c     ), kill)
-
-     -- Rotate through the available layout algorithms
-    , ((modm,               xK_space ), sendMessage NextLayout)
-
-    --  Reset the layouts on the current workspace to default
-    , ((modm .|. shiftMask, xK_space ), setLayout $ XMonad.layoutHook conf)
-
-    -- Resize viewed windows to the correct size
-    , ((modm,               xK_r     ), refresh)
-
-    -- Move focus to the next window
-    , ((modm,               xK_Tab   ), windows W.focusDown)
-
-    -- Move focus to the next window
-    , ((modm,               xK_j     ), windows W.focusDown)
-
-    -- Move focus to the previous window
-    , ((modm,               xK_k     ), windows W.focusUp  )
-
-    -- Move focus to the master window
-    , ((modm,               xK_m     ), windows W.focusMaster  )
-
-    -- Swap the focused window and the master window
-    , ((modm,               xK_Return), windows W.swapMaster)
-
-    -- Swap the focused window with the next window
-    , ((modm .|. shiftMask, xK_j     ), windows W.swapDown  )
-
-    -- Swap the focused window with the previous window
-    , ((modm .|. shiftMask, xK_k     ), windows W.swapUp    )
-
-    -- Full screen
-    , ((modm, xK_f), sendMessage $Toggle FULL)
-    , ((modm .|. shiftMask, xK_f), toggleFullScreen)
-    -- Shrink the master area
-    , ((modm,               xK_h     ), sendMessage Shrink)
-
-    -- Expand the master area
-    , ((modm,               xK_l     ), sendMessage Expand)
-
-    -- Push window back into tiling
-    , ((modm,               xK_t     ), withFocused $ windows . W.sink)
-
-    -- Increment the number of windows in the master area
-    , ((modm              , xK_comma ), sendMessage (IncMasterN 1))
-
-    -- Deincrement the number of windows in the master area
-    , ((modm              , xK_period), sendMessage (IncMasterN (-1)))
-
-    -- Toggle the status bar gap
-    -- Use this binding with avoidStruts from Hooks.ManageDocks.
-    -- See also the statusBar function from Hooks.DynamicLog.
-    --
-    , ((modm              , xK_b     ), sendMessage ToggleStruts)
-
-    -- Restart xmonad
-    , ((modm              , xK_q     ), spawn "xmonad --recompile; xmonad --restart")
-
-    -- Application menu
-    , ((modm ,xK_p ),spawn "~/.config/rofi/applets/app_launcher.sh" )
-
-    -- bluetooth menu
-    , ((modm ,xK_bracketleft),spawn "~/.config/rofi/applets/bluetooth-manager.sh" )
-
-    -- Network
-    , ((modm ,xK_bracketright),spawn ("~/.config/rofi/applets/network-manager.sh" ))
-
-    -- launch power menu
-    , ((modm ,xK_semicolon), spawn ("~/.config/rofi/applets/powermenu.sh"))
-
-    -- Lock
-    , ((modm .|. shiftMask, xK_x), spawn "betterlockscreen -l")
-
-    -- Emacs
-    , ((modm .|. shiftMask, xK_h), spawn "emacsclient --create-frame")
-
-    --MULTIMEDIA KEYS
-
-    -- Mute volume
-    , ((0, xF86XK_AudioMute), spawn $ "amixer -q set Master toggle")
-
-    -- Decrease volume
-    , ((0, xF86XK_AudioLowerVolume), spawn $ "amixer -q set Master 5%-")
-
-    -- Increase volume
-    , ((0, xF86XK_AudioRaiseVolume), spawn $ "amixer -q set Master 5%+")
-
-    -- Increase brightness
-    , ((0, xF86XK_MonBrightnessUp),  spawn $ "xbacklight -inc 5")
-
-    -- Decrease brightness
-    , ((0, xF86XK_MonBrightnessDown), spawn $ "xbacklight -dec 2")
-
-    , ((0, xF86XK_AudioPlay), spawn $ "playerctl play-pause && ~/.local/bin/player-notify")
-    , ((0, xF86XK_AudioNext), spawn $ "playerctl next && ~/.local/bin/player-notify")
-    , ((0, xF86XK_AudioPrev), spawn $ "playerctl previous && ~/.local/bin/player-notify")
-    , ((0, xF86XK_AudioStop), spawn $ "playerctl stop")
-    , ((0, xF86XK_HomePage), spawn "brave")
-    , ((0, xF86XK_Search), spawn "dmsearch")
-    , ((0, xF86XK_Mail), runOrRaise "thunderbird" (resource =? "thunderbird"))
-    , ((0, xF86XK_Calculator), runOrRaise "qalculate-gtk" (resource =? "qalculate-gtk"))
-    , ((0, xF86XK_Eject), spawn "toggleeject")
-
-    , ((0, xK_Print), spawn "flameshot full -p ~/Pictures/Screenshots")
-    , ((controlMask, xK_Print), spawn "flameshot full -c")
-    , ((controlMask .|. shiftMask, xK_Print), spawn "flameshot gui")
-    ]
-    ++
-
-    --
-    -- mod-[1..9], Switch to workspace N
-    -- mod-shift-[1..9], Move client to workspace N
-    --
-    [((m .|. modm, k), windows $ f i)
-        | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
-        , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
-    ++
-
-    --
+myKeys conf@XConfig {XMonad.modMask = modm} =
+  keySet "Launchers"
+    [ key "Terminal"                 (modm .|. shiftMask  , xK_Return) $ spawn (XMonad.terminal conf)
+    , key "Apps (Rofi)"              (modm                , xK_p     ) $ spawn $ "~/.config/rofi/applets/app_launcher.sh"
+    , key "Bluetooth Manager (Rofi)" (modm ,xK_bracketleft           ) $ spawn $ "~/.config/rofi/applets/bluetooth-manager.sh"
+    , key "Network Manager (Rofi)"   (modm ,xK_bracketright          ) $ spawn $ "~/.config/rofi/applets/network-manager.sh"
+    , key "Power Menu (Rofi)"        (modm ,xK_semicolon             ) $ spawn $ "~/.config/rofi/applets/powermenu.sh"
+    , key "Lock screen (Rofi)"       (modm .|. controlMask, xK_l     ) $ spawn $ "betterlockscreen -l"
+    ] ^++^
+  keySet "Audio"
+    [ key "Mute"          (0, xF86XK_AudioMute              ) $ spawn "amixer -q set Master toggle"
+    , key "Lower volume"  (0, xF86XK_AudioLowerVolume       ) $ spawn "amixer -q set Master 5%-"
+    , key "Raise volume"  (0, xF86XK_AudioRaiseVolume       ) $ spawn "amixer -q set Master 5%+"
+    , key "Play / Pause"  (0, xF86XK_AudioPlay              ) $ spawn $ "playerctl play-pause && ~/.local/bin/player-notify"
+    , key "Stop"          (0, xF86XK_AudioStop              ) $ spawn $ "playerctl stop && ~/.local/bin/player-notify"
+    , key "Previous"      (0, xF86XK_AudioPrev              ) $ spawn $ "playerctl previous && ~/.local/bin/player-notify"
+    , key "Next"          (0, xF86XK_AudioNext              ) $ spawn $ "playerctl next && ~/.local/bin/player-notify"
+    ] ^++^
+  keySet "Brigtness"
+    [ key "Increase brigtness"  (0, xF86XK_MonBrightnessUp  ) $  spawn $ "xbacklight -inc 5"
+    , key "Decrease brightness" (0, xF86XK_MonBrightnessDown) $  spawn $ "xbacklight -dec 2"
+    ] ^++^
+  keySet "Fn Keys"
+    [ key "Homepage"   (0, xF86XK_HomePage  ) $ spawn "brave"
+    , key "Search"     (0, xF86XK_Search    ) $ spawn "dmsearch"
+    , key "Mail"       (0, xF86XK_Mail      ) $ runOrRaise "thunderbird" (resource =? "thunderbird")
+    , key "Calculator" (0, xF86XK_Calculator) $ runOrRaise "qalculate-gtk" (resource =? "qalculate-gtk")
+    , key "Eject"      (0, xF86XK_Eject     ) $ spawn "toggleeject"
+    ] ^++^
+  keySet "Scratchpads"
+    [ key "Audacious"       (modm .|. controlMask,  xK_a    ) $ runScratchpadApp audacious
+    , key "bottom"          (modm .|. controlMask,  xK_y    ) $ runScratchpadApp btm
+    , key "Files"           (modm .|. controlMask,  xK_f    ) $ runScratchpadApp nautilus
+    , key "Screen recorder" (modm .|. controlMask,  xK_r    ) $ runScratchpadApp scr
+    , key "Spotify"         (modm .|. controlMask,  xK_s    ) $ runScratchpadApp spotify
+    ] ^++^
+  keySet "System"
+    [ key "Toggle status bar gap"          (modm                      , xK_b )     toggleStruts
+    , key "Logout (quit XMonad)"           (modm .|. shiftMask        , xK_q )     $ io exitSuccess
+    , key "Restart XMonad"                 (modm                      , xK_q )     $ spawn "xmonad --recompile; xmonad --restart"
+    , key "Capture entire screen to file"  (modm                      , xK_Print)  $ spawn "flameshot full -p ~/Pictures/Screenshots/"
+    , key "Capture entire screen to clip"  (controlMask               , xK_Print)  $ spawn "flameshot full -c"
+    , key "Capture partial screen to clip" (controlMask .|. shiftMask , xK_Print)  $ spawn "flameshot gui"
+    ] ^++^
+  keySet "Layouts"
+    [ key "Next"                (modm              , xK_space ) $ sendMessage NextLayout
+    , key "Reset"               (modm .|. shiftMask, xK_space ) $ setLayout (XMonad.layoutHook conf)
+    , key "Fullscreen"          (modm              , xK_f     ) $ sendMessage (Toggle NBFULL)
+    , key "Fullscreen Hide bar" (modm .|. shiftMask, xK_f     ) $ toggleFullScreen
+    ] ^++^
+  keySet "Windows"
+    [ key "Close focused"   (modm              , xK_BackSpace) kill
+    , key "Close all in ws" (modm .|. shiftMask, xK_BackSpace) killAll
+    , key "Refresh size"    (modm              , xK_n        ) refresh
+    , key "Focus next"      (modm              , xK_j        ) $ windows W.focusDown
+    , key "Focus previous"  (modm              , xK_k        ) $ windows W.focusUp
+    , key "Focus master"    (modm              , xK_m        ) $ windows W.focusMaster
+    , key "Swap master"     (modm              , xK_Return   ) $ windows W.swapMaster
+    , key "Swap next"       (modm .|. shiftMask, xK_j        ) $ windows W.swapDown
+    , key "Swap previous"   (modm .|. shiftMask, xK_k        ) $ windows W.swapUp
+    , key "Shrink master"   (modm              , xK_h        ) $ sendMessage Shrink
+    , key "Expand master"   (modm              , xK_l        ) $ sendMessage Expand
+    , key "Switch to tile"  (modm              , xK_t        ) $ withFocused (windows . W.sink)
+    , key "Rotate slaves"   (modm .|. shiftMask, xK_Tab      ) rotSlavesUp
+    , key "Decrease size"   (modm              , xK_d        ) $ withFocused (keysResizeWindow (-10,-10) (1,1))
+    , key "Increase size"   (modm              , xK_s        ) $ withFocused (keysResizeWindow (10,10) (1,1))
+    , key "Decr  abs size"  (modm .|. shiftMask, xK_d        ) $ withFocused (keysAbsResizeWindow (-10,-10) (1024,752))
+    , key "Incr  abs size"  (modm .|. shiftMask, xK_s        ) $ withFocused (keysAbsResizeWindow (10,10) (1024,752))
+    ] ^++^
+  keySet "Polybar"
+    [ key "Toggle"        (modm              , xK_equal     ) togglePolybar
+    ] ^++^
+  keySet "Projects"
+    [ key "Switch prompt" (modm              , xK_o         ) $ switchProjectPrompt projectsTheme
+    ] ^++^
+  keySet "Screens" switchScreen ^++^
+  keySet "Workspaces"
+    [ key "Next"          (modm              , xK_period    ) nextWS'
+    , key "Previous"      (modm              , xK_comma     ) prevWS'
+    , key "Remove"        (modm .|. shiftMask, xK_F4        ) removeWorkspace
+    ] ++ switchWsById
+  where
+    togglePolybar = spawn "polybar-msg cmd toggle &"
+    toggleStruts = togglePolybar >> sendMessage ToggleStruts
+    keySet s ks = subtitle s : ks
+    key n k a = (k, addName n a)
+    action m = if m == shiftMask then "Move to " else "Switch to "
+    -- mod-[1..9]: Switch to workspace N | mod-shift-[1..9]: Move client to workspace N
+    switchWsById =
+      [ key (action m <> show i) (m .|. modm, k) (windows $ f i)
+          | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+          , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
     -- mod-{w,e,r}, Switch to physical/Xinerama screens 1, 2, or 3
     -- mod-shift-{w,e,r}, Move client to screen 1, 2, or 3
-    --
-    [((m .|. modm, key), screenWorkspace sc >>= flip whenJust (windows . f))
-        | (key, sc) <- zip [xK_w, xK_e, xK_r] [0..]
-        , (f, m) <- [(W.view, 0), (W.shift, shiftMask)]]
+    switchScreen =
+      [ key (action m <> show sc) (m .|. modm, k) (screenWorkspace sc >>= flip whenJust (windows . f))
+          | (k, sc) <- zip [xK_w, xK_e, xK_r] [0..]
+          , (f, m)  <- [(W.view, 0), (W.shift, shiftMask)]]
+
+----------- Cycle through workspaces one by one but filtering out NSP (scratchpads) -----------
+
+nextWS' = switchWS Next
+prevWS' = switchWS Prev
+
+switchWS dir =
+  findWorkspace filterOutNSP dir AnyWS 1 >>= windows . W.view
+
+filterOutNSP =
+  let g f xs = filter (\(W.Workspace t _ _) -> t /= "NSP") (f xs)
+  in  g <$> getSortByIndex
 
 
 ------------------------------------------------------------------------
@@ -343,15 +353,186 @@ myLayout =  gaps [(U,38), (D,0), (R,0), (L,0)] defaultLayouts ||| fullscreenLayo
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
-myManageHook = composeAll
-    [ className =? "MPlayer"        --> doFloat
-    , className =? "Gimp"           --> doFloat
-    , className =? "vlc"            --> doFloat
-    , resource  =? "desktop_window" --> doIgnore
-    , title =? "Picture in picture" --> doFloat
-    , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  --> doFloat
-    , resource  =? "kdesktop"       --> doIgnore
-    , isFullscreen -->  doFullFloat]
+
+type AppName      = String
+type AppTitle     = String
+type AppClassName = String
+type AppCommand   = String
+
+data App
+  = ClassApp AppClassName AppCommand
+  | TitleApp AppTitle AppCommand
+  | NameApp AppName AppCommand
+  deriving Show
+
+audacious = ClassApp "Audacious"            "audacious"
+btm       = TitleApp "btm"                  "alacritty -t btm -e btm --color gruvbox --default_widget_type proc"
+calendar  = ClassApp "Gnome-calendar"       "gnome-calendar"
+eog       = NameApp  "eog"                  "eog"
+evince    = ClassApp "Evince"               "evince"
+gimp      = ClassApp "Gimp"                 "gimp"
+nautilus  = ClassApp "Org.gnome.Nautilus"   "nautilus"
+office    = ClassApp "libreoffice-draw"     "libreoffice-draw"
+pavuctrl  = ClassApp "Pavucontrol"          "pavucontrol"
+scr       = ClassApp "SimpleScreenRecorder" "simplescreenrecorder"
+spotify   = ClassApp "Spotify"              "myspotify"
+vlc       = ClassApp "Vlc"                  "vlc"
+yad       = ClassApp "Yad"                  "yad --text-info --text 'XMonad'"
+
+myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
+ where
+  isBrowserDialog     = isDialog <&&> className =? "Brave-browser"
+  isFileChooserDialog = isRole =? "GtkFileChooserDialog"
+  isPopup             = isRole =? "pop-up"
+  isSplash            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
+  isRole              = stringProperty "WM_WINDOW_ROLE"
+  tileBelow           = insertPosition Below Newer
+  doCalendarFloat   = customFloating (W.RationalRect (11 / 15) (1 / 48) (1 / 4) (1 / 4))
+  manageScratchpads = namedScratchpadManageHook scratchpads
+  anyOf :: [Query Bool] -> Query Bool
+  anyOf = foldl (<||>) (pure False)
+  match :: [App] -> Query Bool
+  match = anyOf . fmap isInstance
+  manageApps = composeOne
+    [ isInstance calendar                      -?> doCalendarFloat
+    , match [ gimp, office ]                   -?> doFloat
+    , match [ audacious
+            , eog
+            , nautilus
+            , pavuctrl
+            , scr
+            ]                                  -?> doCenterFloat
+    , match [ btm, evince, spotify, vlc, yad ] -?> doFullFloat
+    , resource =? "desktop_window"             -?> doIgnore
+    , resource =? "kdesktop"                   -?> doIgnore
+    , anyOf [ isBrowserDialog
+            , isFileChooserDialog
+            , isDialog
+            , isPopup
+            , isSplash
+            ]                                  -?> doCenterFloat
+    , title =? "Picture in picture" -?> doFloat
+    , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  -?> doFloat
+    , isFullscreen                             -?> doFullFloat
+    , pure True                                -?> tileBelow
+    ]
+
+isInstance (ClassApp c _) = className =? c
+isInstance (TitleApp t _) = title =? t
+isInstance (NameApp n _)  = appName =? n
+
+getNameCommand (ClassApp n c) = (n, c)
+getNameCommand (TitleApp n c) = (n, c)
+getNameCommand (NameApp  n c) = (n, c)
+
+getAppName    = fst . getNameCommand
+getAppCommand = snd . getNameCommand
+
+scratchpadApp :: App -> NamedScratchpad
+scratchpadApp app = NS (getAppName app) (getAppCommand app) (isInstance app) defaultFloating
+
+runScratchpadApp = namedScratchpadAction scratchpads . getAppName
+
+scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify ]
+
+
+------------------------------------------------------------------------
+-- Dynamic Projects
+--
+projects :: [Project]
+projects =
+  [ Project { projectName      = webWs
+            , projectDirectory = "~/"
+            , projectStartHook = Just $ spawn "firefox -P 'default'"
+            }
+  , Project { projectName      = ossWs
+            , projectDirectory = "~/"
+            , projectStartHook = Just $ do replicateM_ 2 (spawn myTerminal)
+                                           spawn $ myTerminal <> " -e home-manager edit"
+            }
+  , Project { projectName      = devWs
+            , projectDirectory = "~/workspace/trading"
+            , projectStartHook = Just . replicateM_ 8 $ spawn myTerminal
+            }
+  , Project { projectName      = comWs
+            , projectDirectory = "~/"
+            , projectStartHook = Just $ do spawn "telegram-desktop"
+                                           spawn "signal-desktop --use-tray-icon"
+            }
+  , Project { projectName      = wrkWs
+            , projectDirectory = "~/"
+            , projectStartHook = Just $ spawn "firefox -P 'demo'" -- -no-remote"
+            }
+  , Project { projectName      = sysWs
+            , projectDirectory = "/etc/nixos/"
+            , projectStartHook = Just . spawn $ myTerminal <> " -e sudo su"
+            }
+  , Project { projectName      = etcWs
+            , projectDirectory = "~/workspace"
+            , projectStartHook = Just . spawn $ myTerminal
+            }
+  ]
+
+projectsTheme :: XPConfig
+projectsTheme = amberXPConfig
+  { bgHLight = "#002b36"
+  , font     = "xft:Bitstream Vera Sans Mono:size=8:antialias=true"
+  , height   = 50
+  , position = CenteredAt 0.5 0.5
+  }
+
+-----------------------------------------------------------------------
+-- original idea: https://pbrisbin.com/posts/using_notify_osd_for_xmonad_notifications/
+data LibNotifyUrgencyHook = LibNotifyUrgencyHook deriving (Read, Show)
+
+instance UrgencyHook LibNotifyUrgencyHook where
+  urgencyHook LibNotifyUrgencyHook w = do
+    name     <- W.getName w
+    maybeIdx <- W.findTag w <$> gets windowset
+    traverse_ (\i -> safeSpawn "notify-send" [show name, "workspace " ++ i]) maybeIdx
+
+-----------------------------------------------------------------------
+-- Polybar settings (needs DBus client).
+--
+mkDbusClient :: IO D.Client
+mkDbusClient = do
+  dbus <- D.connectSession
+  D.requestName dbus (D.busName_ "org.xmonad.log") opts
+  return dbus
+ where
+  opts = [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+
+-- Emit a DBus signal on log updates
+dbusOutput :: D.Client -> String -> IO ()
+dbusOutput dbus str =
+  let opath  = D.objectPath_ "/org/xmonad/Log"
+      iname  = D.interfaceName_ "org.xmonad.Log"
+      mname  = D.memberName_ "Update"
+      signal = D.signal opath iname mname
+      body   = [D.toVariant $ UTF8.decodeString str]
+  in  D.emit dbus $ signal { D.signalBody = body }
+
+polybarHook :: D.Client -> PP
+polybarHook dbus =
+  let wrapper c s | s /= "NSP" = wrap ("%{F" <> c <> "} ") " %{F-}" s
+                  | otherwise  = mempty
+      blue   = "#2E9AFE"
+      gray   = "#7F7F7F"
+      orange = "#ea4300"
+      purple = "#9058c7"
+      red    = "#722222"
+  in  def { ppOutput          = dbusOutput dbus
+            ,ppOrder            = \(_:l:_:_) -> [l]
+          --, ppCurrent         = wrapper blue
+          --, ppVisible         = wrapper gray
+          --, ppUrgent          = wrapper orange
+          --, ppHidden          = wrapper gray
+          --, ppHiddenNoWindows = wrapper red
+          --, ppTitle           = wrapper purple . shorten 90
+          }
+
+myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)
+
 
 ------------------------------------------------------------------------
 -- Event handling
@@ -371,7 +552,8 @@ myEventHook = do
 -- Perform an arbitrary action on each internal state change or X event.
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
-myLogHook = return ()
+-- myLogHook = return ()
+myLogHook = fadeInactiveLogHook 0.9
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -391,40 +573,35 @@ myStartupHook = do
 -- main = xmonad defaults
 
 main :: IO ()
-main = do
-      dbus <- D.connectSession
-      -- Request access to the DBus name
-      D.requestName dbus (D.busName_ "org.xmonad.Log")
-          [D.nameAllowReplacement, D.nameReplaceExisting, D.nameDoNotQueue]
+main = mkDbusClient >>= main'
 
-      xmonad $ fullscreenSupport $ docks $ ewmh defaults
-      --xmonad $ewmh defaults $ docks
+main' :: D.Client -> IO ()
+main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook $ def {
+  terminal           = myTerminal,
+  focusFollowsMouse  = myFocusFollowsMouse,
+  clickJustFocuses   = myClickJustFocuses,
+  borderWidth        = myBorderWidth,
+  modMask            = myModMask,
+  workspaces         = myWorkspaces,
+  normalBorderColor  = myNormalBorderColor,
+  focusedBorderColor = myFocusedBorderColor,
+
+  mouseBindings      = myMouseBindings,
+
+  layoutHook         = myLayout,
+  manageHook         = manageSpawn <+> manageDocks <+> myManageHook <+> manageHook myBaseConfig,
+  handleEventHook    = myEventHook,
+  logHook            = myPolybarLogHook dbus,
+  startupHook        = myStartupHook >> addEWMHFullscreen
+  }
+  where
+    dynProjects = dynamicProjects projects
+    logHook     = myPolybarLogHook dbus
+    keybindings = addDescrKeys' ((myModMask, xK_F1), showKeybindings) myKeys
+    urgencyHook = withUrgencyHook LibNotifyUrgencyHook
 
 -- A structure containing your configuration settings, overriding
 -- fields in the default config. Any you don't override, will
 -- use the defaults defined in xmonad/XMonad/Config.hs
 --
 -- No need to modify this.
---
-defaults = def {
-      -- simple stuff
-        terminal           = myTerminal,
-        focusFollowsMouse  = myFocusFollowsMouse,
-        clickJustFocuses   = myClickJustFocuses,
-        borderWidth        = myBorderWidth,
-        modMask            = myModMask,
-        workspaces         = myWorkspaces,
-        normalBorderColor  = myNormalBorderColor,
-        focusedBorderColor = myFocusedBorderColor,
-
-      --bindings
-        keys               = myKeys,
-        mouseBindings      = myMouseBindings,
-
-      -- hooks, layouts
-        layoutHook         = myLayout,
-        manageHook         = manageSpawn <+> manageDocks <+> myManageHook <+> manageHook myBaseConfig,
-        handleEventHook    = myEventHook,
-        logHook            = myLogHook,
-        startupHook        = myStartupHook >> addEWMHFullscreen
-    }
