@@ -2,9 +2,7 @@
 nitrogen --restore &
 mpd &
 picom &
-if [ -z "$1" ] && [ $1 == "bar" ]; then
-	~/.config/polybar/sleek/launch.sh
-fi
+[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
 parcellite &
 emacs --bg-daemon &
 #bluetooth 
@@ -13,4 +11,4 @@ pactl load-module module-bluetooth-discover
 ~/.local/bin/update-check-job.sh&
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 [[ -f ~/.cache/wal/colors.Xresources ]] && xrdb -merge ~/.cache/wal/colors.Xresources
-
+bash -c "sleep 5; conky"

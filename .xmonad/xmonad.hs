@@ -564,7 +564,7 @@ myLogHook = fadeInactiveLogHook 0.9
 --
 -- By default, do nothing.
 myStartupHook = do
-  spawnOnce "~/.local/bin/autostart.sh"
+  spawnOnce "~/.local/bin/autostart.sh bar"
   setWMName "XMonad"
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
