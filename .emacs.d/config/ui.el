@@ -24,7 +24,7 @@
 (add-to-list 'initial-frame-alist '(fullscreen . maximized))
 
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
-(load-theme 'material t)
+(load-theme 'zenburn t)
 
 ;; utf-8 all the things
 (set-terminal-coding-system 'utf-8)

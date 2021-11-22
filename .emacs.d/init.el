@@ -10,6 +10,7 @@
 
 (setq backup-directory-alist '(("." . "~/.config/emacs/backups")))
 
+
 (defvar my/laptop-p (equal (system-name) "alen-8918"))
 (defvar my/server-p (and (equal (system-name) "localhost") (equal user-login-name "alen.m")))
 (defvar my/phone-p (not (null (getenv "ANDROID_ROOT")))
@@ -32,10 +33,10 @@
 (require 'cc-config)
 
 (add-to-list 'load-path (expand-file-name emacs-custom-config-dir))
-(require 'ui)
 (require 'key-binding)
 (require 'install-pkg)
 (require 'utils)
+(require 'ui)
 (require 'org-preview-html)
 
 ;;(add-to-list 'load-path "~/.emacs.d/config/")

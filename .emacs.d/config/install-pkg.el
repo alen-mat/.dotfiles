@@ -94,9 +94,9 @@
 
 (use-package org
   :ensure org-plus-contrib
+  :hook (org-mode . org-mode-config)
   :config (require 'ox-extra)
-          (ox-extras-activate '(ignore-headlines))
-          (org-mode-config))
+          (ox-extras-activate '(ignore-headlines)))
 
 ;;DOM Mod line
 (use-package doom-modeline)
@@ -110,13 +110,17 @@
   :mode ("\\.\\(njk\\|md\\)\\'" . markdown-mode))
 
 (use-package org-bullets
-  :hook (org-mode-hook . (lambda () (org-bullets-mode 1))))
+  :hook (org-mode . org-bullets-mode)
+  :custom (org-bullets-bullet-list '("◉" "○" "●" "○" "●" "○" "●")))
 
 (use-package nov
   :mode ("\\.epub\\'" . nov-mode))
 
 (use-package rainbow-mode
   :delight)
+
+(use-package visual-fill-column)
+(use-package zenburn-theme)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'install-pkg)
