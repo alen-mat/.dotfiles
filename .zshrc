@@ -61,8 +61,8 @@ PROMPT_EOL_MARK=""
 TIMEFMT=$'\nreal\t%E\nuser\t%U\nsys\t%S\ncpu\t%P'
 
 ############plugin conf####################
-if [ ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-	source .zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [ -f ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+	source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
         ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
         ZSH_HIGHLIGHT_STYLES[default]=none
         ZSH_HIGHLIGHT_STYLES[unknown-token]=fg=red,bold
