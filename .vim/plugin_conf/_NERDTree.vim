@@ -1,7 +1,7 @@
-Plug 'preservim/nerdtree'
-Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'ryanoasis/vim-devicons'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+call dein#add('preservim/nerdtree')
+call dein#add('Xuyuanp/nerdtree-git-plugin')
+call dein#add('ryanoasis/vim-devicons')
+call dein#add('tiagofumo/vim-nerdtree-syntax-highlight')
 
 let NERDTreeShowHidden=1
 let NERDTreeMinimalUI=1
