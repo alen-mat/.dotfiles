@@ -232,7 +232,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Remove"        (modm .|. shiftMask, xK_F4        ) removeWorkspace
     ] ++ switchWsById
   where
-    togglePolybar = spawn "polybar-msg cmd toggle &"
+    togglePolybar = spawn "polybar-msg cmd toggle &" >> toggleFullScreen
     toggleStruts = togglePolybar >> sendMessage ToggleStruts
     keySet s ks = subtitle s : ks
     key n k a = (k, addName n a)
