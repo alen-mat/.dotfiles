@@ -1,0 +1,28 @@
+blocks:
+  - permission
+  - user
+  - group
+  - size
+  - date
+  - name
+
+color:
+  when: auto
+  theme: default
+
+icons:
+  when: auto
+  theme: fancy
+  separator: " | "
+
+# Possible values: grid, tree, oneline
+layout: grid
+
+sorting:
+  # Possible values: extension, name, time, size, version
+  column: name
+  reverse: false
+  dir-grouping: first
+
+total-size: false
+symlink-arrow: ⇒
