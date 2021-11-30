@@ -10,11 +10,10 @@ export TERM=xterm-color
 export CLICOLOR=1
 export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
 
-# Adds `~/.local/bin` to $PATH
 export PATH="$PATH:$__R3N/scripts/"
 export PATH="$PATH:$__APPS/meld-3.20.2/bin/"
-export PATH="$PATH:~/.local/bin"
-export PATH="$PATH:~/Apps/jdk-15.0.1/bin"
+export PATH="$PATH:$HOME/.local/bin/"
+export PATH="$PATH:$HOME/Apps/jdk-15.0.1/bin"
 export PATH="$HOME/.jbang/bin:$PATH"
 
 export LANG=en_US.UTF-8
