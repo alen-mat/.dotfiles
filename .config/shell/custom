@@ -58,18 +58,3 @@ function run-app(){
 function emcc() {
  emacsclient --create-frame $1 &
 }
-
-function command_not_found_handler {
-  local lred='\e[1;31m'   #Light Red
-  local lprpl='\e[1;35m'  #Light Purple
-  local ylw='\e[1;33m'    #Yellow
-  local bold='\e[1m'
-  local rst='\e[0m'    #T
-
-	echo "$bold $lred $1$rst$bold not found $rst "
-	echo "Search package with :"
-	echo "  $lprpl [OFF] $rst :: $bold pacman -F --machinereadable -- /usr/bin/$1 $rst"
-  echo "          :: $bold pacman -Ss $1 $rst"
-	echo "  $lprpl [AUR] $rst :: $bold aura -As $1 $rst"
-
-}
