@@ -21,6 +21,7 @@ call dein#begin('~/.cache/dein')
 	call dein#add('ludovicchabant/vim-lawrencium')
 	call dein#add('tpope/vim-fugitive')
 	call dein#add('terryma/vim-multiple-cursors')
+	source ~/.vim/plugin_conf/_ale.vim
 	"call dein#add('Shougo/neosnippet.vim')
 	""call dein#add('Shougo/neosnippet-snippets')
 call dein#end()
@@ -62,6 +63,7 @@ set laststatus=2
 set confirm
 set visualbell
 set cmdheight=2
+set tabstop=2
 set number
 "set autochdir
 
@@ -89,6 +91,8 @@ command! MakeTags !ctags -R .
 " - ^x^] for tags only
 " - ^n autocomplete from default completion
 "
+
+au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 expandtab smarttab autoindent 
 
 "FILE BOWSING
 " - 
