@@ -1,17 +1,18 @@
 # example user config (see 'hg help config' for more info)
+[hostfingerprint]
 
 [ui]
 # name and email, e.g.
 # username = Jane Doe <jdoe@example.com>
 username =
 interface = curses
+#clonebundles = false
 
 # We recommend enabling tweakdefaults to get slight improvements to
 # the UI over time. Make sure to set HGPLAIN in the environment when
 # writing scripts!
 # tweakdefaults = True
 
-# uncomment to disable color in command output
 # (see 'hg help color' for details)
 color = yes
 merge =  internal:fail
@@ -29,6 +30,7 @@ meld.args = $local $other $base
 
 [extensions]
 # churn =
+#win32text=
 extdiff =
 strip =
 record =
@@ -40,16 +42,28 @@ graphlog =
 purge =
 #hgext.mercurial_keyring =
 color =
+pager =
+rebase =
+share =
+
+[pager]
+pager = LESS='FSRX' less
+ignore = version, help, update, serve, record
+attend = annotate, cat, diff, export, glog, log, qdiff, status, show
 
 [extdiff]
 cmd.vdiff=meld
 
-[color]
-custom.yellow = yellow
-custom.author = bold
-custom.red = red
-custom.green = green
+[win32text]
+warn=FALSE
 
+[encode]
+**=cleverencode:
+
+[decode]
+**=cleverdecode:
+
+[color]
 mode=terminfo
 color.lightgray = 250
 color.darkgray = 239
@@ -70,8 +84,11 @@ log.branch=cyan
 log.summary=lightyellow
 log.description=lightyellow
 log.bookmark=green
-log.tag=darkorange
+log.tag=darkorange bold
 log.activebookmark = green bold underline
+log.node = white bold
+log.node_merge = red bold white_background
+log.rev = white bold
 
 changeset.public=orange bold
 changeset.secret=blue bold
@@ -79,27 +96,49 @@ changeset.draft=brightyellow bold
 
 desc.here=bold blue_background
 
-[templates]
-short={label('custom.yellow',rev)} | {branch}  | {date|shortdate} | {author}\n{desc}\n\n
-medi={label('custom.yellow',rev)}:{label('custom.yellow',node|short)} | {branch} | {date|shortdate} | {author}\n\n[MSG]:\n{splitlines(desc) % ' -> {line}\n'}\n{_files_}
-_files_={file_dels % '  - {label('custom.red',file)}\n'}{file_adds % '  + {label('custom.green',file)}\n'}{file_mods % '  ~ {label('custom.yellow',file)}\n'}\n
-wip = '{label("log.branch", ifeq(branch, "default", "", branch))} {label("changeset.{phase}", rev)} {label("grep.user", author|user)}{label("log.tag", if(tags," {tags}"))} {bookmarks % "{ifeq(bookmark, currentbookmark, label('log.activebookmark', bookmark), label('log.bookmark', bookmark))} "}\n{label(ifcontains(rev, revset('parents()'), 'desc.here'),desc|firstline)}'
+[templatealias]
+merge_parent = "{ifeq(count(parents),2,label('log.node_merge','{p2.branch}')) }"
+isMerge = "{ifeq(count(parents),2,'[merge]') }"
+
+sep = "{label('custom.yellow',':')}"
+
+_rev = "{ifeq(count(parents),2,label('log.node_merge',rev),wcset) }"
+_node= "{label('log.node',node|short)}"
+_branch = "{label('log.branch',branch)}"
+_tags = "{label('log.tag',if(tags,'Tags : {tags}\n'))}"
+
+_files_add="{file_adds % '  + {label('custom.green',file)}\n'}"
+_files_del ="{file_dels % '  - {label('custom.red',file)}\n'}"
+_files_mod ="{file_mods % '  ~ {label('custom.yellow',file)}\n'}"
+_files_ = "{_files_del}{_files_add}{_files_mod}"
+
+_desc_one_line = "{desc|firstline}"
+_desc = "{splitlines(desc) % ' {line}\n'}"
+
+wcset = '{label("changeset.{phase}",rev)}'
+wuser = '{label("grep.user",author|user)}'
+wdesc = '{label(ifcontains(rev, revset('parents()'), 'desc.here'),
+              desc|firstline)}'
+wtags = '{label("log.tag",if(tags,"[{tags}]"))}\n'
+wbook = '{bookmarks % "{ifeq(bookmark, currentbookmark,
+                             label('log.activebookmark', bookmark),
+                             label('log.bookmark', bookmark))} "}'
 wbrch = '{label("log.branch",
                  ifeq(branch, "default",
                       "",
                       branch))}'
-wcset = '{label("changeset.{phase}",
-                rev)}'
-wuser = '{label("grep.user",
-              author|user)}'
-wtags = '{label("log.tag",
-              if(tags," {tags}"))}'
-wbook = '{bookmarks % "{ifeq(bookmark, currentbookmark,
-                             label('log.activebookmark', bookmark),
-                             label('log.bookmark', bookmark))} "}'
-wdesc = '{label(ifcontains(rev, revset('parents()'), 'desc.here'),
-              desc|firstline)}'
-changeset = '{wbrch} {wcset} {wuser} {wtags} {wbook}\n{wdesc}'
+
+
+[templates]
+
+short={_rev} {_branch} | {date|shortdate} | {wuser}\n{wdesc}\n\n
+
+medi={_rev}:{_node} {_branch}  {wuser} {merge_parent}\n{showParents}{_tags}{_desc }{_files_}\n\n
+
+min = '{wbrch} {wcset} {wuser} {wtags} {wbook}\n{wdesc}\n'
+
+annot = {file} {lines %'{rev}:{wuser}:{date|shortdate}\n{label('custom.yellow',index+1)}{sep}{sep}{line}'}
+grp = '{path}:{rev}:{change}:{texts}\n'
 
 [alias]
 icm = commit -i
