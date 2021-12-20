@@ -197,7 +197,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "Layouts"
     [ key "Next"                (modm              , xK_space ) $ sendMessage NextLayout
     , key "Reset"               (modm .|. shiftMask, xK_space ) $ setLayout (XMonad.layoutHook conf)
-    , key "Fullscreen"          (modm              , xK_f     ) $ sendMessage (Toggle NBFULL)
+    , key "Fullscreen"          (modm              , xK_f     ) $ sendMessage (MT.Toggle NBFULL)
     , key "Fullscreen Hide bar" (modm .|. shiftMask, xK_f     ) $ toggleFullScreen
     ] ^++^
   keySet "Windows"
@@ -219,11 +219,19 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Decr  abs size"  (modm .|. shiftMask, xK_d        ) $ withFocused (keysAbsResizeWindow (-10,-10) (1024,752))
     , key "Incr  abs size"  (modm .|. shiftMask, xK_s        ) $ withFocused (keysAbsResizeWindow (10,10) (1024,752))
     ] ^++^
+  keySet "Tag Windows"
+    [ key "" (modm,                    xK_g ) $ tagPrompt myXPConfig (\ s -> withFocused (addTag s))
+    , key "" (modm .|. controlMask,    xK_g ) $ tagDelPrompt myXPConfig
+    , key "" (modm .|. shiftMask,      xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedGlobal s float)
+    , key "" (altMask,                 xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedP s (W.shiftWin "2"))
+    , key "" (altMask .|. shiftMask,   xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedGlobalP s shiftHere)
+    , key "" (altMask .|. controlMask, xK_g ) $ tagPrompt myXPConfig (\s -> focusUpTaggedGlobal s) 
+    ] ^++^
   keySet "Polybar"
     [ key "Toggle"        (modm              , xK_equal     ) togglePolybar
     ] ^++^
   keySet "Projects"
-    [ key "Switch prompt" (modm              , xK_o         ) $ switchProjectPrompt projectsTheme
+    [ key "Switch prompt" (modm              , xK_o         ) $ switchProjectPrompt myXPConfig
     ] ^++^
   keySet "Screens" switchScreen ^++^
   keySet "Workspaces"
