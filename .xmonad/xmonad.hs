@@ -371,6 +371,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      -- default tiling algorithm partitions the screen into two panes
      tiled   = mySpacing 0
                $ mkToggle (NOBORDERS ?? FULL ?? EOT)
+               $ addTabs shrinkText myTabTheme
                $ Tall nmaster delta ratio
 
      -- The default number of windows in the master pane
@@ -534,10 +535,16 @@ projects =
             , projectStartHook = Just . spawn $ myTerminal
             }
   ]
+-----------------------------------------------------------------------
+--Config for Xmonad prompt
 
-projectsTheme :: XPConfig
-projectsTheme = amberXPConfig
-  { bgHLight = "#002b36"
+myXPConfig :: XPConfig
+myXPConfig = def
+  { bgHLight = color05
+  , bgColor = color01
+  , fgColor = color02
+  , fgHLight = color03
+  , borderColor= color14
   , font     = "xft:Bitstream Vera Sans Mono:size=8:antialias=true"
   , height   = 50
   , position = CenteredAt 0.5 0.5
