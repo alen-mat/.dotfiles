@@ -1,9 +1,11 @@
--- This xmonad monster is an amalgam of
---Default xmonad config
---https://gitlab.com/dwt1/dotfiles
---https://github.com/Axarva/dotfiles-2.0
---https://github.com/xintron/configs/blob/22a33b41587c180172392f80318883921c543053/.xmonad/lib/Config.hs#L199
---https://github.com/xintron/xmonad-log
+{--
+	This xmonad monster is an amalgam of
+	- Default xmonad config
+	- https://gitlab.com/dwt1/dotfiles
+	- https://github.com/Axarva/dotfiles-2.0
+	- https://github.com/xintron/configs/blob/22a33b41587c180172392f80318883921c543053/.xmonad/lib/Config.hs#L199
+	- https://github.com/xintron/xmonad-log
+--}
 
 import Control.Monad ( join, when, replicateM_,liftM2)
 
@@ -166,7 +168,12 @@ myBorderWidth   = 2
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
 -- ("right alt"), which does not conflict with emacs keybindings. The
 -- "windows key" is usually mod4Mask.
---
+---mod4Mask= super key
+--mod1Mask= alt key
+--controlMask= ctrl key
+--shiftMask= shift key
+
+altMask = mod1Mask
 myModMask       = mod4Mask
 
 -- The default number of workspaces (virtual screens) and their names.
@@ -190,12 +197,14 @@ myWorkspaces = [webWs,ossWs,devWs,comWs,wrkWs,sysWs,etcWs,"8","9"]
 
 -- Border colors for unfocused and focused windows, respectively.
 --
-myNormalBorderColor  = "#dddddd"
-myFocusedBorderColor = "#ff0000"
+myNormalBorderColor :: String
+myNormalBorderColor   = colorBack
 
+myFocusedBorderColor :: String
+myFocusedBorderColor  = color15
 
 toggleFullScreen = do
-      sendMessage $ Toggle $ FULL
+      sendMessage $ MT.Toggle $ FULL
       sendMessage $ ToggleGap U
 
 
@@ -347,6 +356,7 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
     ]
 
+------------------------------------------------------------------------
 --Keeps window on top of polybar
 addNETSupported :: Atom -> X ()
 addNETSupported x   = withDisplay $ \dpy -> do
@@ -381,6 +391,15 @@ mySpacing i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
 
 fullscreenLayout = renamed [PrependWords "fullscreen"]
                    ( smartBorders $ Full )
+
+myShowWNameTheme :: SWNConfig
+myShowWNameTheme = def
+    { swn_font              = "xft:Ubuntu:bold:size=60"
+    , swn_fade              = 1.0
+    , swn_bgcolor           = "#1c1f24"
+    , swn_color             = "#ffffff"
+    }
+
 
 defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Full
   where
@@ -678,7 +697,7 @@ main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook $ d
 
   mouseBindings      = myMouseBindings,
 
-  layoutHook         = myLayout,
+  layoutHook         = myLayoutHook,
   manageHook         = manageSpawn <+> manageDocks <+> myManageHook <+> manageHook myBaseConfig,
   handleEventHook    = myEventHook,
   logHook            = myPolybarLogHook dbus,
