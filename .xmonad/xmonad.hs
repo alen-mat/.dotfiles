@@ -78,16 +78,58 @@ import qualified Data.Map as M
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.NamedWindows as W
 
-normBord = "#4f4f4f"
-focdBord = "#00B19F"
-fore     = "#DEE3E0"
-back     = "#282c34"
-winType  = "#c678dd"
+{--
+Run X () actions by touching the edge of your screen with your mouse
+https://wiki.archlinux.org/title/xmonad#Controlling_xmonad_with_external_scripts
+--}
+myColorizer :: Window -> Bool -> X (String, String)
+myColorizer = colorRangeFromClassName
+                  (0x28,0x2c,0x34) -- lowest inactive bg
+                  (0x28,0x2c,0x34) -- highest inactive bg
+                  (0xc7,0x92,0xea) -- active bg
+                  (0xc0,0xa7,0x9a) -- inactive fg
+                  (0x28,0x2c,0x34) -- active fg
 
---mod4Mask= super key
---mod1Mask= alt key
---controlMask= ctrl key
---shiftMask= shift key
+-- gridSelect menu layout
+mygridConfig :: p -> GSConfig Window
+mygridConfig colorizer = (buildDefaultGSConfig myColorizer)
+    { gs_cellheight   = 40
+    , gs_cellwidth    = 200
+    , gs_cellpadding  = 6
+    , gs_originFractX = 0.5
+    , gs_originFractY = 0.5
+    , gs_font         = myFont
+    }
+
+spawnSelected' :: [(String, String)] -> X ()
+spawnSelected' lst = gridselect conf lst >>= flip whenJust spawn
+    where conf = def
+                   { gs_cellheight   = 40
+                   , gs_cellwidth    = 200
+                   , gs_cellpadding  = 6
+                   , gs_originFractX = 0.5
+                   , gs_originFractY = 0.5
+                   , gs_font         = myFont
+                   }
+
+myAppGrid = [ ("Audacity", "audacity")
+                 , ("Deadbeef", "deadbeef")
+                 , ("Emacs", "emacsclient -c -a emacs")
+                 , ("Firefox", "firefox")
+                 , ("Geany", "geany")
+                 , ("Geary", "geary")
+                 , ("Gimp", "gimp")
+                 , ("Kdenlive", "kdenlive")
+                 , ("LibreOffice Impress", "loimpress")
+                 , ("LibreOffice Writer", "lowriter")
+                 , ("OBS", "obs")
+                 , ("PCManFM", "pcmanfm")
+                 ]
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+myFont :: String
+myFont = "xft:SauceCodePro Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
 
 myBaseConfig = desktopConfig
 myTerminal      = "kitty"
@@ -225,7 +267,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "" (modm .|. shiftMask,      xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedGlobal s float)
     , key "" (altMask,                 xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedP s (W.shiftWin "2"))
     , key "" (altMask .|. shiftMask,   xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedGlobalP s shiftHere)
-    , key "" (altMask .|. controlMask, xK_g ) $ tagPrompt myXPConfig (\s -> focusUpTaggedGlobal s) 
+    , key "" (altMask .|. controlMask, xK_g ) $ tagPrompt myXPConfig (\s -> focusUpTaggedGlobal s)
     ] ^++^
   keySet "Polybar"
     [ key "Toggle"        (modm              , xK_equal     ) togglePolybar
@@ -342,6 +384,18 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      tiled_ratio = 1/2
 
 myLayout =  gaps [(U,38), (D,0), (R,0), (L,0)] defaultLayouts ||| fullscreenLayout
+
+myTabTheme = def { fontName            = myFont
+                 , activeColor         = color15
+                 , inactiveColor       = color08
+                 , activeBorderColor   = color15
+                 , inactiveBorderColor = colorBack
+                 , activeTextColor     = colorBack
+                 , inactiveTextColor   = color16
+                 }
+
+-- myLayoutHook = showWName' myShowWNameTheme $ myLayout
+myLayoutHook = screenCornerLayoutHook $ myLayout
 
 -- Set default layout per workSpace
 -- myLayout = onWorkspaces ["4"] simpleFloat $ defaultLayouts
@@ -552,7 +606,7 @@ myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 myEventHook = do
-               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook
+               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook <+> screenCornerEventHook
 
 ------------------------------------------------------------------------
 -- Status bars and logging
@@ -574,6 +628,11 @@ myLogHook = fadeInactiveLogHook 0.9
 myStartupHook = do
   spawnOnce "~/.local/bin/autostart.sh bar"
   setWMName "XMonad"
+  addScreenCorners [ (SCLowerLeft,  prevWS)
+                   , (SCLowerRight, nextWS)
+                   , (SCUpperLeft, spawnSelected' myAppGrid)
+                   , (SCUpperRight, goToSelected $ mygridConfig myColorizer)
+                 ]
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 
