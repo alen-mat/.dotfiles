@@ -21,14 +21,19 @@ import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects ( Project(..), dynamicProjects, switchProjectPrompt)
 import XMonad.Actions.DynamicWorkspaces ( removeWorkspace )
 import XMonad.Actions.FloatKeys ( keysAbsResizeWindow, keysResizeWindow)
+import XMonad.Actions.GridSelect
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.RotSlaves (rotSlavesUp)
 import XMonad.Actions.SpawnOn
+import XMonad.Actions.TagWindows
 import XMonad.Actions.WindowGo (runOrRaise)
 import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Config.Azerty
 import XMonad.Config.Desktop
+
+import Colors.TomorrowNight
+
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.EwmhDesktops ( ewmh, ewmhDesktopsEventHook)
@@ -36,6 +41,7 @@ import XMonad.Hooks.FadeInactive ( fadeInactiveLogHook )
 import XMonad.Hooks.InsertPosition ( Focus(Newer), Position(Below), insertPosition)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers ( (-?>), composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, isInProperty)
+import XMonad.Hooks.ScreenCorners
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook ( UrgencyHook(..), withUrgencyHook)
 
@@ -47,20 +53,28 @@ import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook, full
 import XMonad.Layout.Gaps
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
+import XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
 import XMonad.Layout.Maximize (maximize, maximizeRestore)
 import XMonad.Layout.Minimize(minimize)
-import XMonad.Layout.MultiToggle
+import XMonad.Layout.MultiToggle (Toggle(..), mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances
 import XMonad.Layout.NoBorders
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.SimpleFloat
+import XMonad.Layout.ShowWName
 import XMonad.Layout.Spacing ( Spacing, spacingRaw, Border(Border) )
 import XMonad.Layout.Spiral (spiral)
+import XMonad.Layout.SubLayouts
+import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.ToggleLayouts (toggleLayouts, ToggleLayout(Toggle))
+import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
+import XMonad.Layout.WindowNavigation
 
-import XMonad.Prompt ( XPConfig(..), amberXPConfig, XPPosition(CenteredAt))
+
+import XMonad.Prompt ( defaultXPConfig, XPConfig(..), XPPosition(CenteredAt))
 
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
 import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating, defaultFloating, namedScratchpadAction, namedScratchpadManageHook)
@@ -75,6 +89,8 @@ import qualified DBus as D
 import qualified DBus.Client as D
 import qualified Data.ByteString as B
 import qualified Data.Map as M
+import qualified XMonad.Layout.ToggleLayouts as T
+import qualified XMonad.Layout.MultiToggle as MT
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.NamedWindows as W
 
