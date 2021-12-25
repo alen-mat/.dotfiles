@@ -34,7 +34,7 @@ import XMonad.Actions.WithAll (killAll)
 import XMonad.Config.Azerty
 import XMonad.Config.Desktop
 
-import Colors.TomorrowNight
+import Colors.Monnet
 
 
 import XMonad.Hooks.DynamicLog
@@ -201,7 +201,7 @@ myNormalBorderColor :: String
 myNormalBorderColor   = colorBack
 
 myFocusedBorderColor :: String
-myFocusedBorderColor  = color15
+myFocusedBorderColor  = color14
 
 toggleFullScreen = do
       sendMessage $ MT.Toggle $ FULL
@@ -422,12 +422,12 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
 myLayout =  gaps [(U,38), (D,0), (R,0), (L,0)] defaultLayouts ||| fullscreenLayout
 
 myTabTheme = def { fontName            = myFont
-                 , activeColor         = color15
-                 , inactiveColor       = color08
-                 , activeBorderColor   = color15
+                 , activeColor         = color14
+                 , inactiveColor       = color7
+                 , activeBorderColor   = color14
                  , inactiveBorderColor = colorBack
                  , activeTextColor     = colorBack
-                 , inactiveTextColor   = color16
+                 , inactiveTextColor   = color15
                  }
 
 -- myLayoutHook = showWName' myShowWNameTheme $ myLayout
@@ -575,11 +575,11 @@ projects =
 
 myXPConfig :: XPConfig
 myXPConfig = def
-  { bgHLight = color05
-  , bgColor = color01
-  , fgColor = color02
-  , fgHLight = color03
-  , borderColor= color14
+  { bgHLight = color4
+  , bgColor = color0
+  , fgColor = color1
+  , fgHLight = color2
+  , borderColor= color13
   , font     = "xft:Bitstream Vera Sans Mono:size=8:antialias=true"
   , height   = 50
   , position = CenteredAt 0.5 0.5
