@@ -106,8 +106,11 @@
   :defer t)
 
 (use-package markdown-mode
-  :if my/laptop-p
-  :mode ("\\.\\(njk\\|md\\)\\'" . markdown-mode))
+  :ensure t
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
+  :init (setq markdown-command "multimarkdown"))
 
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode)
@@ -120,7 +123,19 @@
   :delight)
 
 (use-package visual-fill-column)
-(use-package zenburn-theme)
+(use-package exotica-theme)
+(use-package org-roam
+  :init
+    (setq org-roam-v2-ack t )
+  :custom
+    (org-roam-directory "~/.emacs_docs/kb_roam_notes")
+    (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n i" . org-roam-node-insert))
+  :config
+  (org-roam-setup)
+)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (provide 'install-pkg)
