@@ -419,7 +419,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      delta   = 3/100
      tiled_ratio = 1/2
 
-myLayout =  gaps [(U,38), (D,0), (R,0), (L,0)] defaultLayouts ||| fullscreenLayout
+myLayout = avoidStruts(defaultLayouts ||| fullscreenLayout)
 
 myTabTheme = def { fontName            = myFont
                  , activeColor         = color14
