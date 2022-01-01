@@ -390,7 +390,7 @@ mySpacing :: Integer -> l a -> ModifiedLayout Spacing l a
 mySpacing i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
 
 fullscreenLayout = renamed [PrependWords "fullscreen"]
-                   ( smartBorders $ Full )
+                   ( noBorders $ Full )
 
 myShowWNameTheme :: SWNConfig
 myShowWNameTheme = def
@@ -419,7 +419,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      delta   = 3/100
      tiled_ratio = 1/2
 
-myLayout = avoidStruts(defaultLayouts ||| fullscreenLayout)
+myLayout = gaps [(U,38), (D,0), (R,0), (L,0)] $ smartBorders ( defaultLayouts ||| fullscreenLayout)
 
 myTabTheme = def { fontName            = myFont
                  , activeColor         = color14
@@ -685,7 +685,7 @@ main :: IO ()
 main = mkDbusClient >>= main'
 
 main' :: D.Client -> IO ()
-main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook $ def {
+main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook$ fullscreenSupport $ def {
   terminal           = myTerminal,
   focusFollowsMouse  = myFocusFollowsMouse,
   clickJustFocuses   = myClickJustFocuses,
@@ -698,7 +698,7 @@ main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook $ d
   mouseBindings      = myMouseBindings,
 
   layoutHook         = myLayoutHook,
-  manageHook         = manageSpawn <+> manageDocks <+> myManageHook <+> manageHook myBaseConfig,
+  manageHook         = manageSpawn <+> manageDocks <+> fullscreenManageHook  <+> myManageHook <+> manageHook myBaseConfig,
   handleEventHook    = myEventHook,
   logHook            = myPolybarLogHook dbus,
   startupHook        = myStartupHook >> addEWMHFullscreen
