@@ -51,7 +51,7 @@ export WEECHAT_HOME="${XDG_CONFIG_HOME:-$HOME/.config}/weechat"
 
 # Other program settings:
 export DICS="/usr/share/stardict/dic/"
-export SUDO_ASKPASS="$HOME/.local/bin/dmenupass"
+export SUDO_ASKPASS="$HOME/.config/rofi/applets/askpass.sh"
 export FZF_DEFAULT_OPTS="--layout=reverse --height 40%"
 export LESS="-R"
 export LESS_TERMCAP_mb="$(printf '%b' '\e[1;31m')"
