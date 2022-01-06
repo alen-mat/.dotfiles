@@ -81,6 +81,7 @@
                 term-mode-hook
                 shell-mode-hook
                 treemacs-mode-hook
+		 neotree-mode-hook
                 eshell-mode-hook))
   (add-hook mode (lambda () (display-line-numbers-mode 0))))
 
@@ -104,6 +105,7 @@
     :global-prefix "C-SPC")
 
   (efs/leader-keys
+    "nt" '(lambda () (interactive) (neotree-toggle))
     "t"  '(:ignore t :which-key "toggles")
     "tt" '(counsel-load-theme :which-key "choose theme")
     "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
@@ -558,6 +560,40 @@
   :config
   (evil-collection-define-key 'normal 'dired-mode-map
     "H" 'dired-hide-dotfiles-mode))
+
+(use-package neotree
+  :ensure t
+  :bind ("<f8>" . 'neotree-toggle)
+  :init
+  ;; slow rendering
+  (setq inhibit-compacting-font-caches t)
+
+  ;; set icons theme
+  (setq neo-theme (if (display-graphic-p) 'icons 'arrow))
+
+  ;; Every time when the neotree window is opened, let it find current file and jump to node
+  (setq neo-smart-open t)
+
+  ;; When running ‘projectile-switch-project’ (C-c p p), ‘neotree’ will change root automatically
+  (setq projectile-switch-project-action 'neotree-projectile-action)
+  (setq neo-theme 'icons)
+  ;; show hidden files
+  (setq-default neo-show-hidden-files t)
+  (evil-set-initial-state 'neotree-mode 'normal)
+  (evil-define-key 'normal neotree-mode-map
+    (kbd "RET") 'neotree-enter
+    (kbd "c")   'neotree-create-node
+    (kbd "r")   'neotree-rename-node
+    (kbd "d")   'neotree-delete-node
+    (kbd "j")   'neotree-next-node
+    (kbd "k")   'neotree-previous-node
+    (kbd "g")   'neotree-refresh
+    (kbd "C")   'neotree-change-root
+    (kbd "I")   'neotree-hidden-file-toggle
+    (kbd "H")   'neotree-hidden-file-toggle
+    (kbd "q")   'neotree-hide
+    (kbd "l")   'neotree-enter
+    ))
 
 ;; Make gc pauses faster by decreasing the threshold.
 (setq gc-cons-threshold (* 2 1000 1000))
