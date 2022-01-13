@@ -156,9 +156,14 @@ This is the configuration we've been building in the *Emacs From Scratch* series
       :global-prefix "C-SPC")
 
     (efs/leader-keys
+      "td" '(lambda()(interactive)(tab-bar-new-tab))
+      "tc" '(lambda()(interactive)(tab-bar-close-tab))     
+      "tst" '(lambda()(interactive)(tab-bar-switch-to-tab))     
+
       "nt" '(lambda () (interactive) (neotree-toggle))
-      "t"  '(:ignore t :which-key "toggles")
-      "tt" '(counsel-load-theme :which-key "choose theme")
+
+      "to"  '(:ignore t :which-key "toggles")
+      "th" '(counsel-load-theme :which-key "choose theme")
       "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
 
   (use-package evil
@@ -578,7 +583,7 @@ This snippet adds a hook to =org-mode= buffers so that =efs/org-babel-tangle-con
 
 #+end_src
 
-* Development
+ Development
 
 ** Languages
 
@@ -745,6 +750,35 @@ You can use the pyvenv package to use =virtualenv= environments in Emacs.  The =
     :config
     (pyvenv-mode 1))
 
+#+end_src
+
+*** MarkDown
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+:mode "\\.md\\'"
+  :config
+  (setq markdown-command "marked")
+  (defun dw/set-markdown-header-font-sizes ()
+    (dolist (face '((markdown-header-face-1 . 1.2)
+                    (markdown-header-face-2 . 1.1)
+                    (markdown-header-face-3 . 1.0)
+                    (markdown-header-face-4 . 1.0)
+                    (markdown-header-face-5 . 1.0)))
+      (set-face-attribute (car face) nil :weight 'normal :height (cdr face))))
+
+  (defun dw/markdown-mode-hook ()
+    (dw/set-markdown-header-font-sizes))
+
+  (add-hook 'markdown-mode-hook 'dw/markdown-mode-hook))
+
+#+end_src
+
+*** JSON
+
+#+begin_src emacs-lisp
+  (use-package json-mode
+    :mode ("\\.json"))
 #+end_src
 
 ** Company Mode
