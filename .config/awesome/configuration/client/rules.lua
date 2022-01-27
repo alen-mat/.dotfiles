@@ -102,9 +102,9 @@ awful.rules.rules = {{
 	    margins = {
 		top = dpi(8),
 		right = dpi(8),
-								}
-	    })
+	    }
+	})
 		
-	}
+   }
 }
 }
