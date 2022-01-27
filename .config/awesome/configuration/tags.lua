@@ -5,22 +5,22 @@ local apps = require('configuration.apps')
 local dpi = require('beautiful').xresources.apply_dpi
 
 local tags = {{
-    text = 'web',
+    text = '一',
     screen = 1
 }, {
-    text = 'dev',
+    text = '二',
     screen = 1
 }, {
-    text = 'term',
+    text = '三',
     screen = 1
 }, {
-    text = 'file',
+    text = '四',
     screen = 1
 }, {
-    text = 'chat',
+    text = '五',
     screen = 1
 }, {
-    text = 'misc',
+    text = '六',
     screen = 1
 }}
 
