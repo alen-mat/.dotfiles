@@ -2,6 +2,7 @@ local awful = require('awful')
 local gears = require('gears')
 local client_keys = require('configuration.client.keys')
 local client_buttons = require('configuration.client.buttons')
+local dpi = require('beautiful').xresources.apply_dpi
 
 -- Rules
 awful.rules.rules = {{
@@ -72,20 +73,38 @@ awful.rules.rules = {{
         placement = awful.placement.centered
     }
 },{
-		rule_any = {
-				role = {
-          "AlarmWindow",
-          "pop-up",
-          "Preferences",
-          "setup",
-        }
-		},
-		properties = {
-				floating = true,
-				above = true,
-	      skip_decoration = true,
-        placement = awful.placement.centered
+    rule_any = {
+	role = {
+		"AlarmWindow",
+		"pop-up",
+		"Preferences",
+		"setup",
+	},
+	class = {"forticlient", "FortiClient",}
+   },
+   properties = {
+	floating = true,
+	above = true,
+	skip_decoration = true,
+        placement = awful.placement.centered	
+  }
+},{
+   rule_any = {
+	name = {"Cliq Notifier"}
+   },
+   properties = {
+	focus = false,
+	floating = true,
+	above = true,
+	skip_decoration = true,
+        placement = awful.placement.top_right(panel, {
+	    honor_workarea = true,	
+	    margins = {
+		top = dpi(8),
+		right = dpi(8),
+								}
+	    })
 		
-		}
+	}
 }
 }
