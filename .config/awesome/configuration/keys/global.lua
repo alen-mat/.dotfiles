@@ -102,24 +102,33 @@ end, {
 --
 --Screenshot
 -- 
+
+awful.key({}, 'Print', function()
+    awful.util.spawn_with_shell(apps.default.screenshot_file)
+end, {
+    description = 'Save desktop screenshot to file',
+    group = 'Screenshot'
+}),
+awful.key({'Control'}, 'Print', function()
+    awful.util.spawn_with_shell(apps.default.screenshot_clip)
+end, {
+    description = 'Save desktop screenshot to clipboard',
+    group = 'Screenshot'
+}),
 awful.key({'Control', 'Shift'}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.delayed_screenshot)
+    awful.util.spawn_with_shell(apps.default.region_screenshot)
 end, {
     description = 'mark an area and screenshot it (clipboard)',
     group = 'Screenshot'
 }),
-awful.key({altkey}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.screenshot)
+awful.key({'Control',altkey}, 'Print', function()
+    awful.util.spawn_with_shell(apps.default.active_window_screenshot)
 end, {
-    description = 'take a screenshot of your active monitor and copy it to clipboard',
+    description = 'Screenshot active window to clipboard',
     group = 'Screenshot'
 }),
-awful.key({'Control'}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.region_screenshot)
-end, {
-    description = 'mark an area and screenshot it to your clipboard',
-    group = 'Screenshot'
-}),
+
+
 awful.key({modkey}, 'Return', function()
     awful.util.spawn_with_shell(apps.default.terminal)
 end, {
