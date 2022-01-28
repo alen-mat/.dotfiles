@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+
+if [[ ${1-} ]];then
+  MAIM="${1}"
+else
+  exit
+fi
+
+
+file_name="Screen_shot_$(date +%s).png" 
+action="~/Pictures/Screenshots/${file_name}"
+notification_content="Screenshoet saved - ${file_name}"
+if [[ ${2-} ]];then
+  if [ $2 = "clip" ]; then
+     action="| xclip -selection clipboard -t image/png"
+     notification_content="Screenshot saved to clipboard"
+  fi
+fi
+
+take_screen_shot(){
+  echo $MAIM
+  case $MAIM in
+    screen)
+      cmnd="maim ${action}" 
+      ;;
+
+    selection)
+      cmnd="maim -s ${action}"
+      ;;
+
+    active_window)
+      cmnd="maim -i $(xdotool getactivewindow) ${action}"
+      ;;
+
+    *)
+      notify-send "¯\_(ツ)_/¯"
+  		return
+      ;;
+  esac
+  eval $cmnd
+  notify-send "${notification_content}"
+}
+
+take_screen_shot
