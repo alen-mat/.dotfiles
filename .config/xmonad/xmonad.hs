@@ -225,6 +225,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Network Manager (Rofi)"   (modm ,xK_bracketright          ) $ spawn $ "~/.config/rofi/applets/network-manager.sh"
     , key "Power Menu (Rofi)"        (modm ,xK_semicolon             ) $ spawn $ "~/.config/rofi/applets/powermenu.sh"
     , key "Lock screen (Rofi)"       (modm .|. controlMask, xK_l     ) $ spawn $ "betterlockscreen -l"
+    , key "Bitwarden (Rofi)"         (modm .|. controlMask .|. altMask ,xK_slash) $ spawn $ "~/.config/rofi/applets/bwmenu main"
     ] ^++^
   keySet "Audio"
     [ key "Mute"          (0, xF86XK_AudioMute              ) $ spawn "amixer -q set Master toggle"
@@ -294,8 +295,9 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "" (altMask .|. shiftMask,   xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedGlobalP s shiftHere)
     , key "" (altMask .|. controlMask, xK_g ) $ tagPrompt myXPConfig (\s -> focusUpTaggedGlobal s)
     ] ^++^
-  keySet "Polybar"
-    [ key "Toggle"        (modm              , xK_equal     ) togglePolybar
+  keySet "Bar & Widgets"
+    [ key "Polybar Toggle"           (modm , xK_equal ) togglePolybar
+    , key "Eww widget Toggle"        (modm , xK_minus ) $ spawn "~/.config/eww/launch_eww"
     ] ^++^
   keySet "Projects"
     [ key "Switch prompt" (modm              , xK_o         ) $ switchProjectPrompt myXPConfig
@@ -419,7 +421,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      delta   = 3/100
      tiled_ratio = 1/2
 
-myLayout = gaps [(U,38), (D,0), (R,0), (L,0)] $ smartBorders ( defaultLayouts ||| fullscreenLayout)
+myLayout = gaps [(U,38), (D,0), (R,0), (L,0)] $ smartBorders ( defaultLayouts )
 
 myTabTheme = def { fontName            = myFont
                  , activeColor         = color14
