@@ -533,7 +533,7 @@ scratchpadApp app = NS (getAppName app) (getAppCommand app) (isInstance app) def
 
 runScratchpadApp = namedScratchpadAction scratchpads . getAppName
 
-scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify ]
+scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify]
 
 
 ------------------------------------------------------------------------
