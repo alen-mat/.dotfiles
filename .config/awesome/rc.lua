@@ -58,8 +58,8 @@ function Move_mouse_onto_focused_client()
 end
 
 if beautiful.cursor_warp then
-    _G.client.connect_signal("focus", Move_mouse_onto_focused_client)
-    _G.client.connect_signal("swapped", Move_mouse_onto_focused_client)
+  --  _G.client.connect_signal("focus", Move_mouse_onto_focused_client)
+  --  _G.client.connect_signal("swapped", Move_mouse_onto_focused_client)
 end
 
 -- Enable sloppy focus, so that focus follows mouse.

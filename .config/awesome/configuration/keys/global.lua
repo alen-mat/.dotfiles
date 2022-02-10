@@ -68,7 +68,7 @@ end, {
     description = 'focus previous by index',
     group = 'client'
 }),
-awful.key({modkey}, 'r', function()
+awful.key({modkey}, 'p', function()
     _G.awesome.spawn(apps.default.rofi)
 end, {
     description = 'show rofi menu',

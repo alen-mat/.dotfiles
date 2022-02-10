@@ -1,6 +1,6 @@
 local beautiful = require('beautiful')
 local wibox = require('wibox')
-local TaskList = require('widget.task-list')
+local TaskList = require('widget.my.task-list')
 local dpi = require('beautiful').xresources.apply_dpi
 
 local BottomBar = function(s, offset)

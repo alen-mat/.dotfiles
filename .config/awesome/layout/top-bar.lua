@@ -5,7 +5,7 @@ local mat_icon_button = require('widget.material.icon-button')
 local separators = require('widget.material.separator')
 local markup = require('widget.material.markup')
 local wibox = require('wibox')
-local TagList = require('widget.tag-list')
+local TagList = require('widget.my.tag-list')
 local gears = require('gears')
 local dpi = require('beautiful').xresources.apply_dpi
 local table = awful.util.table or gears.table
@@ -67,14 +67,14 @@ local TopBar = function(s, offset)
 
     -- SYSTEM DETAILS
     -- ==============
-    local volume_widget = require('widget.volume')
-    local battery_widget = require('widget.battery')
-    local clock_widget = require('widget.clock')
-    local mem_widget = require('widget.memory')
-    local cpu_widget = require('widget.cpu')
-    local temprature_widget = require('widget.temprature')
-    local storage_widget = require('widget.storage')
-    local net = require('widget.net')
+    local volume_widget = require('widget.my.volume')
+    local battery_widget = require('widget.my.battery')
+    local clock_widget = require('widget.my.clock')
+    local mem_widget = require('widget.my.memory')
+    local cpu_widget = require('widget.my.cpu')
+    local temprature_widget = require('widget.my.temprature')
+    local storage_widget = require('widget.my.storage')
+    local net = require('widget.my.net')
     local net_sent = net({
         settings = function()
             widget:set_markup(markup.font(beautiful.font, net_now.sent))
@@ -87,7 +87,7 @@ local TopBar = function(s, offset)
     })
     local system_details = wibox.widget {
             -- Systray
-            systray,
+            
             create_arrow(nil, beautiful.primary.hue_200, beautiful.primary.hue_100),
             -- Internet Speed
             wibox.widget{
@@ -99,7 +99,7 @@ local TopBar = function(s, offset)
                 layout = wibox.layout.fixed.horizontal
             },
             -- Battery
-            create_arrow (battery_widget, beautiful.primary.hue_200, beautiful.primary.hue_100),
+            --create_arrow (battery_widget, beautiful.primary.hue_200, beautiful.primary.hue_100),
             -- Memory
             create_icon('', beautiful.accent.hue_500),
             mem_widget,
@@ -134,6 +134,8 @@ local TopBar = function(s, offset)
                     spacing = dpi(4),
                     layout = wibox.layout.fixed.horizontal
                 }, beautiful.primary.hue_200, beautiful.primary.hue_100),
+								systray,
+								battery_widget,
             -- Layout
                 wibox.widget {
                     arrow(beautiful.primary.hue_100, beautiful.accent.hue_200),
