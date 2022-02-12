@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+case $1 in
+     -a|--app-launcher) 
+			~/.config/Rofi/scripts/app_launcher.sh
+     	#~/.config/rofi/bin/launcher_slate
+			;;
+		 -bm|--bluetooth-manager)
+			~/.config/Rofi/scripts/bluetooth-manager.sh
+			;;
+		 -nm|--network-manager)
+			~/.config/Rofi/scripts/network-manager.sh
+			;;
+		 -p|--power-menu)
+			~/.config/Rofi/scripts/powermenu.sh
+			#~/.config/rofi/bin/powermenu
+			;;
+		 -bw|--bitwarden)
+ 			 ~/.config/Rofi/scripts/bwmenu main
+			;;
+		 *)
+			;;
+esac

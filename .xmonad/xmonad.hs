@@ -220,12 +220,12 @@ showKeybindings x = addName "Show Keybindings" . io $
 myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
     [ key "Terminal"                 (modm .|. shiftMask  , xK_Return) $ spawn (XMonad.terminal conf)
-    , key "Apps (Rofi)"              (modm                , xK_p     ) $ spawn $ "~/.config/Rofi/scripts/app_launcher.sh"
-    , key "Bluetooth Manager (Rofi)" (modm ,xK_bracketleft           ) $ spawn $ "~/.config/Rofi/scripts/bluetooth-manager.sh"
-    , key "Network Manager (Rofi)"   (modm ,xK_bracketright          ) $ spawn $ "~/.config/Rofi/scripts/network-manager.sh"
-    , key "Power Menu (Rofi)"        (modm ,xK_semicolon             ) $ spawn $ "~/.config/Rofi/scripts/powermenu.sh"
+    , key "Apps (Rofi)"              (modm                , xK_p     ) $ spawn $ "~/.local/bin/rofi_helper -a"
+    , key "Bluetooth Manager (Rofi)" (modm ,xK_bracketleft           ) $ spawn $ "~/.local/bin/rofi_helper -bm"
+    , key "Network Manager (Rofi)"   (modm ,xK_bracketright          ) $ spawn $ "~/.local/bin/rofi_helper -nm"
+    , key "Power Menu (Rofi)"        (modm ,xK_semicolon             ) $ spawn $ "~/.local/bin/rofi_helper -p"
     , key "Lock screen (Rofi)"       (modm .|. controlMask, xK_l     ) $ spawn $ "betterlockscreen -l"
-    , key "Bitwarden (Rofi)"         (modm .|. controlMask .|. altMask ,xK_slash) $ spawn $ "~/.config/Rofi/scripts/bwmenu main"
+    , key "Bitwarden (Rofi)"         (modm .|. controlMask .|. altMask ,xK_slash) $ spawn $ "~/.local/bin/rofi_helper -bw"
     ] ^++^
   keySet "Audio"
     [ key "Mute"          (0, xF86XK_AudioMute              ) $ spawn "amixer -q set Master toggle"
