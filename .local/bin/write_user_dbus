@@ -1,0 +1,8 @@
+#https://unix.stackexchange.com/questions/84437/how-do-i-make-my-laptop-sleep-when-it-reaches-some-low-battery-threshold/84438#84438
+#!/bin/sh
+touch $HOME/.local/share/Xdbus
+chmod 600 $HOME/.local/share/Xdbus
+env | grep DBUS_SESSION_BUS_ADDRESS > $HOME/.local/share/Xdbus
+echo 'export DBUS_SESSION_BUS_ADDRESS' >> $HOME/.local/share/Xdbus
+exit 0
+

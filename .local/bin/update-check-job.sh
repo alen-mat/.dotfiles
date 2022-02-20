@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-if [ "$RUN_BY_CRON" == "TRUE" ];then
-	eval "export $(egrep -z DBUS_SESSION_BUS_ADDRESS /proc/$(pgrep -u $LOGNAME gnome-session)/environ)";
+DISPLAY=:0
+if [ -r ~/.local/share/Xdbus ]; then
+  source ~/.local/share/Xdbus
 fi
 dir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 NOTIFY_ICON=~/.icons/Vimix/symbolic/status/software-update-available-symbolic.svg
