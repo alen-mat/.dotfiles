@@ -57,17 +57,17 @@ function Move_mouse_onto_focused_client()
     })
 end
 
-if beautiful.cursor_warp then
+--if beautiful.cursor_warp then
   --  _G.client.connect_signal("focus", Move_mouse_onto_focused_client)
   --  _G.client.connect_signal("swapped", Move_mouse_onto_focused_client)
-end
+--end
 
 -- Enable sloppy focus, so that focus follows mouse.
-_G.client.connect_signal('mouse::enter', function(c)
-    c:emit_signal('request::activate', 'mouse_enter', {
-        raise = true
-    })
-end)
+--_G.client.connect_signal('mouse::enter', function(c)
+--    c:emit_signal('request::activate', 'mouse_enter', {
+--        raise = true
+--    })
+--end)
 
 -- Make the focused window have a glowing border
 _G.client.connect_signal('focus', function(c)
@@ -75,6 +75,16 @@ _G.client.connect_signal('focus', function(c)
 end)
 _G.client.connect_signal('unfocus', function(c)
     c.border_color = beautiful.border_normal
+end)
+
+--titlebar only when window is floating
+-- add window rule with --> properties = { titlebars_enabled = true }
+client.connect_signal("property::floating", function(c)
+    if c.floating then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
 end)
 
 if beautiful.title_bar then

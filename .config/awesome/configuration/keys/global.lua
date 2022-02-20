@@ -69,10 +69,10 @@ end, {
     group = 'client'
 }),
 awful.key({modkey}, 'p', function()
-    _G.awesome.spawn(apps.default.rofi)
+    awful.util.spawn_with_shell(apps.default.rofi)
 end, {
     description = 'show rofi menu',
-    group = 'rofi'
+    group = 'Rofi'
 }), 
 awful.key({modkey}, 'u', function()
     awful.client.urgent.jumpto()
@@ -129,7 +129,7 @@ end, {
 }),
 
 
-awful.key({modkey}, 'Return', function()
+awful.key({modkey,'Shift'}, 'Return', function()
     awful.util.spawn_with_shell(apps.default.terminal)
 end, {
     description = 'open a terminal',
@@ -140,7 +140,7 @@ awful.key({modkey}, ';', function()
     awful.util.spawn_with_shell(apps.default.power_command)
 end, {
     description = 'end session menu',
-    group = 'rofi'
+    group = 'Rofi'
 }), awful.key({altkey, 'Shift'}, 'Right', function()
     awful.tag.incmwfact(0.05)
 end, {
@@ -235,7 +235,7 @@ end, {
     _G.toggle_splash()
 end, {
     description = 'toggle splash terminal',
-    group = 'launcher'
+    group = 'ScratchPad'
 }), 
 --
 --Audio

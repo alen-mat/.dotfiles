@@ -9,14 +9,18 @@ return {
     -- List of apps to start by default on some actions
     default = {
         terminal = 'kitty',
-        rofi = rofi_command,
+
+        rofi = '~/.local/bin/rofi_helper -a',
+        power_command = '~/.local/bin/rofi_helper -p',
+
         lock = 'better',
         splash = 'kitty -T SplashTerminal -o background_opacity=0.95',
+
 				screenshot_file = '~/.local/bin/maim_helper screen',
         screenshot_clip = '~/.local/bin/maim_helper screen clip',
 				region_screenshot = '~/.local/bin/maim_helper selection clip',
         active_window_screenshot = '~/.local/bin/maim_helper active_window clip',
-        power_command = '~/.config/rofi/applets/powermenu.sh',
+
         browser = 'env firefox',
         editor = 'kitty',
         social = 'env discord',
