@@ -165,6 +165,7 @@ local TopBar = function(s, offset)
         stretch = false,
         bg = beautiful.primary.hue_100,
         fg = beautiful.fg_normal,
+	opacity=0.85,
     })
 
     panel:struts({
