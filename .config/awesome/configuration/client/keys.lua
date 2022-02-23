@@ -26,6 +26,13 @@ end, {
 end, {
     description = 'close',
     group = 'client'
+}),awful.key({ modkey}, "Return", 
+    function (c) 
+        c:swap(awful.client.getmaster())
+end,{
+    description = "move to master", 
+		group = "client"
 }))
+
 
 return clientKeys
