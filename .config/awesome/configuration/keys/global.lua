@@ -295,6 +295,12 @@ end, {
 end, {
     description = 'toggle mute',
     group = 'hotkeys'
+}), awful.key({}, 'XF86AudioMicMute', function()
+    awful.spawn('amixer set Capture toggle')
+    _G.update_volume()
+end, {
+    description = 'toggle mic mute',
+    group = 'hotkeys'
 }), awful.key({modkey}, 'o', awful.client.movetoscreen, {
     description = 'move window to next screen',
     group = 'client'
