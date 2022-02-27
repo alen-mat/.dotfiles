@@ -2,7 +2,8 @@
 
 case $1 in
      -a|--app-launcher) 
-			~/.config/Rofi/scripts/app_launcher.sh
+			#~/.config/Rofi/scripts/app_launcher.sh
+			~/.config/rofi/launchers/slate/launcher.sh
      	#~/.config/rofi/bin/launcher_slate
 			;;
 		 -bm|--bluetooth-manager)
@@ -17,6 +18,9 @@ case $1 in
 			;;
 		 -bw|--bitwarden)
  			 ~/.config/Rofi/scripts/bwmenu main
+			;;
+		 -gc|--greenclip)
+			~/.config/Rofi/scripts/greenclip
 			;;
 		 *)
 			;;

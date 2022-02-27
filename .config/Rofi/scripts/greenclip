@@ -2,8 +2,8 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 echo $DIR
-
+cmd="~/.local/bin/greenclip "
 dir=$DIR/../styles
 
-rofi -theme $dir/launcher.rasi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
+rofi -theme $dir/launcher.rasi -modi "Clipboard:$cmd print" -show Clipboard -run-command '{cmd}'
 
