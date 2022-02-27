@@ -154,11 +154,11 @@ myTerminal      = "kitty"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
-myFocusFollowsMouse = True
+myFocusFollowsMouse = False
 
 -- Whether clicking on a window to focus also passes the click to the window
 myClickJustFocuses :: Bool
-myClickJustFocuses = False
+myClickJustFocuses =  True
 
 -- Width of the window border in pixels.
 --
@@ -206,6 +206,9 @@ myFocusedBorderColor  = color14
 toggleFullScreen = do
       sendMessage $ MT.Toggle $ FULL
       sendMessage $ ToggleGap U
+      sendMessage $ ToggleGap R
+      sendMessage $ ToggleGap L
+      sendMessage $ ToggleGap D
 
 
 ------------------------------------------------------------------------
@@ -224,6 +227,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Bluetooth Manager (Rofi)" (modm ,xK_bracketleft           ) $ spawn $ "~/.local/bin/rofi_helper -bm"
     , key "Network Manager (Rofi)"   (modm ,xK_bracketright          ) $ spawn $ "~/.local/bin/rofi_helper -nm"
     , key "Power Menu (Rofi)"        (modm ,xK_semicolon             ) $ spawn $ "~/.local/bin/rofi_helper -p"
+    , key "ClipBoard (Rofi)"         (modm ,xK_v) $ spawn $ "~/.local/bin/rofi_helper -gc"
     , key "Lock screen (Rofi)"       (modm .|. controlMask, xK_l     ) $ spawn $ "betterlockscreen -l"
     , key "Bitwarden (Rofi)"         (modm .|. controlMask .|. altMask ,xK_slash) $ spawn $ "~/.local/bin/rofi_helper -bw"
     ] ^++^
@@ -421,7 +425,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      delta   = 3/100
      tiled_ratio = 1/2
 
-myLayout = gaps [(U,38), (D,0), (R,0), (L,0)] $ smartBorders ( defaultLayouts )
+myLayout = gaps [(U,40), (D,10), (R,10), (L,10)] $ smartBorders ( defaultLayouts )
 
 myTabTheme = def { fontName            = myFont
                  , activeColor         = color14
@@ -512,6 +516,7 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
             , isSplash
             ]                                  -?> doCenterFloat
     , title =? "Picture in picture" -?> doFloat
+		, className =? "fluent-reader"  -?> doFloat
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  -?> doFloat
     , isFullscreen                             -?> doFullFloat
     , pure True                                -?> tileBelow
