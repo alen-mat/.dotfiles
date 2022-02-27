@@ -1,7 +1,9 @@
 #!/usr/bin/env sh
 mpd &
 picom &
-[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
+
+#[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
+~/.local/bin/bartoggle #tint2
 
 deviceid=$(xinput list | grep "Touchpad" | awk '{print $5}'|cut -d= -f2)
 if [[ ${deviceid-} ]];then

@@ -8,7 +8,7 @@ main() {
   if [ "$dnd" == true ];then 
 		end_dnd
 	else
-		dunstctl set-paused true;
+		sleep 3 && dunstctl close && dunstctl set-paused true
 	fi
 }
 main "$@"
