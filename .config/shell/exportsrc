@@ -6,6 +6,8 @@
 export __WS='~/WorkSpace'
 export SUDO_PROMPT='[sudo] %p 🔒 : '
 
+export QT_STYLE_OVERRIDE=kvantum
+
 export TERM=xterm-color
 export CLICOLOR=1
 export LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33'
