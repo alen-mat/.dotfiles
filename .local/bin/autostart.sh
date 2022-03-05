@@ -1,6 +1,7 @@
 #!/usr/bin/env sh
 mpd &
-picom &
+picom -f --experimental-backend -b &
+
 
 #[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
 ~/.local/bin/bartoggle #tint2
