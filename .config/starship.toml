@@ -48,3 +48,7 @@ disabled = false
 show_always = true
 
 
+[hg_branch]
+format = "on [🌱 $branch](bold purple)"
+truncation_length = 4
+truncation_symbol = ""
