@@ -2,8 +2,8 @@
 # Any customization should be done in ~/.gtkrc-2.0.mine instead.
 
 include "/home/alen/.gtkrc-2.0.mine"
-gtk-theme-name="Arc-Dark"
-gtk-icon-theme-name="Vimix"
+gtk-theme-name="Sweet-Dark"
+gtk-icon-theme-name="OieIcons"
 gtk-font-name="Droid Sans 11"
 gtk-cursor-theme-name="Vimix"
 gtk-cursor-theme-size=0
