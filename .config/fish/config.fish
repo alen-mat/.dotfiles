@@ -6,8 +6,8 @@ set -e fish_user_paths
 set -U fish_user_paths $HOME/.local/bin ~/Apps/jdk-15.0.1/bin $fish_user_paths
 
 
-source exports.fish
-source alias.fish
+source ~/.config/fish/exports.fish
+source ~/.config/fish/alias.fish
 
 #https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
 function bind_bang
