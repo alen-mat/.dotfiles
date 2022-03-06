@@ -2,9 +2,10 @@
 mpd &
 picom -f --experimental-backend -b &
 
+xsetroot -cursor_name left_ptr &
 
 #[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
-~/.local/bin/bartoggle #tint2
+~/.local/bin/bartoggle & #tint2
 
 deviceid=$(xinput list | grep "Touchpad" | awk '{print $5}'|cut -d= -f2)
 if [[ ${deviceid-} ]];then
@@ -14,7 +15,7 @@ if [[ ${deviceid-} ]];then
 	done
 fi
 
-greenclip daemon
+greenclip daemon &
 emacs --bg-daemon &
 #bluetooth
 #nm-applet 
