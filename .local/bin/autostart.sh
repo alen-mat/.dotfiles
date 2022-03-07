@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 mpd &
-picom -f --experimental-backend -b &
+picom -f --experimental-backend --config ~/.config/picom/picom  -b&
 
 xsetroot -cursor_name left_ptr &
 
