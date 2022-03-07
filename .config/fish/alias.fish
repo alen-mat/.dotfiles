@@ -51,3 +51,5 @@ alias nis='npm i -S'
 alias set_server_opts='export JAVA_OPTS="-XX:PermSize=250M -XX:MaxPermSize=250M -Xms256m -Xmx512m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8991"'
 
 alias j!=jbang
+
+alias ytube-mp3="youtube-dl --extract-audio --audio-format mp3 "

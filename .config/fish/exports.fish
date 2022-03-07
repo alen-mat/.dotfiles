@@ -5,6 +5,17 @@
 
 set -U fish_greeting ""
 
+set -x XDG_CONFIG_HOME $HOME/.config
+set -x XDG_CACHE_HOME $HOME/.cache
+set -x XDG_DATA_HOME $HOME/.local/share
+set -x XDG_STATE_HOME $HOME/.local/state
+
+#XDG_RUNTIME_DIR #pam_systemd sets this to /run/user/$UID
+
+#analogous to PATH
+set -x XDG_DATA_DIRS /usr/local/share:/usr/share
+set -x XDG_CONFIG_DIRS /etc/xdg
+
 set -x __WS         '~/WorkSpace'
 set -x SUDO_PROMPT  '[sudo] %p 🔒 : '
 
