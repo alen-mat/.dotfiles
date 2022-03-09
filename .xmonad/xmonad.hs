@@ -52,7 +52,9 @@ import XMonad.Layout.BoringWindows (boringWindows, focusUp, focusDown)
 import XMonad.Layout.CenteredMaster (centerMaster)
 import XMonad.Layout.Cross (simpleCross)
 import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook, fullscreenSupport, fullscreenFull)
-import XMonad.Layout.Gaps
+import XMonad.Layout.Gaps ( Direction2D(D, L, R, U), gaps, setGaps, GapMessage(DecGap, ToggleGaps, IncGap) )
+
+
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
 import XMonad.Layout.LimitWindows (limitWindows, increaseLimit, decreaseLimit)
@@ -205,10 +207,7 @@ myFocusedBorderColor  = color14
 
 toggleFullScreen = do
       sendMessage $ MT.Toggle $ FULL
-      sendMessage $ ToggleGap U
-      sendMessage $ ToggleGap R
-      sendMessage $ ToggleGap L
-      sendMessage $ ToggleGap D
+      sendMessage $ ToggleGaps
 
 
 ------------------------------------------------------------------------
@@ -410,7 +409,7 @@ myShowWNameTheme = def
 defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Full
   where
      -- default tiling algorithm partitions the screen into two panes
-     tiled   = mySpacing 0
+     tiled   = mySpacing 5
                $ mkToggle (NOBORDERS ?? FULL ?? EOT)
                $ addTabs shrinkText myTabTheme
                $ Tall nmaster delta ratio
