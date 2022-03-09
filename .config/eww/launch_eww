@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+open_widgets=$(~/.local/bin/eww windows | grep '\*'|cut -d '*' -f 2 ) 
+if [[ ${open_widgets-} ]]; then
+	for widget in $open_widgets 
+	do
+     ~/.local/bin/eww close $widget&
+	done
+else
+	~/.local/bin/eww open-many weather_side time_side smol_calendar player_side sys_side sliders_side&
+fi
