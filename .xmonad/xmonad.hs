@@ -231,7 +231,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Bitwarden (Rofi)"         (modm .|. controlMask .|. altMask ,xK_slash) $ spawn $ "~/.local/bin/rofi_helper -bw"
     ] ^++^
   keySet "Audio"
-    [ key "Mute"          (0, xF86XK_AudioMute              ) $ spawn "amixer -q set Master toggle"
+    [ key "Mute"          (0, xF86XK_AudioMicMute           ) $ spawn "amixer -q set Capture toggle"
+    , key "Mute"          (0, xF86XK_AudioMute              ) $ spawn "amixer -q set Master toggle"
     , key "Lower volume"  (0, xF86XK_AudioLowerVolume       ) $ spawn "amixer -q set Master 5%-"
     , key "Raise volume"  (0, xF86XK_AudioRaiseVolume       ) $ spawn "amixer -q set Master 5%+"
     , key "Play / Pause"  (0, xF86XK_AudioPlay              ) $ spawn $ "playerctl play-pause && echo 'play-pause' | ~/.local/bin/usr_notification_helper media"

@@ -1,69 +1,75 @@
-# Configuration from archcraft os
-# 
-
 [global]
-monitor = 0
-follow = mouse
-geometry = "300x30-7+40"
-indicate_hidden = yes
-shrink = no
-separator_height = 4
-separator_color = auto
-padding = 10
-horizontal_padding = 10
-frame_width = 1
-transparency = 0
-sort = yes
-idle_threshold = 120
-font = Iosevka Custom 9
-line_height = 4
-corner_radius = 0
-markup = full
-plain_text = no
-format = "<big><b>%s</b></big>\n<small>%b</small>"
-alignment = left
-show_age_threshold = 60
-word_wrap = yes
-bounce_freq = 0
-ignore_newline = no
-stack_duplicates = yes
-hide_duplicate_count = no
-show_indicators = yes
-indicate_hidden = yes
-icon_position = left
-min_icon_size = 10
-max_icon_size = 48
-sticky_history = yes
-history_length = 30
-always_run_script = true
-title = Dunst
-class = Dunst
-idle_threshold = 5
-dmenu = /usr/bin/rofi -dmenu -p "Open URL"
-browser = /usr/bin/firefox --new-tab
-frame_color = "#f00f0f"
-frame_width = 0
+	monitor = 0
+	follow = mouse
+	geometry = "300x30-7+40"
+	indicate_hidden = yes
+	shrink = no
+	separator_height = 4
+	separator_color = auto
+	padding = 10
+	horizontal_padding = 10
+	frame_width = 1
+	transparency = 0
+	sort = yes
+	idle_threshold = 120
+	font = Iosevka Custom 9
+	line_height = 4
+	corner_radius = 0
+	markup = full
+	plain_text = no
+	format = "<big><b>%s</b></big>\n<small>%b</small>"
+	alignment = left
+	show_age_threshold = 60
+	word_wrap = yes
+	bounce_freq = 0
+	ignore_newline = no
+	stack_duplicates = yes
+	hide_duplicate_count = no
+	show_indicators = yes
+	indicate_hidden = yes
+	icon_position = left
+	min_icon_size = 10
+	max_icon_size = 48
+	sticky_history = yes
+	history_length = 30
+	always_run_script = true
+	title = Dunst
+	class = Dunst
+	idle_threshold = 5
+	dmenu = /usr/bin/rofi -dmenu -p "Open URL"
+	browser = /usr/bin/firefox --new-tab
+	frame_color = "#f00f0f"
+	frame_width = 0
+	mouse_left_click = do_action
+	mouse_middle_click = close_all
+	mouse_right_click = close_current
 
 [shortcuts]
-close = ctrl+shift+space
-close_all = ctrl+shift+space
-history = ctrl+grave
-context = ctrl+shift+period
+	close = ctrl+shift+space
+	close_all = ctrl+shift+space
+	history = ctrl+grave
+	context = ctrl+shift+period
+
+[fullscreen_delay_everything]
+	fullscreen = delay
+[fullscreen_show_critical]
+   msg_urgency = critical
+   fullscreen = show
 
 [urgency_low]
-timeout = 3
-background = "#212B30"
-foreground = "#C4C7C5"
-frame_color = "#4DD0E1"
+	timeout = 3
+	background = "#212B30"
+	foreground = "#C4C7C5"
+	frame_color = "#4DD0E1"
 
 [urgency_normal]
-timeout = 5
-background = "#212B30"
-foreground = "#C4C7C5"
-frame_color = "#4DD0E1"
+	timeout = 5
+	background = "#212B30"
+	foreground = "#C4C7C5"
+	frame_color = "#4DD0E1"
 
 [urgency_critical]
-timeout = 0
-background = "#212B30"
-foreground = "#EC407A"
-frame_color = "#EC407A"
+	timeout = 0
+	background = "#212B30"
+	foreground = "#EC407A"
+	frame_color = "#EC407A"
