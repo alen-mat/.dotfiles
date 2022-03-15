@@ -20,6 +20,13 @@ else
 	alias ll="ls -al" # List all files in current directory in long list format
 end
 
+if type -q bat
+	if type -q fzf
+		alias pfzf="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
+	end
+	alias cat="bat"
+end
+
 alias clear="clear && printf '\e[3J'"
 
 alias cp="cp -iv" 

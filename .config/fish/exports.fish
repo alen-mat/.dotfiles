@@ -1,17 +1,10 @@
-# profile file. Runs on login. Environmental variables are set here.
-
-# If you don't plan on reverting to bash, you can remove the link in ~/.profile
-# to clean up.
-
 set -U fish_greeting ""
 
 set -x XDG_CONFIG_HOME $HOME/.config
 set -x XDG_CACHE_HOME $HOME/.cache
 set -x XDG_DATA_HOME $HOME/.local/share
 set -x XDG_STATE_HOME $HOME/.local/state
-
 #XDG_RUNTIME_DIR #pam_systemd sets this to /run/user/$UID
-
 #analogous to PATH
 set -x XDG_DATA_DIRS /usr/local/share:/usr/share
 set -x XDG_CONFIG_DIRS /etc/xdg
@@ -35,16 +28,32 @@ fish_add_path $HOME/.jbang/bin
 
 set -x LANG en_US.UTF-8
 
+if type -q bat
+	set -x BAT_CONFIG_DIR "$XDG_CONFIG_HOME/batcat"
+	set -x BAT_CONFIG_PATH "$BAT_CONFIG_DIR/batcat.cfg"
+	set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
+else
+	set -x LESS "-R"
+	set -x LESS_TERMCAP_mb "(printf '%b' '\e[1;31m')"
+	set -x LESS_TERMCAP_md "(printf '%b' '\e[1;36m')"
+	set -x LESS_TERMCAP_me "(printf '%b' '\e[0m')"
+	set -x LESS_TERMCAP_so "(printf '%b' '\e[01;44;33m')"
+	set -x LESS_TERMCAP_se "(printf '%b' '\e[0m')"
+	set -x LESS_TERMCAP_us "(printf '%b' '\e[1;32m')"
+	set -x LESS_TERMCAP_ue "(printf '%b' '\e[0m')"
+	set -x LESSOPEN "| /usr/bin/highlight -O ansi %s 2>/dev/null"
+
+	set -x MANPAGER "less -R --use-color -Dd+r -Du+b"
+end
+
 # Default programs:
 set -x EDITOR vim
 set -x TERMINAL "terminator"
 set -x BROWSER "firefox"
+set -x VISUAL vim
 
 set -x JAVA_HOME /usr/lib/jvm/java-8-openjdk 
 
-set -x XDG_CONFIG_HOME "$HOME/.config"
-set -x XDG_DATA_HOME "$HOME/.local/share"
-set -x XDG_CACHE_HOME "$HOME/.cache"
 #set -x XINITRC "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
 #set -x XAUTHORITY "$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
 set -x NOTMUCH_CONFIG "$HOME/.config/notmuch-config"
@@ -70,20 +79,10 @@ set -x HISTFILE "$HOME/.local/share/history"
 set -x DICS "/usr/share/stardict/dic/"
 set -x SUDO_ASKPASS "$HOME/.config/rofi/applets/askpass.sh"
 set -x FZF_DEFAULT_OPTS "--layout reverse --height 40%"
-set -x LESS "-R"
-set -x LESS_TERMCAP_mb "(printf '%b' '\e[1;31m')"
-set -x LESS_TERMCAP_md "(printf '%b' '\e[1;36m')"
-set -x LESS_TERMCAP_me "(printf '%b' '\e[0m')"
-set -x LESS_TERMCAP_so "(printf '%b' '\e[01;44;33m')"
-set -x LESS_TERMCAP_se "(printf '%b' '\e[0m')"
-set -x LESS_TERMCAP_us "(printf '%b' '\e[1;32m')"
-set -x LESS_TERMCAP_ue "(printf '%b' '\e[0m')"
-set -x LESSOPEN "| /usr/bin/highlight -O ansi %s 2>/dev/null"
 set -x QT_QPA_PLATFORMTHEME "gtk2"	# Have QT use gtk2 theme.
 set -x MOZ_USE_XINPUT2 "1"		# Mozilla smooth scrolling/touchpads.
 set -x AWT_TOOLKIT "MToolkit wmname LG3D"	#May have to install wmname
 set -x _JAVA_AWT_WM_NONREPARENTING 1	# Fix for Java applications in dwm
-set -x MANPAGER "less -R --use-color -Dd+r -Du+b"
 
 # This is the list for lf icons:
 set -x LF_ICONS "di 📁:\
