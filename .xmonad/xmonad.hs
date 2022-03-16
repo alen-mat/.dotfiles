@@ -425,7 +425,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      delta   = 3/100
      tiled_ratio = 1/2
 
-myLayout = gaps [(U,40), (D,10), (R,10), (L,10)] $ smartBorders ( defaultLayouts )
+myLayout = gaps [(U,35), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts )
 
 myTabTheme = def { fontName            = myFont
                  , activeColor         = color14

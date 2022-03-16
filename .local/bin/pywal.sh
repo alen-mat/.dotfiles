@@ -2,9 +2,9 @@
 
 # Color files
 PFILE="$HOME/.config/polybar/sleek/colors.ini"
-RFILE="$HOME/.config/rofi/colors.rasi"
-WALL_LOC=$(cat  ~/.config/nitrogen/bg-saved.cfg | grep "file="|cut -d'=' -f 2)
-
+RFILE="$HOME/.config/Rofi/styles/colors.rasi"
+#WALL_LOC=$(cat  ~/.config/nitrogen/bg-saved.cfg | grep "file="|cut -d'=' -f 2)
+WALL_LOC=$1
 # Get colors
 pywal_get() {
 	wal -i "$1" -q -t

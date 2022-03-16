@@ -2,6 +2,8 @@
 if [ -r ~/.local/share/Xdbus ]; then
   source ~/.local/share/Xdbus
 fi
-WALLPAPERS=~/Pictures/wall
-DISPLAY=:0 feh --bg-fill --randomize $WALLPAPERS
+WALL_DIR=~/Pictures/wall
+WALLPAPER=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
+DISPLAY=:0 feh --bg-fill $WALLPAPER
+~/.local/bin/pywal.sh $WALLPAPER
 

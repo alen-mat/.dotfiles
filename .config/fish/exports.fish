@@ -9,12 +9,37 @@ set -x XDG_STATE_HOME $HOME/.local/state
 set -x XDG_DATA_DIRS /usr/local/share:/usr/share
 set -x XDG_CONFIG_DIRS /etc/xdg
 
+# Default programs:
+set -x EDITOR "vim"
+set -x TERMINAL "kitty"
+set -x BROWSER "firefox"
+set -x VISUAL "vim"
+set -x READER "zathura"
+set -x VIDEO "mpv"
+set -x IMAGE "sxiv"
+set -x COLORTERM "truecolor"
+set -x OPENER "xdg-open"
+set -x PAGER "less"
+set -x WM "xmonad"
+
 set -x __WS         '~/WorkSpace'
 set -x SUDO_PROMPT  '[sudo] %p 🔒 : '
 
 set -x QT_STYLE_OVERRIDE            kvantum
 set -x QT_QPA_PLATFORMTHEME         "qt5ct"  
 set -x QT_AUTO_SCREEN_SCALE_FACTOR  1
+set -x GTK_IM_MODULE               'fcitx'
+set -x QT_IM_MODULE                'fcitx'
+set -x SDL_IM_MODULE               'fcitx'
+set -x XMODIFIERS                  '@im fcitx'
+
+
+# Scaling
+set -x QT_AUTO_SCREEN_SCALE_FACTOR 0
+set -x QT_SCALE_FACTOR 1
+set -x QT_SCREEN_SCALE_FACTORS "1;1;1"
+set -x GDK_SCALE 1
+set -x GDK_DPI_SCALE 1
 
 set -x TERM      xterm-color
 set -x CLICOLOR  1
@@ -27,13 +52,13 @@ fish_add_path $HOME/Apps/jdk-15.0.1/bin
 fish_add_path $HOME/.jbang/bin
 
 set -x LANG en_US.UTF-8
+set -x LESS "-R"
 
 if type -q bat
 	set -x BAT_CONFIG_DIR "$XDG_CONFIG_HOME/batcat"
 	set -x BAT_CONFIG_PATH "$BAT_CONFIG_DIR/batcat.cfg"
 	set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 else
-	set -x LESS "-R"
 	set -x LESS_TERMCAP_mb "(printf '%b' '\e[1;31m')"
 	set -x LESS_TERMCAP_md "(printf '%b' '\e[1;36m')"
 	set -x LESS_TERMCAP_me "(printf '%b' '\e[0m')"
@@ -45,12 +70,6 @@ else
 
 	set -x MANPAGER "less -R --use-color -Dd+r -Du+b"
 end
-
-# Default programs:
-set -x EDITOR vim
-set -x TERMINAL "terminator"
-set -x BROWSER "firefox"
-set -x VISUAL vim
 
 set -x JAVA_HOME /usr/lib/jvm/java-8-openjdk 
 
