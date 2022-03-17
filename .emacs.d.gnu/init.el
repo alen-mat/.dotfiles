@@ -105,9 +105,14 @@
     :global-prefix "C-SPC")
 
   (efs/leader-keys
+    "td" '(lambda()(interactive)(tab-bar-new-tab))
+    "tc" '(lambda()(interactive)(tab-bar-close-tab))     
+    "tst" '(lambda()(interactive)(tab-bar-switch-to-tab))     
+
     "nt" '(lambda () (interactive) (neotree-toggle))
-    "t"  '(:ignore t :which-key "toggles")
-    "tt" '(counsel-load-theme :which-key "choose theme")
+
+    "to"  '(:ignore t :which-key "toggles")
+    "th" '(counsel-load-theme :which-key "choose theme")
     "fde" '(lambda () (interactive) (find-file (expand-file-name "~/.emacs.d/Emacs.org")))))
 
 (use-package evil
@@ -279,7 +284,7 @@
   (setq org-habit-graph-column 60)
 
   (setq org-todo-keywords
-    '((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d!)")
+    '((sequence "TODO(t)" "NEXT(n)" "INPROGRESS(ip)" "|" "DONE(d!)")
       (sequence "BACKLOG(b)" "PLAN(p)" "READY(r)" "ACTIVE(a)" "REVIEW(v)" "WAIT(w@/!)" "HOLD(h)" "|" "COMPLETED(c)" "CANC(k@)")))
 
   (setq org-refile-targets
@@ -376,6 +381,27 @@
       ("m" "Metrics Capture")
       ("mw" "Weight" table-line (file+headline "~/.emacs_doc/org-mode/Metrics.org" "Weight")
        "| %U | %^{Weight} | %^{Notes} |" :kill-buffer t)))
+
+  (setq org-agenda-custom-commands
+    '(("X" agenda "" nil ("agenda.html" "agenda.ps"))
+      ("Y" alltodo "" nil ("todo.html" "todo.txt" "todo.ps"))
+      ("h" "Agenda and Home-related tasks"
+       ((agenda "")
+        (tags-todo "home")
+        (tags "garden"))
+       nil
+       ("~/views/home.html"))
+      ("o" "Agenda and Office-related tasks"
+       ((agenda)
+        (tags-todo "work")
+        (tags "office"))
+       nil
+       ("~/views/office.ps" "~/calendars/office.ics"))))
+  (setq org-agenda-exporter-settings
+    '((ps-number-of-columns 2)
+      (ps-landscape-mode t)
+      (org-agenda-add-entry-text-maxlines 5)
+      (htmlize-output-type 'css)))
 
   (define-key global-map (kbd "C-c j")
     (lambda () (interactive) (org-capture nil "jj")))
@@ -484,6 +510,26 @@
   :config
   (pyvenv-mode 1))
 
+(use-package markdown-mode
+:mode "\\.md\\'"
+  :config
+  (setq markdown-command "marked")
+  (defun dw/set-markdown-header-font-sizes ()
+    (dolist (face '((markdown-header-face-1 . 1.2)
+                    (markdown-header-face-2 . 1.1)
+                    (markdown-header-face-3 . 1.0)
+                    (markdown-header-face-4 . 1.0)
+                    (markdown-header-face-5 . 1.0)))
+      (set-face-attribute (car face) nil :weight 'normal :height (cdr face))))
+
+  (defun dw/markdown-mode-hook ()
+    (dw/set-markdown-header-font-sizes))
+
+  (add-hook 'markdown-mode-hook 'dw/markdown-mode-hook))
+
+(use-package json-mode
+  :mode ("\\.json"))
+
 (use-package company
   :after lsp-mode
   :hook (lsp-mode . company-mode)
@@ -530,6 +576,25 @@
 
 (use-package rainbow-delimiters
   :hook (prog-mode . rainbow-delimiters-mode))
+
+;;https://tsdh.wordpress.com/2009/03/04/integrating-emacs-org-mode-with-the-awesome-window-manager/
+  ;; update agenda file after changes to org files
+  (defun th-org-mode-init ()
+    (add-hook 'after-save-hook 'th-org-update-agenda-file t t))
+
+  (add-hook 'org-mode-hook 'th-org-mode-init)
+
+  ;; that's the export function
+  (defun th-org-update-agenda-file (&optional force)
+    (interactive)
+    (save-excursion
+      (save-window-excursion
+        (let ((file "/tmp/org-agenda.txt"))
+          (org-agenda-list)
+          (org-write-agenda file)org-agenda-custom-commands))))
+
+  ;; do it once at startup
+  (th-org-update-agenda-file t)
 
 (use-package dired
   :ensure nil
