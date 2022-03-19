@@ -68,7 +68,7 @@ import XMonad.Layout.Renamed
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.SimpleFloat
 import XMonad.Layout.ShowWName
-import XMonad.Layout.Spacing ( Spacing, spacingRaw, Border(Border) )
+import XMonad.Layout.Spacing ( Spacing, spacingRaw, Border(Border), toggleSmartSpacing, toggleScreenSpacingEnabled, toggleWindowSpacingEnabled )
 import XMonad.Layout.Spiral (spiral)
 import XMonad.Layout.SubLayouts
 import XMonad.Layout.Tabbed
@@ -206,8 +206,13 @@ myFocusedBorderColor :: String
 myFocusedBorderColor  = color14
 
 toggleFullScreen = do
-      sendMessage $ MT.Toggle $ FULL
-      sendMessage $ ToggleGaps
+      sendMessage( MT.Toggle NBFULL)
+			>> sendMessage ToggleStruts
+      >> toggleScreenSpacingEnabled
+      >> toggleWindowSpacingEnabled
+      >> sendMessage ToggleGaps
+			>> toggleSmartSpacing
+
 
 
 ------------------------------------------------------------------------
@@ -425,7 +430,7 @@ defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Ful
      delta   = 3/100
      tiled_ratio = 1/2
 
-myLayout = gaps [(U,35), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts )
+myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts )
 
 myTabTheme = def { fontName            = myFont
                  , activeColor         = color14
@@ -705,7 +710,7 @@ main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook$ fu
   mouseBindings      = myMouseBindings,
 
   layoutHook         = myLayoutHook,
-  manageHook         = manageSpawn <+> manageDocks <+> fullscreenManageHook  <+> myManageHook <+> manageHook myBaseConfig,
+  manageHook         = fullscreenManageHook <+> manageSpawn <+> manageDocks <+>  myManageHook <+> manageHook myBaseConfig,
   handleEventHook    = myEventHook,
   logHook            = myPolybarLogHook dbus,
   startupHook        = myStartupHook >> addEWMHFullscreen
