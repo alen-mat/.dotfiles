@@ -13,6 +13,7 @@ import Control.Monad ( join, when, replicateM_,liftM2)
 import Data.Foldable ( traverse_ )
 import Data.Maybe (maybeToList)
 import Data.List (elemIndex)
+import Data.Semigroup
 
 import Graphics.X11.ExtraTypes.XF86
 
@@ -39,6 +40,7 @@ import Colors.Monnet
 
 
 import XMonad.Hooks.DynamicLog
+import XMonad.Hooks.DynamicProperty
 import XMonad.Hooks.EwmhDesktops ( ewmh, ewmhDesktopsEventHook)
 import XMonad.Hooks.FadeInactive ( fadeInactiveLogHook )
 import XMonad.Hooks.InsertPosition ( Focus(Newer), Position(Below), insertPosition)
@@ -663,8 +665,13 @@ myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)
 -- return (All True) if the default handler is to be run afterwards. To
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
+myDynamicEventHook :: Event -> X All
+myDynamicEventHook = dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> floating)
+        where floating = customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)
+
+
 myEventHook = do
-               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook <+> screenCornerEventHook <+> serverModeEventHook 
+               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook <+> screenCornerEventHook <+> myDynamicEventHook <+> serverModeEventHook 
 ------------------------------------------------------------------------
 -- Status bars and logging
 
