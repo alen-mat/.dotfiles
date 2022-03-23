@@ -5,6 +5,7 @@
 	- https://github.com/Axarva/dotfiles-2.0
 	- https://github.com/xintron/configs/blob/22a33b41587c180172392f80318883921c543053/.xmonad/lib/Config.hs#L199
 	- https://github.com/xintron/xmonad-log
+  - https://github.com/gvolpe/nix-config/blob/master/home/programs/xmonad/config.hs
 --}
 
 import Control.Monad ( join, when, replicateM_,liftM2)
@@ -44,6 +45,7 @@ import XMonad.Hooks.InsertPosition ( Focus(Newer), Position(Below), insertPositi
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers ( (-?>), composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, isInProperty)
 import XMonad.Hooks.ScreenCorners
+import XMonad.Hooks.ServerMode
 import XMonad.Hooks.SetWMName
 import XMonad.Hooks.UrgencyHook ( UrgencyHook(..), withUrgencyHook)
 
@@ -206,7 +208,7 @@ myFocusedBorderColor :: String
 myFocusedBorderColor  = color14
 
 toggleFullScreen = do
-      sendMessage( MT.Toggle NBFULL)
+      sendMessage( MT.Toggle FULL)
 			>> sendMessage ToggleStruts
       >> toggleScreenSpacingEnabled
       >> toggleWindowSpacingEnabled
@@ -262,6 +264,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Files"           (modm .|. controlMask,  xK_f    ) $ runScratchpadApp nautilus
     , key "Screen recorder" (modm .|. controlMask,  xK_r    ) $ runScratchpadApp scr
     , key "Spotify"         (modm .|. controlMask,  xK_s    ) $ runScratchpadApp spotify
+		, key "kitty"           (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
     ] ^++^
   keySet "System"
     [ key "Toggle status bar gap"          (modm                      , xK_b )     toggleStruts
@@ -445,7 +448,7 @@ myTabTheme = def { fontName            = myFont
 myLayoutHook = screenCornerLayoutHook $ myLayout
 
 -- Set default layout per workSpace
--- myLayout = onWorkspaces ["4"] simpleFloat $ defaultLayouts
+-- myLayout = onWorkspaces ["4"] simpleFloat $ smartBorders(defaultLayouts)
 
 ------------------------------------------------------------------------
 -- Window rules:
@@ -484,9 +487,10 @@ nautilus  = ClassApp "Org.gnome.Nautilus"   "nautilus"
 office    = ClassApp "libreoffice-draw"     "libreoffice-draw"
 pavuctrl  = ClassApp "Pavucontrol"          "pavucontrol"
 scr       = ClassApp "SimpleScreenRecorder" "simplescreenrecorder"
-spotify   = ClassApp "Spotify"              "myspotify"
+spotify   = ClassApp "Spotify"              "spotify"
 vlc       = ClassApp "Vlc"                  "vlc"
 yad       = ClassApp "Yad"                  "yad --text-info --text 'XMonad'"
+kterm     = ClassApp "kitty-scratch"        "kitty --class 'kitty-scratch'"
 
 myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
  where
@@ -543,7 +547,7 @@ scratchpadApp app = NS (getAppName app) (getAppCommand app) (isInstance app) def
 
 runScratchpadApp = namedScratchpadAction scratchpads . getAppName
 
-scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify]
+scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify, kterm]
 
 
 ------------------------------------------------------------------------
@@ -660,8 +664,7 @@ myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)
 -- combine event hooks use mappend or mconcat from Data.Monoid.
 --
 myEventHook = do
-               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook <+> screenCornerEventHook
-
+               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook <+> screenCornerEventHook <+> serverModeEventHook 
 ------------------------------------------------------------------------
 -- Status bars and logging
 

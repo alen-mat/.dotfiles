@@ -7,6 +7,8 @@ xsetroot -cursor_name left_ptr &
 #[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
 ~/.local/bin/bartoggle & #tint2
 
+[ -x "$(command -v hhp)" ] && hhp&
+
 deviceid=$(xinput list | grep "Touchpad" | awk '{print $5}'|cut -d= -f2)
 if [[ ${deviceid-} ]];then
 	device_props=("libinput Middle Emulation Enabled" "libinput Tapping Enabled")
