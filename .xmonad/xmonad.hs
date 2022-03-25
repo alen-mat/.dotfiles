@@ -57,7 +57,7 @@ import XMonad.Layout.CenteredMaster (centerMaster)
 import XMonad.Layout.Cross (simpleCross)
 import XMonad.Layout.Fullscreen (fullscreenEventHook, fullscreenManageHook, fullscreenSupport, fullscreenFull)
 import XMonad.Layout.Gaps ( Direction2D(D, L, R, U), gaps, setGaps, GapMessage(DecGap, ToggleGaps, IncGap) )
-
+import XMonad.Layout.IndependentScreens
 
 import XMonad.Layout.IndependentScreens
 import XMonad.Layout.LayoutModifier (ModifiedLayout)
@@ -106,6 +106,9 @@ import qualified XMonad.Util.NamedWindows as W
 Run X () actions by touching the edge of your screen with your mouse
 https://wiki.archlinux.org/title/xmonad#Controlling_xmonad_with_external_scripts
 --}
+
+workSpacePerMonitor = True
+
 myColorizer :: Window -> Bool -> X (String, String)
 myColorizer = colorRangeFromClassName
                   (0x28,0x2c,0x34) -- lowest inactive bg
@@ -180,7 +183,7 @@ myBorderWidth   = 2
 --shiftMask= shift key
 
 altMask = mod1Mask
-myModMask       = mod4Mask
+myModMask = mod4Mask
 
 -- The default number of workspaces (virtual screens) and their names.
 -- By default we use numeric strings, but any string may be used as a
@@ -198,8 +201,12 @@ comWs = "4" --"com"
 wrkWs = "5" --"wrk"
 sysWs = "6" --"sys"
 etcWs = "7" --"etc"
-myWorkspaces :: [WorkspaceId]
-myWorkspaces = [webWs,ossWs,devWs,comWs,wrkWs,sysWs,etcWs,"8","9"]
+normalWorkspaces :: [WorkspaceId]
+normalWorkspaces = [webWs,ossWs,devWs,comWs,wrkWs,sysWs,etcWs,"8","9"]
+
+dwmLikeWorkspaces = withScreens 2 normalWorkspaces
+
+myWorkspaces = if (workSpacePerMonitor) then dwmLikeWorkspaces else normalWorkspaces
 
 -- Border colors for unfocused and focused windows, respectively.
 --
@@ -211,11 +218,11 @@ myFocusedBorderColor  = color14
 
 toggleFullScreen = do
       sendMessage( MT.Toggle FULL)
-			>> sendMessage ToggleStruts
+      >> sendMessage ToggleStruts
       >> toggleScreenSpacingEnabled
       >> toggleWindowSpacingEnabled
       >> sendMessage ToggleGaps
-			>> toggleSmartSpacing
+      >> toggleSmartSpacing
 
 
 
@@ -266,7 +273,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Files"           (modm .|. controlMask,  xK_f    ) $ runScratchpadApp nautilus
     , key "Screen recorder" (modm .|. controlMask,  xK_r    ) $ runScratchpadApp scr
     , key "Spotify"         (modm .|. controlMask,  xK_s    ) $ runScratchpadApp spotify
-		, key "kitty"           (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
+    , key "kitty"           (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
     ] ^++^
   keySet "System"
     [ key "Toggle status bar gap"          (modm                      , xK_b )     toggleStruts
@@ -328,8 +335,12 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     keySet s ks = subtitle s : ks
     key n k a = (k, addName n a)
     action m = if m == shiftMask then "Move to " else "Switch to "
-    -- mod-[1..9]: Switch to workspace N | mod-shift-[1..9]: Move client to workspace N
-    switchWsById =
+    -- mod-[1..9]: Switch to workspace N | mod-shift-[1..9]: Move client to workspace N	
+    switchWsById = if (workSpacePerMonitor) then
+      [ key (action m <> show i) (m .|. modm, k) (windows $ onCurrentScreen f i)
+          | (i, k) <- zip (workspaces' conf) [xK_1 .. xK_9]
+          , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+    else
       [ key (action m <> show i) (m .|. modm, k) (windows $ f i)
           | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
           , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
