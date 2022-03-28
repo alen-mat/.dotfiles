@@ -19,6 +19,7 @@ import Graphics.X11.ExtraTypes.XF86
 
 import System.Exit
 import System.IO
+import System.Process
 
 import XMonad
 import XMonad.Actions.CycleWS
@@ -106,8 +107,12 @@ import qualified XMonad.Util.NamedWindows as W
 Run X () actions by touching the edge of your screen with your mouse
 https://wiki.archlinux.org/title/xmonad#Controlling_xmonad_with_external_scripts
 --}
+workSpacePerMonitor = False
+--result <- readCreateProcess (shell "xrandr | grep " connected " | awk '{ print$1 }'|wc -l") myHaskellString
+--workSpacePerMonitor = if (result > 1) then True else False
 
-workSpacePerMonitor = True
+myHaskellString :: String
+myHaskellString = "string"
 
 myColorizer :: Window -> Bool -> X (String, String)
 myColorizer = colorRangeFromClassName
@@ -237,14 +242,15 @@ showKeybindings x = addName "Show Keybindings" . io $
 
 myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
-    [ key "Terminal"                 (modm .|. shiftMask  , xK_Return) $ spawn (XMonad.terminal conf)
-    , key "Apps (Rofi)"              (modm                , xK_p     ) $ spawn $ "~/.local/bin/rofi_helper -a"
-    , key "Bluetooth Manager (Rofi)" (modm ,xK_bracketleft           ) $ spawn $ "~/.local/bin/rofi_helper -bm"
-    , key "Network Manager (Rofi)"   (modm ,xK_bracketright          ) $ spawn $ "~/.local/bin/rofi_helper -nm"
-    , key "Power Menu (Rofi)"        (modm ,xK_semicolon             ) $ spawn $ "~/.local/bin/rofi_helper -p"
-    , key "ClipBoard (Rofi)"         (modm ,xK_v) $ spawn $ "~/.local/bin/rofi_helper -gc"
-    , key "Lock screen (Rofi)"       (modm .|. controlMask, xK_l     ) $ spawn $ "betterlockscreen -l"
-    , key "Bitwarden (Rofi)"         (modm .|. controlMask .|. altMask ,xK_slash) $ spawn $ "~/.local/bin/rofi_helper -bw"
+    [ key "Terminal"                 (modm .|. shiftMask, xK_Return      ) $ spawn (XMonad.terminal conf)
+    , key "Apps (Rofi)"              (modm              , xK_p           ) $ spawn $ "~/.local/bin/rofi_helper -a"
+    , key "Bluetooth Manager (Rofi)" (modm              , xK_bracketleft ) $ spawn $ "~/.local/bin/rofi_helper -bm"
+    , key "Network Manager (Rofi)"   (modm              , xK_bracketright) $ spawn $ "~/.local/bin/rofi_helper -nm"
+    , key "Power Menu (Rofi)"        (modm              , xK_semicolon   ) $ spawn $ "~/.local/bin/rofi_helper -p"
+    , key "ClipBoard (Rofi)"         (modm              , xK_v           ) $ spawn $ "~/.local/bin/rofi_helper -gc"
+    , key "Emoji Picker (Rofi)"      (modm .|. altMask  , xK_period      ) $ spawn $ "~/.local/bin/rofi_helper -ep"
+    , key "Bitwarden (Rofi)"         (modm .|. altMask  , xK_slash       ) $ spawn $ "~/.local/bin/rofi_helper -bw"
+    , key "Lock screen"              (modm .|. altMask  , xK_l           ) $ spawn $ "betterlockscreen -l"
     ] ^++^
   keySet "Audio"
     [ key "Mute"          (0, xF86XK_AudioMicMute           ) $ spawn "amixer -q set Capture toggle"
@@ -273,7 +279,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Files"           (modm .|. controlMask,  xK_f    ) $ runScratchpadApp nautilus
     , key "Screen recorder" (modm .|. controlMask,  xK_r    ) $ runScratchpadApp scr
     , key "Spotify"         (modm .|. controlMask,  xK_s    ) $ runScratchpadApp spotify
-    , key "kitty"           (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
+    , key "Kitty"           (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
+    , key "Emacs"           (modm .|. controlMask,  xK_e    ) $ runScratchpadApp emScratch
     ] ^++^
   keySet "System"
     [ key "Toggle status bar gap"          (modm                      , xK_b )     toggleStruts
@@ -502,8 +509,10 @@ pavuctrl  = ClassApp "Pavucontrol"          "pavucontrol"
 scr       = ClassApp "SimpleScreenRecorder" "simplescreenrecorder"
 spotify   = ClassApp "Spotify"              "spotify"
 vlc       = ClassApp "Vlc"                  "vlc"
-yad       = ClassApp "Yad"                  "yad --text-info --text 'XMonad'"
+yad       = ClassApp "Yad"                  "yad --text-info --text 'XMonad' --show-uri --width=300 --height=200 --center --wrap --window-icon='text-editor' --no-buttons "
+
 kterm     = ClassApp "kitty-scratch"        "kitty --class 'kitty-scratch'"
+emScratch = TitleApp "_emacs_scratchpad_"   "emacsclient --frame-parameters '((name . \"_emacs_scratchpad_\"))' -nc"
 
 myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
  where
@@ -514,6 +523,7 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
   isRole              = stringProperty "WM_WINDOW_ROLE"
   tileBelow           = insertPosition Below Newer
   doCalendarFloat   = customFloating (W.RationalRect (11 / 15) (1 / 48) (1 / 4) (1 / 4))
+  doYadDiagFloat    = customFloating (W.RationalRect (1 / 6)   (1 / 6)  (2 / 3) (2 / 3))
   manageScratchpads = namedScratchpadManageHook scratchpads
   anyOf :: [Query Bool] -> Query Bool
   anyOf = foldl (<||>) (pure False)
@@ -521,6 +531,7 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
   match = anyOf . fmap isInstance
   manageApps = composeOne
     [ isInstance calendar                      -?> doCalendarFloat
+    , isInstance yad                           -?> doYadDiagFloat
     , match [ gimp, office ]                   -?> doFloat
     , match [ audacious
             , eog
@@ -528,7 +539,7 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
             , pavuctrl
             , scr
             ]                                  -?> doCenterFloat
-    , match [ btm, evince, spotify, vlc, yad ] -?> doFullFloat
+    , match [ btm, evince, spotify, vlc] -?> doFullFloat
     , resource =? "desktop_window"             -?> doIgnore
     , resource =? "kdesktop"                   -?> doIgnore
     , anyOf [ isBrowserDialog
@@ -560,7 +571,7 @@ scratchpadApp app = NS (getAppName app) (getAppCommand app) (isInstance app) def
 
 runScratchpadApp = namedScratchpadAction scratchpads . getAppName
 
-scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify, kterm]
+scratchpads = scratchpadApp <$> [ audacious, btm, nautilus, scr, spotify, kterm, emScratch]
 
 
 ------------------------------------------------------------------------
