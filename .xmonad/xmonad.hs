@@ -238,7 +238,7 @@ toggleFullScreen = do
 
 showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
 showKeybindings x = addName "Show Keybindings" . io $
-  E.bracket (spawnPipe $ getAppCommand yad) hClose (\h -> hPutStr h (unlines $ showKm x))
+  E.bracket (spawnPipe $ getAppCommand xmonKeYad) hClose (\h -> hPutStr h (unlines $ showKm x))
 
 myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
@@ -509,7 +509,7 @@ pavuctrl  = ClassApp "Pavucontrol"          "pavucontrol"
 scr       = ClassApp "SimpleScreenRecorder" "simplescreenrecorder"
 spotify   = ClassApp "Spotify"              "spotify"
 vlc       = ClassApp "Vlc"                  "vlc"
-yad       = ClassApp "Yad"                  "yad --text-info --text 'XMonad' --show-uri --width=300 --height=200 --center --wrap --window-icon='text-editor' --no-buttons "
+xmonKeYad = TitleApp "xmonad-keys-yad"      "yad --text-info --text 'XMonad' --show-uri --width=300 --height=200 --center --wrap --window-icon='text-editor' --no-buttons --undecorated --title='xmonad-keys-yad' # --back=COLOR --fore=COLOR "
 
 kterm     = ClassApp "kitty-scratch"        "kitty --class 'kitty-scratch'"
 emScratch = TitleApp "_emacs_scratchpad_"   "emacsclient --frame-parameters '((name . \"_emacs_scratchpad_\"))' -nc"
@@ -531,7 +531,7 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
   match = anyOf . fmap isInstance
   manageApps = composeOne
     [ isInstance calendar                      -?> doCalendarFloat
-    , isInstance yad                           -?> doYadDiagFloat
+    , isInstance xmonKeYad                     -?> doYadDiagFloat
     , match [ gimp, office ]                   -?> doFloat
     , match [ audacious
             , eog
@@ -539,7 +539,7 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
             , pavuctrl
             , scr
             ]                                  -?> doCenterFloat
-    , match [ btm, evince, spotify, vlc] -?> doFullFloat
+    , match [ btm, evince, spotify, vlc]       -?> doFullFloat
     , resource =? "desktop_window"             -?> doIgnore
     , resource =? "kdesktop"                   -?> doIgnore
     , anyOf [ isBrowserDialog
@@ -548,8 +548,8 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
             , isPopup
             , isSplash
             ]                                  -?> doCenterFloat
-    , title =? "Picture in picture" -?> doFloat
-		, className =? "fluent-reader"  -?> doFloat
+    , title =? "Picture in picture"            -?> doFloat
+		, className =? "Yad"                       -?> doFloat
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  -?> doFloat
     , isFullscreen                             -?> doFullFloat
     , pure True                                -?> tileBelow

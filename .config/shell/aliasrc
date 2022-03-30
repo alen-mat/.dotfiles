@@ -1,4 +1,3 @@
-#!/bin/sh
 
 alias init_java="mkdir -p {lib,bin,src/{main/{java,resources,filters,assembly,config,webapp},test/{java,resources,filters},site}}"
 alias config='/usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
@@ -16,12 +15,12 @@ else
 	alias ll="ls -al" # List all files in current directory in long list format
 fi
 
-if type -q bat
-	if type -q fzf
+if [ -x "$(command -v bat)" ];then 
+  if [ -x "$(command -v fzf)" ];then 
 		alias pfzf="fzf --preview 'bat --color=always --style=numbers --line-range=:500 {}'"
-	end
+	fi
 	alias cat="bat"
-end
+fi
 
 alias clear="clear && printf '\e[3J'"
 

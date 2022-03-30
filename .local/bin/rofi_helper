@@ -22,6 +22,9 @@ case $1 in
 		 -gc|--greenclip)
 			~/.config/Rofi/scripts/greenclip
 			;;
+		 -ep|--emoji-picker)
+			rofimoji
+      ;;
 		 *)
 			;;
 esac
