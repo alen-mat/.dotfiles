@@ -1,7 +1,64 @@
 add_newline = true
+format = """
+[┌────](bold white)$directory$hg_branch
+[└─](bold white)$character"""
+right_format = "$status$cmd_duration $username"
+scan_timeout = 10
+
+continuation_prompt = "▶▶"
+
+cmake.disabled = true
+cobol.disabled = true
+conda.disabled = true
+crystal.disabled = true
+dart.disabled = true
+deno.disabled = true
+dotnet.disabled = true
+elixir.disabled = true
+elm.disabled = true
+erlang.disabled = true
+golang.disabled = true
+helm.disabled = true
+java.disabled = true
+julia.disabled = true
+kotlin.disabled = true
+lua.disabled = true
+nim.disabled = true
+nodejs.disabled = true
+ocaml.disabled = true
+openstack.disabled = true
+perl.disabled = true
+php.disabled = true
+pulumi.disabled = true
+purescript.disabled = true
+python.disabled = true
+red.disabled = true
+rlang.disabled = true
+ruby.disabled = true
+rust.disabled = true
+scala.disabled = true
+singularity.disabled = true
+swift.disabled = true
+terraform.disabled = true
+vagrant.disabled = true
+vlang.disabled = true
+zig.disabled = true
+
 
 [character]
-success_symbol = "[➜](bold green)"
+vicmd_symbol = "[❮](bold green)"
+success_symbol = "[❯](bold green)"
+
+[directory]
+style="bold cyan"
+truncation_length = 8
+truncation_symbol = "…/"
+repo_root_format="[$before_root_path]($style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
+read_only="🔒"
+read_only_style="red"
+format="\\[[$path]($style)[$read_only]($read_only_style)\\]  "
+
+[directory.substitutions]
 
 [package]
 format = "via [🎁 $version](208 bold) "
@@ -11,20 +68,9 @@ threshold = 10
 style = "bold red"
 discharging_symbol = "💀 "
 
-[java]
-symbol = "☕" 
-
-[python]
-symbol = "🐍 "
-pyenv_version_name = true
-python_binary = ["./venv/bin/python", "python", "python3", "python2"]
-
 [cmd_duration]
 min_time = 500
 format = "underwent [$duration](bold yellow)"
-
-[nodejs]
-format = "via [🤖 $version](bold green) "
 
 [status]
 style = "bg:blue"
@@ -47,8 +93,7 @@ format = "[$user]($style) "
 disabled = false
 show_always = true
 
-
 [hg_branch]
-format = "on [🌱 $branch](bold purple)"
+format = "\\([🌱 $branch](bold purple)\\)"
 truncation_length = 4
 truncation_symbol = ""

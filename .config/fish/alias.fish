@@ -29,6 +29,9 @@ end
 
 alias clear="clear && printf '\e[3J'"
 
+alias emct="emacsclient -nw -c"
+alias emc="emacsclient -c --no-wait"
+
 alias cp="cp -iv" 
 alias mv="mv -iv"
 alias rm="rm -vi"
