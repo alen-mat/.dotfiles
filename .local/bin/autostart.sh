@@ -1,11 +1,11 @@
 #!/usr/bin/env sh
-mpd &
 picom -f --experimental-backend --config ~/.config/picom/picom  -b&
 
 xsetroot -cursor_name left_ptr &
 
 #[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
-~/.local/bin/bartoggle & #tint2
+#~/.local/bin/bartoggle & #tint2
+polybar -q xmonad -c ~/.config/polybar/minimal/config.ini&
 
 [ -x "$(command -v hhp)" ] && hhp&
 
@@ -17,8 +17,6 @@ if [[ ${deviceid-} ]];then
 	done
 fi
 
-greenclip daemon &
-emacs --bg-daemon &
 #bluetooth
 #nm-applet 
 pactl load-module module-bluetooth-discover

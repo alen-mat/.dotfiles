@@ -1,0 +1,8 @@
+[Unit]
+Description=Green clip
+
+[Service]
+ExecStart=/home/alen/.local/bin/greenclip daemon
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,9 @@
+[Unit]
+Description=Music Player Daemon
+
+[Service]
+Environment=DISPLAY=:0
+ExecStart=/usr/bin/redshift-gtk
+
+[Install]
+WantedBy=default.target

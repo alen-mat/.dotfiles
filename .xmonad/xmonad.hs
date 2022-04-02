@@ -6,6 +6,7 @@
 	- https://github.com/xintron/configs/blob/22a33b41587c180172392f80318883921c543053/.xmonad/lib/Config.hs#L199
 	- https://github.com/xintron/xmonad-log
   - https://github.com/gvolpe/nix-config/blob/master/home/programs/xmonad/config.hs
+  - https://github.com/psamim/dotfiles
 --}
 
 import Control.Monad ( join, when, replicateM_,liftM2)
@@ -199,15 +200,15 @@ myModMask = mod4Mask
 --
 -- > workspaces = ["web", "irc", "code" ] ++ map show [4..9]
 --
-webWs = "1" --"web"
-ossWs = "2" --"oss"
-devWs = "3" --"dev"
-comWs = "4" --"com"
-wrkWs = "5" --"wrk"
-sysWs = "6" --"sys"
-etcWs = "7" --"etc"
+webWs = "web"
+ossWs = "oss"
+devWs = "dev"
+comWs = "com"
+wrkWs = "wrk"
+sysWs = "sys"
+etcWs = "etc"
 normalWorkspaces :: [WorkspaceId]
-normalWorkspaces = [webWs,ossWs,devWs,comWs,wrkWs,sysWs,etcWs,"8","9"]
+normalWorkspaces = ["1","2","3","4","5","6","7","8","9"]
 
 dwmLikeWorkspaces = withScreens 2 normalWorkspaces
 
