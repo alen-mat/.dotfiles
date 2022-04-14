@@ -7,6 +7,8 @@
 	- https://github.com/xintron/xmonad-log
   - https://github.com/gvolpe/nix-config/blob/master/home/programs/xmonad/config.hs
   - https://github.com/psamim/dotfiles
+  - https://github.com/yuttie
+  - https://github.com/boogy
 --}
 
 import Control.Monad ( join, when, replicateM_,liftM2)
@@ -28,6 +30,7 @@ import XMonad.Actions.DynamicProjects ( Project(..), dynamicProjects, switchProj
 import XMonad.Actions.DynamicWorkspaces ( removeWorkspace )
 import XMonad.Actions.FloatKeys ( keysAbsResizeWindow, keysResizeWindow)
 import XMonad.Actions.GridSelect
+import XMonad.Actions.MouseResize
 import XMonad.Actions.Navigation2D
 import XMonad.Actions.RotSlaves (rotSlavesUp)
 import XMonad.Actions.SpawnOn
@@ -38,14 +41,14 @@ import XMonad.Actions.WithAll (killAll)
 import XMonad.Config.Azerty
 import XMonad.Config.Desktop
 
-import Colors.Monnet
-
+import My.Layouts
+import My.Themes.Monnet
 
 import XMonad.Hooks.DynamicLog
 import XMonad.Hooks.DynamicProperty
 import XMonad.Hooks.EwmhDesktops ( ewmh, ewmhDesktopsEventHook)
 import XMonad.Hooks.FadeInactive ( fadeInactiveLogHook )
-import XMonad.Hooks.InsertPosition ( Focus(Newer), Position(Below), insertPosition)
+import XMonad.Hooks.InsertPosition ( Focus(Newer), Position(Below, End), insertPosition)
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers ( (-?>), composeOne, doCenterFloat, doFullFloat, isDialog, isFullscreen, isInProperty)
 import XMonad.Hooks.ScreenCorners
@@ -82,7 +85,6 @@ import XMonad.Layout.ThreeColumns
 import XMonad.Layout.ToggleLayouts (toggleLayouts, ToggleLayout(Toggle))
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import XMonad.Layout.WindowNavigation
-
 
 import XMonad.Prompt ( defaultXPConfig, XPConfig(..), XPPosition(CenteredAt))
 
@@ -161,8 +163,6 @@ myAppGrid = [ ("Audacity", "audacity")
 
 ------------------------------------------------------------------------
 ------------------------------------------------------------------------
-myFont :: String
-myFont = "xft:SauceCodePro Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
 
 myBaseConfig = desktopConfig
 myTerminal      = "kitty"
@@ -174,10 +174,6 @@ myFocusFollowsMouse = False
 -- Whether clicking on a window to focus also passes the click to the window
 myClickJustFocuses :: Bool
 myClickJustFocuses =  True
-
--- Width of the window border in pixels.
---
-myBorderWidth   = 2
 
 -- modMask lets you specify which modkey you want to use. The default
 -- is mod1Mask ("left alt").  You may also consider using mod3Mask
@@ -249,14 +245,16 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Network Manager (Rofi)"   (modm              , xK_bracketright) $ spawn $ "~/.local/bin/rofi_helper -nm"
     , key "Power Menu (Rofi)"        (modm              , xK_semicolon   ) $ spawn $ "~/.local/bin/rofi_helper -p"
     , key "ClipBoard (Rofi)"         (modm              , xK_v           ) $ spawn $ "~/.local/bin/rofi_helper -gc"
+    , key "Switcher (Rofi)"          (modm              , xK_Tab         ) $ spawn $ "~/.local/bin/rofi_helper -ss"
     , key "Emoji Picker (Rofi)"      (modm .|. altMask  , xK_period      ) $ spawn $ "~/.local/bin/rofi_helper -ep"
+    , key "Buku BookMarks (Rofi)"    (modm .|. altMask  , xK_b           ) $ spawn $ "~/.local/bin/rofi_helper -bb"
     , key "Bitwarden (Rofi)"         (modm .|. altMask  , xK_slash       ) $ spawn $ "~/.local/bin/rofi_helper -bw"
     , key "Lock screen"              (modm .|. altMask  , xK_l           ) $ spawn $ "betterlockscreen -l"
     ] ^++^
   keySet "Audio"
     [ key "Mute"          (0, xF86XK_AudioMicMute           ) $ spawn "amixer -q set Capture toggle"
     , key "Mute"          (0, xF86XK_AudioMute              ) $ spawn "amixer -q set Master toggle"
-    , key "Lower volume"  (0, xF86XK_AudioLowerVolume       ) $ spawn "amixer -q set Master 5%-"
+    , key "Lower volume"  (0, xF86XK_AudioLowerVolume       ) $ spawn "amixer -q set Master 1%-"
     , key "Raise volume"  (0, xF86XK_AudioRaiseVolume       ) $ spawn "amixer -q set Master 5%+"
     , key "Play / Pause"  (0, xF86XK_AudioPlay              ) $ spawn $ "playerctl play-pause && echo 'play-pause' | ~/.local/bin/usr_notification_helper media"
     , key "Stop"          (0, xF86XK_AudioStop              ) $ spawn $ "playerctl stop && echo 'Stopped' | ~/.local/bin/usr_notification_helper media"
@@ -387,8 +385,15 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                                        >> windows W.shiftMaster))
+    -- , ((modm, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
+
+    -- , ((mySup, 1), (\w -> focus w >> windows W.swapUp))
 
     -- you may also bind events to the mouse scroll wheel (button4 and button5)
+    , ((modm, button4),               (\_ -> windows W.focusUp))
+    , ((modm, button5),               (\_ -> windows W.focusDown))
+    , ((modm .|. shiftMask, button4), (\_ -> windows W.swapUp))
+    , ((modm .|. shiftMask, button5), (\_ -> windows W.swapDown))
     ]
 
 ------------------------------------------------------------------------
@@ -421,52 +426,16 @@ addEWMHFullscreen   = do
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-mySpacing :: Integer -> l a -> ModifiedLayout Spacing l a
-mySpacing i = spacingRaw False (Border 0 i 0 i) True (Border i 0 i 0) True
 
 fullscreenLayout = renamed [PrependWords "fullscreen"]
                    ( noBorders $ Full )
 
-myShowWNameTheme :: SWNConfig
-myShowWNameTheme = def
-    { swn_font              = "xft:Ubuntu:bold:size=60"
-    , swn_fade              = 1.0
-    , swn_bgcolor           = "#1c1f24"
-    , swn_color             = "#ffffff"
-    }
-
-
-defaultLayouts = renamed [PrependWords "Default"] tiled ||| Mirror tiled ||| Full
-  where
-     -- default tiling algorithm partitions the screen into two panes
-     tiled   = mySpacing 5
-               $ mkToggle (NOBORDERS ?? FULL ?? EOT)
-               $ addTabs shrinkText myTabTheme
-               $ Tall nmaster delta ratio
-
-     -- The default number of windows in the master pane
-     nmaster = 1
-
-     -- Default proportion of screen occupied by master pane
-     ratio   = 1/2
-
-     -- Percent of screen to increment by when resizing panes
-     delta   = 3/100
-     tiled_ratio = 1/2
-
 myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts )
 
-myTabTheme = def { fontName            = myFont
-                 , activeColor         = color14
-                 , inactiveColor       = color7
-                 , activeBorderColor   = color14
-                 , inactiveBorderColor = colorBack
-                 , activeTextColor     = colorBack
-                 , inactiveTextColor   = color15
-                 }
-
 -- myLayoutHook = showWName' myShowWNameTheme $ myLayout
-myLayoutHook = screenCornerLayoutHook $ myLayout
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
+               $ screenCornerLayoutHook $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) defaultLayouts
+
 
 -- Set default layout per workSpace
 -- myLayout = onWorkspaces ["4"] simpleFloat $ smartBorders(defaultLayouts)
@@ -486,6 +455,8 @@ myLayoutHook = screenCornerLayoutHook $ myLayout
 -- To match on the WM_NAME, you can use 'title' in the same way that
 -- 'className' and 'resource' are used below.
 --
+doLower :: ManageHook
+doLower = ask >>= \w -> liftX $ withDisplay $ \dpy -> io (lowerWindow dpy w) >> mempty
 
 type AppName      = String
 type AppTitle     = String
@@ -520,8 +491,12 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
   isBrowserDialog     = isDialog <&&> className =? "Brave-browser"
   isFileChooserDialog = isRole =? "GtkFileChooserDialog"
   isPopup             = isRole =? "pop-up"
+
   isSplash            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
+  isNotify            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+  isKDE               = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
   isRole              = stringProperty "WM_WINDOW_ROLE"
+
   tileBelow           = insertPosition Below Newer
   doCalendarFloat   = customFloating (W.RationalRect (11 / 15) (1 / 48) (1 / 4) (1 / 4))
   doYadDiagFloat    = customFloating (W.RationalRect (1 / 6)   (1 / 6)  (2 / 3) (2 / 3))
@@ -548,9 +523,13 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
             , isDialog
             , isPopup
             , isSplash
+            , isNotify
+            , isKDE
             ]                                  -?> doCenterFloat
     , title =? "Picture in picture"            -?> doFloat
 		, className =? "Yad"                       -?> doFloat
+		, className =? "Xboard"                    -?> doFloat
+		, className =? "Blueman-manager"           -?> doCenterFloat
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  -?> doFloat
     , isFullscreen                             -?> doFullFloat
     , pure True                                -?> tileBelow
@@ -714,7 +693,7 @@ myLogHook = fadeInactiveLogHook 0.9
 -- By default, do nothing.
 myStartupHook = do
   spawnOnce "~/.local/bin/autostart.sh bar"
-  setWMName "XMonad"
+  setWMName "LG3D"
   addScreenCorners [ (SCLowerLeft,  prevWS)
                    , (SCLowerRight, nextWS)
                    , (SCUpperLeft, spawnSelected' myAppGrid)
@@ -730,7 +709,7 @@ main :: IO ()
 main = mkDbusClient >>= main'
 
 main' :: D.Client -> IO ()
-main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook$ fullscreenSupport $ def {
+main' dbus = xmonad . ewmh . docks . dynProjects . keybindings . urgencyHook$ fullscreenSupport $ def {
   terminal           = myTerminal,
   focusFollowsMouse  = myFocusFollowsMouse,
   clickJustFocuses   = myClickJustFocuses,
@@ -746,7 +725,7 @@ main' dbus = xmonad . docks . ewmh . dynProjects . keybindings . urgencyHook$ fu
   manageHook         = fullscreenManageHook <+> manageSpawn <+> manageDocks <+>  myManageHook <+> manageHook myBaseConfig,
   handleEventHook    = myEventHook,
   logHook            = myPolybarLogHook dbus,
-  startupHook        = myStartupHook >> addEWMHFullscreen
+  startupHook        = myStartupHook -- >> addEWMHFullscreen
   }
   where
     dynProjects = dynamicProjects projects

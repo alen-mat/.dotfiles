@@ -11,7 +11,7 @@ pywal_get() {
 }
 
 change_xmonad(){
- XMONAD_MONNET="$HOME/.xmonad/lib/Colors/Monnet.hs"
+ XMONAD_MONNET="$HOME/.xmonad/lib/My/Themes/Monnet.hs"
  sed -i -e "s/colorBack = .*/colorBack = \"#${BG}\"/g" $XMONAD_MONNET
  sed -i -e "s/colorFore = .*/colorFore = \"#${FG}\"/g" $XMONAD_MONNET
  sed -i -e "s/accent = .*/accent = \"${AC}\"/g" $XMONAD_MONNET

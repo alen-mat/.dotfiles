@@ -1,4 +1,4 @@
-module Colors.TomorrowNight where
+module My.Themes.TomorrowNight where
 
 import XMonad
 
