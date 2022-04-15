@@ -51,18 +51,36 @@ notifyBrightness() {
 }
 
 notifyMedia(){
-	album_art=$(playerctl metadata | grep -i "arturl"|awk -F$'              '  'BEGIN {OFS = FS}{ print $2 }')
-	album=$(playerctl metadata --format "{{album}}")
-	title=$(playerctl metadata --format "{{title}}")
-	artist=$(playerctl metadata --format "{{artist}}")
+	album_art=$(playerctl metadata --format '{{mpris:artUrl}}')
+	album=$(playerctl metadata --format "{{xesam:album}}")
+	title=$(playerctl metadata --format "{{xesam:title}}")
+	artist=$(playerctl metadata --format "{{xesam:artist}}")
+	albumArtist=$(playerctl metadata --format "{{xesam:albumArtist}}")
 	player=$(playerctl metadata --format "{{playerName}}")
 	status=$(playerctl metadata --format "{{status}}")
-	if [ $1 == 'play-pause' ];then
+
+	regex='(https?|ftp|file)://[-A-Za-z0-9\+&@#/%?=~_|!:,.;]*[-A-Za-z0-9\+&@#/%=~_|]'
+	if [[ $album_art =~ $regex ]]
+	then 
+		echo "h1"
+		albumArtLoc=$album_art
+		album_art="/tmp/_ $album _ $title _albumart.jpg"
+		if [ ! -f "$album_art" ]; then
+			curl "$albumArtLoc" --output "$album_art"
+			convert "$album_art" -resize 64x64  "$album_art"
+		fi
+	fi
+
+	if [ "$1" == 'play-pause' ];then
 		pstatus=$status
 	else
+		if [ "$player" == 'spotify' ];then
+      return
+    fi
 		pstatus=$1
 	fi
-	dunstify -a $player "$pstatus"$'\n'"$title - $album" "<b>$artist</b> " -i $album_art -u low -h string:x-canonical-private-synchronous:player_ctl 
+
+	dunstify -a "$player" "$pstatus"$'\n'"$title - $album" "<b>$artist  <i>$albumArtist</i></b>" -i "$album_art" -u low -h string:x-canonical-private-synchronous:player_ctl 
 }
 
 input=`cat /dev/stdin`

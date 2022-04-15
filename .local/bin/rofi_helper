@@ -25,6 +25,12 @@ case $1 in
 		 -ep|--emoji-picker)
 			rofimoji
       ;;
+     -ss|--simple-switcher)
+      rofi -show window combi-modes: [windowcd,window,ssh,run] -modes combi -theme "~/.config/Rofi/styles/window-swith.rasi"
+      ;;
+     -bb|--buku-bookmarks)
+      ~/.config/Rofi/scripts/buku  
+      ;;
 		 *)
 			;;
 esac

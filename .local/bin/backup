@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+echo "">~/.config/.restore-setup/aur_packages
+aura -Qm | cut -d ' ' -f1 | while read line
+do
+        aura -As $line | grep "installed"| cut -d ' ' -f1 | cut -d/ -f2 >> ~/.config/.restore-setup/aur_packages
+done
+pacman -Qqe > ~/.config/.restore-setup/pacman_packages
+
+pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort ~/.config/.restore-setup/pacman_packages))
