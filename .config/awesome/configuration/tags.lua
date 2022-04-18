@@ -24,7 +24,14 @@ local tags = {{
     screen = 1
 }}
 
-awful.layout.layouts = {awful.layout.suit.tile, awful.layout.suit.max, awful.layout.suit.floating}
+awful.layout.layouts = {
+	awful.layout.suit.tile,
+	awful.layout.suit.magnifier, 
+	awful.layout.suit.fair,
+	awful.layout.suit.max,
+	awful.layout.suit.max.fullscreen,
+	awful.layout.suit.floating
+}
 
 awful.screen.connect_for_each_screen(function(s)
     for i, tag in pairs(tags) do
