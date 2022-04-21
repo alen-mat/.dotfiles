@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+~/.config/polybar/sleek/launch.sh 
+#~/.local/bin/bartoggle & #tint2
+#~/.config/polybar/minimal/launch.sh       
+
+[ -x "$(command -v hhp)" ] && hhp&
+

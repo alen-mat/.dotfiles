@@ -5,54 +5,335 @@ local modkey = require('configuration.keys.mod').modKey
 local altkey = require('configuration.keys.mod').altKey
 local apps = require('configuration.apps')
 
--- Key bindings
-local globalKeys = awful.util.table.join( -- Hotkeys
-awful.key({modkey}, '/', hotkeys_popup.show_help, {
-    description = 'show help',
-    group = 'Awesome'
-}),
- awful.key({modkey}, 'F1', hotkeys_popup.show_help, {
-    description = 'show help',
-    group = 'Awesome'
-}),
-awful.key({modkey}, 'l', function()
-    awful.spawn(apps.default.lock)
-end, {
-    description = 'lock the screen',
-    group = 'Awesome'
-}),
-awful.key({modkey, 'Control'}, 'q', _G.awesome.restart, {
-    description = 'reload awesome',
-    group = 'Awesome'
-}),
-awful.key({modkey, 'Shift'}, 'q', _G.awesome.quit, {
-    description = 'quit awesome',
-    group = 'Awesome'
-}),
---
--- Tag browsing
---
-awful.key({modkey}, ',', function()
-    awful.tag.viewprev()
-    _G._splash_to_current_tag()
-end, {
-    description = 'go to previous workspace',
-    group = 'tag'
-}), 
-awful.key({modkey}, '.', function()
-    awful.tag.viewnext()
-    _G._splash_to_current_tag()
-end, {
-    description = 'go to next workspace',
-    group = 'tag'
-}),
-awful.key({modkey}, 'Escape', function()
-    awful.tag.history.restore()
-    _G._splash_to_current_tag()
-end, {
-    description = 'go back',
-    group = 'tag'
-}),
+local globalKeys = awful.util.table.join(
+	awful.key({modkey}, '/', hotkeys_popup.show_help, {
+  	  description = 'show help',
+    	group = 'Awesome'
+	}),
+ 	awful.key({modkey}, 'F1', hotkeys_popup.show_help, {
+    	description = 'show help',
+    	group = 'Awesome'
+	}),
+	awful.key({modkey}, 'l', 
+		function()
+  		awful.spawn(apps.default.lock)
+		end, {
+			description = 'lock the screen',
+			group = 'Awesome'
+	}),
+	awful.key({modkey, 'Control'}, 'q', _G.awesome.restart, {
+			description = 'reload awesome',
+			group = 'Awesome'
+	}),
+	awful.key({modkey, 'Shift'}, 'q', _G.awesome.quit, {
+			description = 'quit awesome',
+			group = 'Awesome'
+	}),
+-------------------------------
+-----------Apps----------------
+-------------------------------
+	awful.key({modkey,'Shift'}, 'Return', 
+		function()
+    	awful.util.spawn_with_shell(apps.default.terminal)
+		end, {
+    	description = 'open a terminal',
+    	group = 'Apps'
+	}),
+-------------------------------
+-----------Rofi----------------
+-------------------------------
+	awful.key({modkey}, 'p',
+		function()
+			awful.util.spawn_with_shell(apps.default.rofi)
+		end, {
+    	description = 'Apps',
+    	group = 'Rofi'
+	}), 
+	awful.key({modkey}, '[', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -bm')
+		end, {
+    	description = 'Bluetooth Manager',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey}, ']', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -nm')
+		end, {
+    	description = 'Network Manager',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey}, ';', 
+		function()
+  	  awful.util.spawn_with_shell(apps.default.power_command)
+		end, {
+    	description = 'Power Menu',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey}, 'v', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -gc')
+		end, {
+    	description = 'Clipboard',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey}, 'Tab', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -ss')
+		end, {
+    	description = 'Switcher',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey, altkey}, '.', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -ep')
+		end, {
+    	description = 'Switcher',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey, altkey}, 'b', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -bb')
+		end, {
+    	description = 'Switcher',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey, altkey}, '/', 
+		function()
+  	  awful.util.spawn_with_shell('~/.local/bin/rofi_helper -bw')
+		end, {
+    	description = 'Switcher',
+    	group = 'Rofi'
+	}),
+	awful.key({modkey}, ';', 
+		function()
+  	  awful.util.spawn_with_shell(apps.default.power_command)
+		end, {
+ 	  	description = 'Power Menu',
+  	 	group = 'Rofi'
+	}),
+-------------------------------
+--------brightness-------------
+-------------------------------
+	awful.key({}, 'XF86MonBrightnessUp',
+		function()
+  	  awful.spawn('xbacklight -inc 10')
+		end, {
+    	description = '+10%',
+    	group = 'Brightness'
+	}), 
+	awful.key({}, 'XF86MonBrightnessDown',
+		function()
+  	  awful.spawn('xbacklight -dec 10')
+		end, {
+    	description = '-10%',
+    	group = 'Brightness'
+	}),
+-------------------------------
+-----------Audio---------------
+-------------------------------
+	awful.key({altkey}, 'k',
+		function()
+    	awful.spawn.easy_async('amixer -D pulse sset Master 5%+', 
+				function()
+      		_G.update_volume()
+    		end
+			)
+		end, {
+    	description = 'volume up',
+    	group = 'Audio'
+	}), 
+	awful.key({}, 'XF86AudioRaiseVolume', 
+		function()
+    	awful.spawn.easy_async('amixer -D pulse sset Master 5%+',
+				function()
+        	_G.update_volume()
+    		end
+			)
+		end, {
+    	description = 'volume up',
+    	group = 'Audio'
+	}), 
+	awful.key({}, 'XF86AudioLowerVolume',
+		function()
+    	awful.spawn.easy_async('amixer -D pulse sset Master 5%-',
+				function()
+        	_G.update_volume()
+    		end
+			)
+		end, {
+    	description = 'volume down',
+    	group = 'Audio'
+	}), 
+	awful.key({altkey}, 'j', 
+		function()
+    	awful.spawn.easy_async('amixer -D pulse sset Master 5%-',
+				function()
+        	_G.update_volume()
+    		end
+			)
+		end, {
+    	description = 'volume down',
+    	group = 'Audio'
+	}), 
+	awful.key({altkey}, 'm', 
+		function()
+    	awful.spawn('amixer -D pulse set Master 1+ toggle')
+	   	_G.update_volume()
+		end, {
+    	description = 'toggle mute',
+    	group = 'Audio'
+	}), 
+	awful.key({}, 'XF86AudioMute', 
+		function()
+    	awful.spawn('amixer -D pulse set Master 1+ toggle')
+    	_G.update_volume()
+		end, {
+   		description = 'toggle mute',
+    	group = 'Audio'
+	}), 
+	awful.key({}, 'XF86AudioMicMute',
+		function()
+    	awful.spawn('amixer set Capture toggle')
+    	_G.update_volume()
+		end, {
+    	description = 'toggle mic mute',
+	    group = 'Audio'
+	}),
+	awful.key({}, 'XF86AudioPlay',
+		function()
+    	awful.spawn('playerctl play-pause && echo "play-pause" | ~/.local/bin/usr_notification_helper media')
+		end, {
+    	description = 'Play / Pause',
+	    group = 'Audio'
+	}),
+	awful.key({}, 'XF86AudioStop',
+		function()
+    	awful.spawn('playerctl stop && echo "Stopped" | ~/.local/bin/usr_notification_helper media')
+		end, {
+    	description = 'Stop',
+	    group = 'Audio'
+	}),
+	awful.key({}, 'XF86AudioPrev',
+		function()
+    	awful.spawn('playerctl previous && echo "Now Playing" | ~/.local/bin/usr_notification_helper media')
+		end, {
+    	description = 'Previous',
+	    group = 'Audio'
+	}),
+	awful.key({}, 'XF86AudioNext',
+		function()
+    	awful.spawn('playerctl next && echo "Now Playing" | ~/.local/bin/usr_notification_helper media')
+		end, {
+    	description = 'Next',
+	    group = 'Audio'
+	}),
+-------------------------------
+-----------Fn keys-------------
+-------------------------------
+	awful.key({}, 'XF86HomePage',
+		function()
+    	awful.spawn('brave')
+		end, {
+    	description = 'Homepage',
+	    group = 'Fn-Keys'
+	}),
+	awful.key({}, 'XF86Search',
+		function()
+    	awful.spawn('dmsearch')
+		end, {
+    	description = 'Search',
+	    group = 'Fn-Keys'
+	}),
+	awful.key({}, 'XF86Mail',
+		function()
+    	awful.spawn('thunderbird')
+		end, {
+    	description = 'Mail',
+	    group = 'Fn-Keys'
+	}),
+	awful.key({}, 'XF86Calculator',
+		function()
+    	awful.spawn('qalculate-gtk')
+		end, {
+    	description = 'Calculator',
+	    group = 'Fn-Keys'
+	}),
+	awful.key({}, 'XF86Eject',
+		function()
+    	awful.spawn('toggleeject')
+		end, {
+    	description = 'Eject',
+	    group = 'Fn-Keys'
+	}),
+-------------------------------
+---------Scratch Pad-------------
+-------------------------------
+	awful.key({modkey,'Control'}, 't',
+		function()
+    	_G.toggle_splash()
+		end, {
+    	description = 'toggle splash terminal',
+	    group = 'Scratch Pad'
+	}),
+-------------------------------
+-------Workspace / Tag---------
+-------------------------------
+	awful.key({modkey}, ',',
+		function()
+    	awful.tag.viewprev()
+	    _G._splash_to_current_tag()
+		end, {
+    	description = 'go to previous workspace',
+    	group = 'Workspace / Tag'
+	}), 
+	awful.key({modkey}, '.', 
+		function()
+  	  awful.tag.viewnext()
+    	_G._splash_to_current_tag()
+		end, {
+    	description = 'go to next workspace',
+	    group = 'Workspace / Tag'
+	}),
+	awful.key({modkey}, 'Escape',
+		function()
+  	  awful.tag.history.restore()
+    	_G._splash_to_current_tag()
+		end, {
+  	  description = 'go back',
+	    group = 'Workspace / Tag'
+	}),
+-------------------------------
+-------Workspace / Tag---------
+-------------------------------
+	awful.key({}, 'Print',
+		function()
+    	awful.util.spawn_with_shell(apps.default.screenshot_file)
+		end, {
+    	description = 'Save desktop screenshot to file',
+	    group = 'Screenshot'
+	}),
+	awful.key({'Control'}, 'Print',
+		function()
+   		 awful.util.spawn_with_shell(apps.default.screenshot_clip)
+		end, {
+    	description = 'Save desktop screenshot to clipboard',
+	    group = 'Screenshot'
+	}),
+	awful.key({'Control', 'Shift'}, 'Print',
+		function()
+    	awful.util.spawn_with_shell(apps.default.region_screenshot)
+		end, {
+  	  description = 'mark an area and screenshot it (clipboard)',
+  	  group = 'Screenshot'
+	}),
+	awful.key({'Control',altkey}, 'Print', 
+		function()
+  	  awful.util.spawn_with_shell(apps.default.active_window_screenshot)
+		end, {
+  	  description = 'Screenshot active window to clipboard',
+    	group = 'Screenshot'
+	}),
 --
 -- Default client focus
 --
@@ -68,12 +349,7 @@ end, {
     description = 'focus previous by index',
     group = 'client'
 }),
-awful.key({modkey}, 'p', function()
-    awful.util.spawn_with_shell(apps.default.rofi)
-end, {
-    description = 'show rofi menu',
-    group = 'Rofi'
-}), 
+
 awful.key({modkey}, 'u', function()
     awful.client.urgent.jumpto()
     _G._splash_to_current_tag()
@@ -81,7 +357,7 @@ end, {
     description = 'jump to urgent client',
     group = 'client'
 }),
- awful.key({altkey}, 'Tab', function()
+ awful.key({modkey}, 'k', function()
     awful.client.focus.byidx(1)
     if _G.client.focus then
         _G.client.focus:raise()
@@ -90,7 +366,7 @@ end, {
     description = 'switch to next window',
     group = 'client'
 }), 
-awful.key({altkey, 'Shift'}, 'Tab', function()
+awful.key({modkey}, 'j', function()
     awful.client.focus.byidx(-1)
     if _G.client.focus then
         _G.client.focus:raise()
@@ -100,48 +376,9 @@ end, {
     group = 'client'
 }),
 --
---Screenshot
+--Layout
 -- 
-
-awful.key({}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.screenshot_file)
-end, {
-    description = 'Save desktop screenshot to file',
-    group = 'Screenshot'
-}),
-awful.key({'Control'}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.screenshot_clip)
-end, {
-    description = 'Save desktop screenshot to clipboard',
-    group = 'Screenshot'
-}),
-awful.key({'Control', 'Shift'}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.region_screenshot)
-end, {
-    description = 'mark an area and screenshot it (clipboard)',
-    group = 'Screenshot'
-}),
-awful.key({'Control',altkey}, 'Print', function()
-    awful.util.spawn_with_shell(apps.default.active_window_screenshot)
-end, {
-    description = 'Screenshot active window to clipboard',
-    group = 'Screenshot'
-}),
-
-
-awful.key({modkey,'Shift'}, 'Return', function()
-    awful.util.spawn_with_shell(apps.default.terminal)
-end, {
-    description = 'open a terminal',
-    group = 'Launch Apps'
-}), 
-
-awful.key({modkey}, ';', function()
-    awful.util.spawn_with_shell(apps.default.power_command)
-end, {
-    description = 'end session menu',
-    group = 'Rofi'
-}), awful.key({altkey, 'Shift'}, 'Right', function()
+ awful.key({altkey, 'Shift'}, 'Right', function()
     awful.tag.incmwfact(0.05)
 end, {
     description = 'increase master width factor',
@@ -231,77 +468,10 @@ end, {
 end, {
     description = 'decrease the number of columns',
     group = 'layout'
-}), awful.key({modkey}, 'k', function()
-    _G.toggle_splash()
-end, {
-    description = 'toggle splash terminal',
-    group = 'ScratchPad'
 }), 
---
---Audio
---
-awful.key({}, 'XF86MonBrightnessUp', function()
-    awful.spawn('xbacklight -inc 10')
-end, {
-    description = '+10%',
-    group = 'hotkeys'
-}), 
-awful.key({}, 'XF86MonBrightnessDown', function()
-    awful.spawn('xbacklight -dec 10')
-end, {
-    description = '-10%',
-    group = 'hotkeys'
-}),
- -- ALSA volume control
-awful.key({altkey}, 'k', function()
-    awful.spawn.easy_async('amixer -D pulse sset Master 5%+', function()
-        _G.update_volume()
-    end)
-end, {
-    description = 'volume up',
-    group = 'hotkeys'
-}), 
-awful.key({}, 'XF86AudioRaiseVolume', function()
-    awful.spawn.easy_async('amixer -D pulse sset Master 5%+', function()
-        _G.update_volume()
-    end)
-end, {
-    description = 'volume up',
-    group = 'hotkeys'
-}), 
-awful.key({}, 'XF86AudioLowerVolume', function()
-    awful.spawn.easy_async('amixer -D pulse sset Master 5%-', function()
-        _G.update_volume()
-    end)
-end, {
-    description = 'volume down',
-    group = 'hotkeys'
-}), awful.key({altkey}, 'j', function()
-    awful.spawn.easy_async('amixer -D pulse sset Master 5%-', function()
-        _G.update_volume()
-    end)
-end, {
-    description = 'volume down',
-    group = 'hotkeys'
-}), awful.key({altkey}, 'm', function()
-    awful.spawn('amixer -D pulse set Master 1+ toggle')
-    _G.update_volume()
-end, {
-    description = 'toggle mute',
-    group = 'hotkeys'
-}), awful.key({}, 'XF86AudioMute', function()
-    awful.spawn('amixer -D pulse set Master 1+ toggle')
-    _G.update_volume()
-end, {
-    description = 'toggle mute',
-    group = 'hotkeys'
-}), awful.key({}, 'XF86AudioMicMute', function()
-    awful.spawn('amixer set Capture toggle')
-    _G.update_volume()
-end, {
-    description = 'toggle mic mute',
-    group = 'hotkeys'
-}), awful.key({modkey}, 'o', awful.client.movetoscreen, {
+
+
+awful.key({modkey}, 'o', awful.client.movetoscreen, {
     description = 'move window to next screen',
     group = 'client'
 }))

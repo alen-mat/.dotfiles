@@ -86,8 +86,6 @@ local TopBar = function(s, offset)
         end
     })
     local system_details = wibox.widget {
-            -- Systray
-            
             create_arrow(nil, beautiful.primary.hue_200, beautiful.primary.hue_100),
             -- Internet Speed
             wibox.widget{
@@ -165,7 +163,7 @@ local TopBar = function(s, offset)
         stretch = false,
         bg = beautiful.primary.hue_100,
         fg = beautiful.fg_normal,
-	opacity=0.85,
+				opacity=0.85,
     })
 
     panel:struts({

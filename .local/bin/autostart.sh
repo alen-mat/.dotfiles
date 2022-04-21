@@ -3,12 +3,6 @@ picom -f --experimental-backend --config ~/.config/picom/picom  -b&
 
 xsetroot -cursor_name left_ptr &
 
-#[[ $1 = "bar" ]] && ~/.config/polybar/sleek/launch.sh 
-#~/.local/bin/bartoggle & #tint2
-polybar -q xmonad -c ~/.config/polybar/minimal/config.ini&
-
-[ -x "$(command -v hhp)" ] && hhp&
-
 deviceid=$(xinput list | grep "Touchpad" | awk '{print $5}'|cut -d= -f2)
 if [[ ${deviceid-} ]];then
 	device_props=("libinput Middle Emulation Enabled" "libinput Tapping Enabled")
@@ -18,8 +12,10 @@ if [[ ${deviceid-} ]];then
 fi
 
 #bluetooth
-#nm-applet 
+blueman-applet&
+nm-applet&
 pactl load-module module-bluetooth-discover
 [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
 [[ -f ~/.cache/wal/colors.Xresources ]] && xrdb -merge ~/.cache/wal/colors.Xresources
 #bash -c "sleep 5; conky"
+systemctl start --user greenclip.service&

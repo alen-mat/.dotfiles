@@ -692,13 +692,16 @@ myLogHook = fadeInactiveLogHook 0.9
 --
 -- By default, do nothing.
 myStartupHook = do
-  spawnOnce "~/.local/bin/autostart.sh bar"
-  setWMName "LG3D"
   addScreenCorners [ (SCLowerLeft,  prevWS)
                    , (SCLowerRight, nextWS)
                    , (SCUpperLeft, spawnSelected' myAppGrid)
                    , (SCUpperRight, goToSelected $ mygridConfig myColorizer)
                  ]
+  spawnOnce "~/.xmonad/autostart"
+  spawnOnce "~/.local/bin/autostart.sh"
+
+  setWMName "LG3D"
+
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
 

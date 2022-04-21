@@ -29,10 +29,7 @@ return {
     },
     -- List of commands to start once on start-up
     run_on_start_up = {
-        '~/.config/awesome/configuration/awspawn',
-        '[[ -x "$(command -v compton)" ]] && compton -f ~/.config/compton.conf || picom -f --experimental-backend --config ~/.config/picom/picom  -b',
-        'nitrogen --restore',
-        'blueman-tray'
+        '~/.local/bin/autostart.sh',
     }
 }
 

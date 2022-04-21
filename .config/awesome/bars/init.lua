@@ -1,6 +1,6 @@
 local awful = require('awful')
-local top_bar = require('layout.top-bar')
-local bottom_bar = require('layout.bottom-bar')
+local top_bar = require('bars.top-bar')
+local bottom_bar = require('bars.bottom-bar')
 local beautiful = require('beautiful')
 
 -- Create a wibox for each screen and add it

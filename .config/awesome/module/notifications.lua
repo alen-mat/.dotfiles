@@ -3,6 +3,9 @@ local beautiful = require('beautiful')
 local gears = require('gears')
 local dpi = require('beautiful').xresources.apply_dpi
 
+beautiful.notification_max_width = dpi(300)
+beautiful.notification_icon_size = dpi(70)
+
 -- Naughty presets
 naughty.config.padding = 8
 naughty.config.spacing = 8
@@ -14,7 +17,7 @@ naughty.config.defaults.margin = dpi(16)
 naughty.config.defaults.ontop = true
 naughty.config.defaults.font = beautiful.font
 naughty.config.defaults.icon = nil
-naughty.config.defaults.icon_size = dpi(32)
+naughty.config.defaults.icon_size = dpi(64)
 naughty.config.defaults.shape = gears.shape.rectangle
 naughty.config.defaults.border_width = dpi(0)
 naughty.config.defaults.hover_timeout = nil
