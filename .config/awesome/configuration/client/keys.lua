@@ -32,7 +32,14 @@ end, {
 end,{
     description = "move to master", 
 		group = "client"
-}))
+}),awful.key({modkey,altkey},"f",
+    function(c)
+				awful.client.floating.toggle(c)
+    end,{
+    description = "Toggle Float",
+		group = "client"
+})
+)
 
 
 return clientKeys

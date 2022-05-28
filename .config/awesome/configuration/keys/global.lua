@@ -16,7 +16,7 @@ local globalKeys = awful.util.table.join(
 	}),
 	awful.key({modkey}, 'l', 
 		function()
-  		awful.spawn(apps.default.lock)
+  		awful.util.spawn_with_shell(apps.default.lock)
 		end, {
 			description = 'lock the screen',
 			group = 'Awesome'
@@ -35,6 +35,13 @@ local globalKeys = awful.util.table.join(
 	awful.key({modkey,'Shift'}, 'Return', 
 		function()
     	awful.util.spawn_with_shell(apps.default.terminal)
+		end, {
+    	description = 'open a terminal',
+    	group = 'Apps'
+	}),
+	awful.key({modkey}, '\\', 
+		function()
+    	awful.util.spawn_with_shell('ulauncher-toggle')
 		end, {
     	description = 'open a terminal',
     	group = 'Apps'
@@ -233,7 +240,7 @@ local globalKeys = awful.util.table.join(
 -------------------------------
 	awful.key({}, 'XF86HomePage',
 		function()
-    	awful.spawn('brave')
+    	awful.spawn('brave-browser')
 		end, {
     	description = 'Homepage',
 	    group = 'Fn-Keys'
@@ -329,11 +336,18 @@ local globalKeys = awful.util.table.join(
 	}),
 	awful.key({'Control',altkey}, 'Print', 
 		function()
-  	  awful.util.spawn_with_shell(apps.default.active_window_screenshot)
+  	  awful.util.spawn_with_shell(apps.default.active_window_screenshot_clip)
 		end, {
   	  description = 'Screenshot active window to clipboard',
     	group = 'Screenshot'
 	}),
+  awful.key({altkey}, 'Print', 
+    function()
+      awful.util.spawn_with_shell(apps.default.active_window_screenshot)
+    end, {
+      description = 'Screenshot active window',
+      group = 'Screenshot'
+  }),
 --
 -- Default client focus
 --

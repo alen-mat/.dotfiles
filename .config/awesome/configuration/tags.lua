@@ -22,6 +22,15 @@ local tags = {{
 }, {
     text = '六',
     screen = 1
+},{
+    text = '七',
+    screen = 1
+},{
+    text = '八',
+    screen = 1
+},{
+    text = '九',
+    screen = 1
 }}
 
 awful.layout.layouts = {

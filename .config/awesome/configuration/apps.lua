@@ -13,13 +13,14 @@ return {
         rofi = '~/.local/bin/rofi_helper -a',
         power_command = '~/.local/bin/rofi_helper -p',
 
-        lock = 'better',
+        lock = '~/.config/awesome/lkscrip',
         splash = 'kitty -T SplashTerminal -o background_opacity=0.95',
 
 				screenshot_file = '~/.local/bin/maim_helper screen',
         screenshot_clip = '~/.local/bin/maim_helper screen clip',
 				region_screenshot = '~/.local/bin/maim_helper selection clip',
-        active_window_screenshot = '~/.local/bin/maim_helper active_window clip',
+				active_window_screenshot_clip = '~/.local/bin/maim_helper active_window clip',
+				active_window_screenshot = '~/.local/bin/maim_helper active_window',
 
         browser = 'env firefox',
         editor = 'kitty',

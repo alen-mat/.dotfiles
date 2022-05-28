@@ -27,7 +27,7 @@ awful.rules.rules = {{
 {
 	rule_any = {
   	type = {'dialog'},
-    class = {'Wicd-client.py', 'calendar.google.com', 'Brave-browser'}
+    class = {'Wicd-client.py', 'calendar.google.com'}
   },
   properties = {
     placement = awful.placement.centered,
@@ -85,7 +85,7 @@ awful.rules.rules = {{
 			"Preferences",
 			"setup",
 		},
-		class = {"forticlient", "FortiClient",}
+		class = {"forticlient", "FortiClient","Ulauncher"}
 	},
   properties = {
 		floating = true,

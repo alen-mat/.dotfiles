@@ -64,6 +64,17 @@ local TopBar = function(s, offset)
     -- ===========
     local systray = wibox.widget.systray()
     systray:set_horizontal(true)
+    s.systray = wibox.widget {
+		{
+			base_size = dpi(20),
+			horizontal = true,
+			screen = "primary",
+			widget = systray,
+		},
+		visible = false,
+		top = dpi(4),
+		widget = wibox.container.margin,
+	  }
 
     -- SYSTEM DETAILS
     -- ==============
@@ -75,6 +86,10 @@ local TopBar = function(s, offset)
     local temprature_widget = require('widget.my.temprature')
     local storage_widget = require('widget.my.storage')
     local net = require('widget.my.net')
+		s.tray_toggler = require('widget.my.tray-toggle')
+		local network = require "widget.my.network"()
+		local bluetooth = require "widget.my.bluetooth"()
+
     local net_sent = net({
         settings = function()
             widget:set_markup(markup.font(beautiful.font, net_now.sent))
@@ -86,7 +101,13 @@ local TopBar = function(s, offset)
         end
     })
     local system_details = wibox.widget {
-            create_arrow(nil, beautiful.primary.hue_200, beautiful.primary.hue_100),
+				layout = wibox.layout.fixed.horizontal,
+				{
+					s.systray,
+					margins = dpi(0),
+					widget = wibox.container.margin,
+				},
+				s.tray_toggler,
             -- Internet Speed
             wibox.widget{
                 create_icon('', beautiful.accent.hue_200),
@@ -96,11 +117,12 @@ local TopBar = function(s, offset)
                 spacing = dpi(4),
                 layout = wibox.layout.fixed.horizontal
             },
-            -- Battery
-            --create_arrow (battery_widget, beautiful.primary.hue_200, beautiful.primary.hue_100),
             -- Memory
             create_icon('', beautiful.accent.hue_500),
             mem_widget,
+				    create_arrow(nil, beautiful.primary.hue_200, beautiful.primary.hue_100),
+						network,
+						bluetooth,
             -- CPU
             create_arrow(wibox.widget{
                 create_icon('﬙', beautiful.accent.hue_600),
@@ -132,7 +154,7 @@ local TopBar = function(s, offset)
                     spacing = dpi(4),
                     layout = wibox.layout.fixed.horizontal
                 }, beautiful.primary.hue_200, beautiful.primary.hue_100),
-								systray,
+								--systray,
 								battery_widget,
             -- Layout
                 wibox.widget {
