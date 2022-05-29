@@ -19,7 +19,7 @@ configuration {
 	sidebar-mode: 					false;
 }
 
-@import "colors.rasi"
+@import "~/.config/Rofi/styles/colors.rasi"
 
 window {
     transparency:                   "real";
