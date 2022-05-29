@@ -1,7 +1,7 @@
+set font "FiraCode 15"
+
 set window-title-basename "true"
 set selection-clipboard "clipboard"
-
-map <C-i> recolor
 
 set notification-error-bg       "#ff5555" # Red
 set notification-error-fg       "#dadada" # Foreground
@@ -46,6 +46,35 @@ set recolor-darkcolor           "#dadada" # Foreground
 
 set adjust-open width
 set recolor true
+set recolor-keephue false
 
 set smooth-scroll true
 set show-v-scrollbar true
+
+# Open document in fit-width mode by default
+set adjust-open "best-fit"
+
+# One page per row by default
+set pages-per-row 1
+
+#stop at page boundries
+set scroll-page-aware "true"
+set scroll-full-overlap 0.01
+set scroll-step 100
+
+#zoom settings
+set zoom-min 10
+set guioptions ""
+
+map r reload
+map p print
+map i recolor
+map J zoom out
+map K zoom in
+map R rotate
+unmap f
+map f toggle_fullscreen
+map [fullscreen] f toggle_fullscreen
+
+# Open document in fit-width mode by default
+set adjust-open "best-fit"

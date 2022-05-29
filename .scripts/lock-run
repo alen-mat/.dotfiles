@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+$HOME/.scripts/i3lock-widgets &&
+
+#pkill -u "$USER" -USR2 dunst
+pkill cycle-dim
+pkill wait-suspend
+kill $(ps -ef | grep ".scripts/cycle-dim" |  grep -v grep  | awk '{print $2}')
+sleep 1 && eww -c ~/.config/eww/Lock/ close-all
+#$HOME/.scripts/unlock-bg
