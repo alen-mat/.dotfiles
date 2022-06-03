@@ -1,0 +1,435 @@
+[colors]
+# With picom
+#background = #00151821
+# Without picom
+background = #6a96af
+background-alt = #8badc1
+foreground = #e4e5ed
+foreground-alt = #666
+primary = #ffb52a
+secondary = #e60053
+alert = #bd2c40
+mod-underline = ${self.background}
+
+
+
+[bar/main]
+monitor = ${env:MONITOR:HDMI-1}
+width = 100%
+height = 30
+radius = 0.0
+fixed-center = true
+dpi=162
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-bottom-size = 0
+# With picom
+#border-color = #00000000
+# Without picom
+border-color = #000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 5
+module-margin-right = 5
+
+font-0 = Source Code Pro:size=4
+font-1 = UNUSED
+; For speaker indicator
+font-2 = IBM Plex Sans JP:size=4
+; Vertical/horizontal inidicator
+font-3 = Iosevka Fixed:size=4;3
+; Emoji
+font-4 = Symbols Nerd Font:size=4;5
+; For workspace names
+font-5 = Inter:size=5;3
+; For digits
+font-6 = IBM Plex Sans JP:size=4
+; Clock
+font-7 = IBM Plex Sans JP:weight=semibold:size=5
+
+modules-left = ewmh
+modules-center = date
+modules-right = cpu memory eth wifi xbacklight battery temperature
+
+tray-position = right
+tray-detached = false
+tray-padding = 2
+tray-maxsize = 28
+
+scroll-up = i3wm-wsprev
+scroll-down = i3wm-wsnext
+
+
+
+[module/ewmh]
+type = internal/xworkspaces
+enable-click = true
+enable-scroll = true
+
+format = <label-state>
+
+label-active = %name%
+label-active-foreground = ${colors.foreground}
+label-active-background = ${colors.background-alt}
+label-active-underline = ${colors.background-alt}
+label-active-padding = 4
+label-active-font = 6
+
+label-occupied = %name%
+label-occupied-foreground = ${colors.foreground}
+label-occupied-background = ${colors.background}
+label-occupied-padding = ${self.label-active-padding}
+label-occupied-font = ${self.label-active-font}
+
+label-urgent = %name%
+label-urgent-foreground = ${colors.secondary}
+label-urgent-background = ${colors.alert}
+label-urgent-padding = ${self.label-active-padding}
+label-urgent-font = ${self.label-active-font}
+
+label-empty = %name%
+label-empty-foreground = ${colors.foreground-alt}
+label-empty-background = ${colors.background}
+label-empty-padding = ${self.label-active-padding}
+label-empty-font = ${self.label-active-font}
+
+
+
+[module/i3]
+type = internal/i3
+format = <label-state> <label-mode>
+pin-workspaces = true
+strip-wsnumbers = true
+index-sort = false
+enable-click = true
+enable-scroll = true
+wrapping-scroll = false
+
+; Only show workspaces on the same output as the bar
+;pin-workspaces = true
+
+label-mode-padding = 2
+label-mode-foreground = #ffffff
+label-mode-background = ${colors.background}
+label-mode-font = 6
+
+; focused = Active workspace on focused monitor
+label-focused = %name%
+label-focused-foreground = #e4e5ed
+# With picom
+#label-focused-background = #22ffffff
+#label-focused-underline = #00ffffff
+# Without picom
+label-focused-background = #8badc1
+label-focused-underline = ${colors.background}
+label-focused-padding = 4
+label-focused-font = 6
+
+; visible = Active workspace on unfocused monitor
+label-visible = %name%
+label-visible-foreground = #e4e5ed
+# With picom
+#label-visible-background = #22ffffff
+#label-visible-underline = #00ffffff
+# Without picom
+label-visible-background = #8badc1
+label-visible-underline = ${colors.background}
+label-visible-padding = ${self.label-focused-padding}
+label-visible-font = ${self.label-unfocused-font}
+
+; unfocused = Inactive workspace on any monitor
+label-unfocused = %name%
+label-unfocused-foreground = #c6c8d1
+# With picom
+#label-unfocused-background = #00151821
+# Without picom
+label-unfocused-background = ${colors.background}
+label-unfocused-padding = ${self.label-focused-padding}
+label-unfocused-font = ${self.label-focused-font}
+
+; urgent = Workspace with urgency hint set
+label-urgent = %name%
+label-urgent-foreground = #ffffff
+# With picom
+#label-urgent-background = #aa5e354d
+# Without picom
+label-urgent-background = #5e354d
+label-urgent-padding = ${self.label-focused-padding}
+label-urgent-font = ${self.label-unfocused-font}
+
+
+
+[module/title]
+type = internal/xwindow
+label-font = 1
+label-maxlen = 30
+
+
+
+[module/cpu]
+type = internal/cpu
+interval = 2
+format = <label> <ramp-coreload>
+format-underline = ${colors.mod-underline}
+format-prefix = %{F#c6c8d1} %{F-}
+label = 
+label-font = 8
+ramp-coreload-spacing = 0
+ramp-coreload-0 = ▁
+ramp-coreload-1 = ▂
+ramp-coreload-2 = ▃
+ramp-coreload-3 = ▄
+ramp-coreload-4 = ▅
+ramp-coreload-5 = ▆
+ramp-coreload-6 = ▇
+ramp-coreload-7 = █
+ramp-coreload-0-foreground = #e4e5ed
+ramp-coreload-1-foreground = #e4e5ed
+ramp-coreload-2-foreground = #e4e5ed
+ramp-coreload-3-foreground = #e4e5ed
+ramp-coreload-4-foreground = #e4e5ed
+ramp-coreload-5-foreground = #e4e5ed
+ramp-coreload-6-foreground = #e4e5ed
+ramp-coreload-7-foreground = #e4e5ed
+ramp-coreload-font = 4
+
+
+
+[module/memory]
+type = internal/memory
+interval = 2
+format = <bar-used>
+format-underline = ${colors.mod-underline}
+format-prefix = %{F#c6c8d1}    %{F-}
+label = %{T7}%gb_used:8%%{T-}
+label-font = 8
+bar-used-indicator =
+bar-used-width = 20
+bar-used-foreground-0 = #e4e5ed
+bar-used-foreground-1 = #e4e5ed
+bar-used-foreground-2 = #e4e5ed
+bar-used-foreground-3 = #e4e5ed
+# With picom
+#bar-used-empty-foreground = #22e4e5ed
+# Without picom
+bar-used-empty-foreground = #8badc1
+bar-used-fill = █
+bar-used-empty = █
+bar-used-fill-font = 4
+bar-used-empty-font = 4
+
+
+
+[module/eth]
+type = internal/network
+interval = 2
+interface = ${env:ETH_INTERFACE}
+
+format-connected-prefix = %{F#c6c8d1}%{F-}
+format-connected-prefix-font = 5
+format-connected = <label-connected>
+format-connected-underline = ${colors.mod-underline}
+label-connected = %{F#c6c8d1} %{F-}%{T7}%downspeed:9%%{T-} %{F#c6c8d1} %{F-}%{T7}%upspeed:9%%{T-}
+label-connected-font = 7
+
+format-disconnected-prefix =  
+format-disconnected-prefix-font = 5
+format-disconnected-prefix-foreground = #66
+format-disconnected =
+format-disconnected-underline = ${colors.mod-underline}
+format-disconnected-foreground = #66
+label-disconnected = %ifname%
+label-disconnected-font = 8
+
+
+
+[module/wifi]
+type = internal/network
+interval = 2
+interface = ${env:WIFI_INTERFACE}
+
+format-connected-prefix = %{F#c6c8d1}%{F-}
+format-connected-prefix-font = 5
+format-connected = <ramp-signal> <label-connected>
+format-connected-underline = ${colors.mod-underline}
+label-connected = %essid% %{F#c6c8d1} %{F-}%downspeed:9% %{F#c6c8d1} %{F-}%upspeed:9%
+label-connected-font = 7
+
+format-disconnected-prefix = %{F#c6c8d1}%{F-}
+format-disconnected-prefix-font = 5
+format-disconnected-prefix-foreground = #66
+format-disconnected =
+format-disconnected-foreground = #66
+format-disconnected-underline = ${colors.mod-underline}
+label-disconnected = %ifname%
+label-disconnected-font = 8
+
+ramp-signal-0 = 
+ramp-signal-1 = 
+ramp-signal-2 = 
+ramp-signal-3 = 
+ramp-signal-4 = 
+ramp-signal-foreground = ${colors.foreground-alt}
+
+
+
+[module/xbacklight]
+type = internal/xbacklight
+
+format = <label> <bar>
+format-underline = ${colors.mod-underline}
+label = %{F#c6c8d1}%{F-}
+label-font = 5
+
+bar-width = 10
+bar-indicator = |
+bar-indicator-foreground = #ff
+bar-indicator-font = 3
+bar-fill = ─
+bar-fill-font = 3
+bar-fill-foreground = #9f78e1
+bar-empty = ─
+bar-empty-font = 3
+bar-empty-foreground = ${colors.foreground-alt}
+
+
+
+[module/backlight-acpi]
+inherit = module/xbacklight
+type = internal/backlight
+card = intel_backlight
+
+
+
+[module/volume]
+type = internal/volume
+
+format-volume = <label-volume> <bar-volume>
+format-volume-underline = ${colors.mod-underline}
+label-volume = "%{A3:~/.config/polybar/pavucontrol.sh:}%{F#c6c8d1} %{F-}%{A}"
+label-volume-foreground = ${root.foreground}
+label-volume-font = 5
+
+format-muted = <label-muted>
+format-muted-foreground = ${colors.foreground-alt}
+format-muted-underline = ${self.format-volume-underline}
+label-muted = "%{A3:~/.config/polybar/pavucontrol.sh:}%{F#c6c8d1} %{F-}%{A}"
+label-muted-font = 5
+label-muted-foreground = #66
+
+bar-volume-width = 10
+bar-volume-foreground-0 = #55aa55
+bar-volume-foreground-1 = #55aa55
+bar-volume-foreground-2 = #55aa55
+bar-volume-foreground-3 = #55aa55
+bar-volume-foreground-4 = #55aa55
+bar-volume-foreground-5 = #f5a70a
+bar-volume-foreground-6 = #ff5555
+bar-volume-empty-foreground = ${colors.foreground-alt}
+bar-volume-gradient = false
+bar-volume-indicator = |
+bar-volume-fill = ─
+bar-volume-empty = ─
+bar-volume-indicator-font = 3
+bar-volume-fill-font = 3
+bar-volume-empty-font = 3
+
+
+
+[module/battery]
+type = internal/battery
+battery = BAT1
+adapter = ACAD
+full-at = 99
+
+format-charging = <animation-charging> <label-charging>
+format-charging-underline = ${colors.mod-underline}
+label-charging-font = 8
+
+format-discharging = <ramp-capacity> <label-discharging>
+format-discharging-underline = ${self.format-charging-underline}
+label-discharging-font = 8
+
+format-full = <ramp-capacity> <label-full>
+format-full-underline = ${self.format-charging-underline}
+label-full-font = 8
+
+ramp-capacity-0 = 
+ramp-capacity-1 = 
+ramp-capacity-2 = 
+ramp-capacity-3 = 
+ramp-capacity-4 = 
+ramp-capacity-font = 5
+ramp-capacity-0-foreground = #ff5555
+
+animation-charging-0 = 
+animation-charging-1 = 
+animation-charging-2 = 
+animation-charging-3 = 
+animation-charging-4 = 
+animation-charging-framerate = 750
+animation-charging-font = 5
+
+
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+hwmon-path = ${env:TEMPERATURE_HWMON_PATH}
+warn-temperature = 85
+
+format-prefix = %{F#c6c8d1} %{F-}
+format-prefix-font = 5
+format = <label>
+format-underline = ${colors.mod-underline}
+
+format-warn-prefix =  
+format-warn-prefix-font = 5
+format-warn = <label-warn>
+format-warn-underline = ${self.format-underline}
+
+label = %temperature-c%
+label-font = 7
+label-warn = %temperature-c%
+label-warn-foreground = ${colors.secondary}
+label-warn-font = 7
+
+
+
+[module/date]
+type = internal/date
+interval = 1
+
+format-underline = ${colors.mod-underline}
+
+date = "%Y-%m-%d (%a)"
+date-alt =
+
+time = "%H:%M:%S"
+time-alt =
+
+label = %date% %time%
+label-font = 8
+
+
+
+[settings]
+screenchange-reload = true
+;compositing-background = xor
+;compositing-background = screen
+;compositing-foreground = source
+;compositing-border = over
+
+
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
