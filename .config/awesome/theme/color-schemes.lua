@@ -1,4 +1,5 @@
-return {
+local monnetsc = require('theme.monnet') 
+local preset_scheme = {
     dracula = {
         primary = {
             hue_100 = '#282a36',
@@ -48,3 +49,5 @@ return {
         }
     }
 }
+preset_scheme.monnet = monnetsc
+return preset_scheme 

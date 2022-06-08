@@ -7,7 +7,7 @@ local theme = {}
 
 -- Color Scheme
 theme.primary = color_schemes.gruvbox_material.primary
-theme.accent = color_schemes.gruvbox_material.accent
+theme.accent = color_schemes.monnet.accent
 
 local awesome_overrides = function(theme)
     theme.dir = os.getenv('HOME') .. '/.config/awesome/theme'

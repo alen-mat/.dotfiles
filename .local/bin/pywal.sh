@@ -35,6 +35,27 @@ change_xmonad(){
 
 }
 
+change_awesome(){
+ AWESOME_MONNET="$HOME/.config/awesome/theme/monnet.lua"
+ sed -i -e "s/.* hue_100 = .*/             hue_100 = \"${color0}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_200 = .*/             hue_200 = \"${color1}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_100 = .*/             hue_100 = \"${color2}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_200 = .*/             hue_200 = \"${color3}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_300 = .*/             hue_300 = \"${color4}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_400 = .*/             hue_400 = \"${color5}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_500 = .*/             hue_500 = \"${color6}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_600 = .*/             hue_600 = \"${color7}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_700 = .*/             hue_700 = \"${color8}\",/g" $AWESOME_MONNET
+ sed -i -e "s/.* hue_800 = .*/             hue_800 = \"${color9}\",/g" $AWESOME_MONNET
+# sed -i -e "s/color10 = .*/color10 = \"${color10}\"/g" $XMONAD_MONNET
+# sed -i -e "s/color11 = .*/color11 = \"${color11}\"/g" $XMONAD_MONNET
+# sed -i -e "s/color12 = .*/color12 = \"${color12}\"/g" $XMONAD_MONNET
+# sed -i -e "s/color13 = .*/color13 = \"${color13}\"/g" $XMONAD_MONNET
+# sed -i -e "s/color14 = .*/color14 = \"${color14}\"/g" $XMONAD_MONNET
+# sed -i -e "s/color15 = .*/color15 = \"${color15}\"/g" $XMONAD_MONNET
+
+}
+
 # Change colors
 change_color() {
 	# polybar
@@ -59,12 +80,13 @@ change_color() {
 	}
 	EOF
 
-	polybar-msg cmd restart
   change_xmonad
+	change_awesome
+	polybar-msg cmd restart
 }
 
 # Main
-if [[ -f "/usr/bin/wal" ]]; then
+if [[ -f "/usr/bin/wal" ]] || $(python -c "import pywal"); then
 	if [[ "$1" ]]; then
 		pywal_get "$1"
 
