@@ -12,19 +12,27 @@ interface = curses
 # the UI over time. Make sure to set HGPLAIN in the environment when
 # writing scripts!
 # tweakdefaults = True
-
+editor = vim
 # (see 'hg help color' for details)
 color = yes
-merge =  internal:fail
+merge =  meld #internal:fail
+#verbose = True
+logtemplate = {min}\n
 # uncomment to disable command output pagination
 # (see 'hg help pager' for details)
 # paginate = never
 
+[diff]
+git=True
+
 [merge-tools]
+meld = path/to/meld
 meld.priority = 1
 meld.premerge = False
-meld.args = $local $other $base
-
+#meld.args = $base $local $other
+vimdiff.executable = vim
+vimdiff.args = -d $base $local $output $other +close +close
+ 
 [merge-patterns]
 #** = meld
 
@@ -35,24 +43,32 @@ extdiff =
 strip =
 record =
 hgext.convert =
-progress =
-color =
-hgk =
+progress = 
+color = 
+hgk = 
 graphlog =
-purge =
-#hgext.mercurial_keyring =
+purge = 
+#mercurial_keyring =path/to/mercurial_keyring.py
 color =
 pager =
 rebase =
 share =
+progress =
+#Use mq at discretion
+#hgext.mq  =
+#hg version 6 and up
+#evolve =
+
+[progress]
+delay = 1.5
 
 [pager]
 pager = LESS='FSRX' less
 ignore = version, help, update, serve, record
-attend = annotate, cat, diff, export, glog, log, qdiff, status, show
+attend = annotate, cat, diff, export, glog, log, qdiff, status, show, hist
 
 [extdiff]
-cmd.vdiff=meld
+cmd.vdiff = meld
 
 [win32text]
 warn=FALSE
@@ -90,19 +106,22 @@ log.node = white bold
 log.node_merge = red bold white_background
 log.rev = white bold
 
-changeset.public=orange bold
+changeset.public=white bold
 changeset.secret=blue bold
 changeset.draft=brightyellow bold
 
 desc.here=bold blue_background
 
 [templatealias]
+web_url = "https://cmsuite/product/code/{branch}/{node|short}/"
 merge_parent = "{ifeq(count(parents),2,label('log.node_merge','{p2.branch}')) }"
 isMerge = "{ifeq(count(parents),2,'[merge]') }"
 
 sep = "{label('custom.yellow',':')}"
 
-_rev = "{ifeq(count(parents),2,label('log.node_merge',rev),wcset) }"
+_rev = "{wcset}"
+__date = "[{date|age}:{date|isodate}]"
+_date = "{ifeq(count(parents),2,label('log.node_merge',__date),__date)}"
 _node= "{label('log.node',node|short)}"
 _branch = "{label('log.branch',branch)}"
 _tags = "{label('log.tag',if(tags,'Tags : {tags}\n'))}"
@@ -131,37 +150,54 @@ wbrch = '{label("log.branch",
 
 [templates]
 
-short={_rev} {_branch} | {date|shortdate} | {wuser}\n{wdesc}\n\n
+short={_rev}:{node}| {date|shortdate} | {wuser} @ {_branch}\n{wdesc}\n\n
 
-medi={_rev}:{_node} {_branch}  {wuser} {merge_parent}\n{showParents}{_tags}{_desc }{_files_}\n\n
+medi={_date}{_rev}:{_node} {_branch}  {wuser} {merge_parent}\n url : {web_url}\n{showParents}{_tags}{_desc }{_files_}\n\n
 
-min = '{wbrch} {wcset} {wuser} {wtags} {wbook}\n{wdesc}\n'
+min = '{wbrch} {wcset} {wuser} {wtags} {wbook}\n{_desc}\n'
 
 annot = {file} {lines %'{rev}:{wuser}:{date|shortdate}\n{label('custom.yellow',index+1)}{sep}{sep}{line}'}
 grp = '{path}:{rev}:{change}:{texts}\n'
 
+[paths]
+sdp=https://cmsuite
+
 [alias]
-icm = commit -i
-origin = log -r $1 -b $2
-compare = extdiff -p meld -r $1:$2  "set:**.$3"
-history = st --rev 'p1(first(branch($1)))::$1'
-par-branch = log -r "parents(min(branch(.)))"
-show = log -pr
-switch-to = update -C -r
+#Invoking shell alias from hg
+#pushbranch = !$HG push -b `$HG branch`
+checkout = !$HG up $($HG branches | fzf | cut -d ' ' -f 1 ) 
 _blame =annotate -l --user --number
-wip = log --graph --rev=wip --template=wip
+origin = log -r $1 -b $2
+par-branch = log -r "parents(min(branch(.)))"
+show = log --color=always -pr
+hist = log -T medi
+last_merge = log -r last(ms2b("$1",".")) -T medi
+foreign_parent = log -r last(fp_ms("$1",".")) -T medi
 
 [revsetalias]
 wip = (parents(not public()) or not public() or . or head()) and (not obsolete() or unstable()^) and not closed()
+leftpad(s, w) = pad(s, w, ' ', True)
+branchedFrom(b)= parents(min(branch(b)))
+
+#https://stackoverflow.com/questions/56479038/mercurial-how-to-find-last-time-my-branch-was-merged-into-default
+grafted(from, to) = destination(branch(from)) & branch(to)
+ms(to) = merge() & branch(to)
+ms2b(to,from) = children(p2(ms(to)) & branch(from)) & branch(to)
 
 [hooks]
 commit = echo "\n[COMMIT] $HG_NODE \n\n $(hg log -r$HG_NODE --template=medi)"
+post-push= echo "Pushed"
+#pretxncommit.crlf=python:hgext.win32text.forbidcrlf
+#pretxncommit.codecheck=python:/path/to/wrapper.py:startChecks
+#pre-commit =~/.config/mercurial/pre_commit.hook
+#pre-update =
+#post-update = 
 
 [convert]
 hg.saverev=false
 
 [path]
-conmans=https://cmsuite.
+conmans=https://cmsuite
 
 [auth]
 hg.schemes =
@@ -191,4 +227,11 @@ hg.password =
 #maxdiff = 300
 
 [tortoisehg]
-vdiff = kdiff3
+vdiff = meld 
+ui.language = en
+guifork = True
+fontcomment = Cantarell,11,-1,5,50,0,0,0,0,0,Regular
+fontdiff = Source Code Pro,11,-1,5,25,0,0,0,0,0,Light
+fontlog = Cantarell,12,-1,5,50,0,0,0,0,0,Regular
+fontoutputlog = Fira Code,11,-1,5,25,0,0,0,0,0,Light
+editor = emc
