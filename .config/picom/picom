@@ -546,3 +546,7 @@ wintypes:
   notification = { opacity = 1; }
   dropdown_menu = { opacity = 0.8; }
 };
+
+invert-color-include = [
+    "TAG_INVERT@:8c = 1"
+];
