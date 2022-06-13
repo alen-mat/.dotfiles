@@ -82,7 +82,25 @@ change_color() {
 
   change_xmonad
 	change_awesome
-	polybar-msg cmd restart
+	current_wm="$(wmctrl -m | grep -i "name" | cut -d: -f 2 | cut -d ' ' -f2)"
+	#acitve_window="$(wmctrl -lp | grep $(xprop -root | grep _NET_ACTIVE_WINDOW | head -1 | awk '{print $5}' | sed 's/,//' | sed 's/^0x/0x0/') | awk '{print $1}')"
+	#acitve_window="$(printf 0x%x $(xdotool getactivewindow))"
+	active_window_pid="$(xdotool getactivewindow getwindowpid)"
+	wid=$(wmctrl -lp | grep "$APP_PID" | awk '{print $1}')
+	case $current_wm in
+					awesome)
+								echo 'awesome.restart()' | awesome-client&
+								;;
+				  xmonad)
+								xmonad --restart &
+								;;
+			 	  *)
+                ;;
+  esac
+	sleep 2 && wmctrl -iR "$wid" #wmctrl -a **$active_window** -i #xdotool key --window "$active_window" F5 && xdotool windowactivate "$active_window"
+	if command -v polybar-msg &> /dev/null ;then
+				polybar-msg cmd restart
+	fi
 }
 
 # Main
