@@ -1,0 +1,2 @@
+#! /bin/bash
+sed -i '4,$d' ~/.config/conky/hax_os/.calendar.sh

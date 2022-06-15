@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
-~/.config/polybar/sleek/launch.sh 
 #~/.local/bin/bartoggle & #tint2
-#~/.config/polybar/minimal/launch.sh       
+~/.config/polybar/minimal/launch.sh       
 
-[ -x "$(command -v hhp)" ] && hhp&
-
+command -v hhp >/dev/null 2>&1 && hhp&
+command -v conky >/dev/null 2>&1 && sleep 5;~/.config/conky/hax_os/start&

@@ -1,0 +1,13 @@
+#/usr/bin/env bash
+
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_clock&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_cal&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conkyrc&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_tor&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_weather_icons&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_speed&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_rss&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_gmail&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_mpd&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_weather&
+sleep 1;/bin/conky --config ~/.config/conky/hax_os/.conky_stod&

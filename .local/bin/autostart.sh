@@ -30,8 +30,6 @@ then
     [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
     [[ -f ~/.cache/wal/colors.Xresources ]] && xrdb -merge ~/.cache/wal/colors.Xresources
 
-    #bash -c "sleep 5; conky"
-
     systemctl start --user greenclip.service&
     touch /tmp/autostart_done
 fi
