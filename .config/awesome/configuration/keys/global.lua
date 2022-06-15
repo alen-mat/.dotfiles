@@ -348,6 +348,14 @@ local globalKeys = awful.util.table.join(
       description = 'Screenshot active window',
       group = 'Screenshot'
   }),
+	awful.key({modkey,altkey}, 'i', 
+		function()
+  	  awful.util.spawn_with_shell('~/.scripts/invert-window')
+		end, {
+    	description = 'Compton invert window',
+    	group = 'Misc'
+	}),
+
 --
 -- Default client focus
 --
