@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+#$1 - appname 
+#$2 - summary 
+#$3 - body 
+#$4 - icon 
+#$5 - urgency
+
+paplay /path/to/alert.wav
+case $1 in
+  *)
+		file="~/.config/dunst/assets/default.wav"
+    ;;
+esac
+
