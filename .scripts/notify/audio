@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+getdefaultsinkvol() {
+	out="$(pactl get-sink-volume @DEFAULT_SINK@)"
+	left="$(echo $out| cut -d, -f1 | grep -Po '\d+(?=%)')"
+	right="$(echo $out| cut -d, -f2 | grep -Po '\d+(?=%)')"
+	num=$(python -c "print(($left+$right)//2)")
+	echo "$num"
+}
+
+HELPER(){
+	read foo 
+	echo $foo | ~/.scripts/notification_helper $@
+}
+
+case $1 in
+	--spkr-i)
+		pactl set-sink-volume @DEFAULT_SINK@ +3%
+		echo $(getdefaultsinkvol) | HELPER audio
+		;;
+	--spkr-d)
+		pactl set-sink-volume @DEFAULT_SINK@ -2%
+		echo $(getdefaultsinkvol) | HELPER audio
+		;;
+	--spkr-toggle)
+		pactl set-sink-mute @DEFAULT_SINK@ toggle
+		stat="$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')"
+		if [ "$stat" = "yes" ] ; then
+			 echo "1" | HELPER muted $(getdefaultsinkvol)
+		else
+			 echo "0" | HELPER muted $(getdefaultsinkvol)
+		fi
+		;;
+	--mic-toggle)
+		pactl set-source-mute @DEFAULT_SOURCE@ toggle
+		;;
+	*)
+		;;
+esac

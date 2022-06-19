@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+HELPER(){
+	read foo 
+	echo $foo | ~/.scripts/notification_helper media
+}
+
+case $1 in
+	--pp)
+		playerctl play-pause
+ 		echo 'play-pause' | HELPER
+		;;
+	--stop)
+		playerctl stop 
+		echo 'Stopped' | HELPER
+		;;
+	--prev)
+		playerctl previous 
+		echo 'Now Playing' | HELPER
+		;;
+	--next)
+		playerctl next 
+		echo 'Now Playing' | HELPER
+		;;
+	*)
+		;;
+esac

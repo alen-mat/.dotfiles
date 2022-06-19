@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+HELPER(){
+	read foo
+	echo $foo | ~/.scripts/notification_helper brightness
+}
+
+case $1 in
+	-d)
+		brightnessctl set 2%-| grep "Current brightness" | cut -d '(' -f2 | cut -d '%' -f1 | HELPER
+		;;
+	-i)
+		brightnessctl set 3%+| grep "Current brightness" | cut -d '(' -f2 | cut -d '%' -f1 | HELPER
+		;;
+	*)
+		;;
+esac
