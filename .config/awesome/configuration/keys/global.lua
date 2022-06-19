@@ -124,14 +124,14 @@ local globalKeys = awful.util.table.join(
 -------------------------------
 	awful.key({}, 'XF86MonBrightnessUp',
 		function()
-  	  awful.spawn('xbacklight -inc 10')
+  	  awful.spawn.with_shell('~/.scripts/notify/brightness -i')
 		end, {
     	description = '+10%',
     	group = 'Brightness'
 	}), 
 	awful.key({}, 'XF86MonBrightnessDown',
 		function()
-  	  awful.spawn('xbacklight -dec 10')
+  	  awful.spawn.with_shell('~/.scripts/notify/brightness -d')
 		end, {
     	description = '-10%',
     	group = 'Brightness'
@@ -141,7 +141,7 @@ local globalKeys = awful.util.table.join(
 -------------------------------
 	awful.key({altkey}, 'k',
 		function()
-    	awful.spawn.easy_async('amixer -D pulse sset Master 5%+', 
+    	awful.spawn.easy_async_with_shell('~/.scripts/notify/audio --spkr-i ', 
 				function()
       		_G.update_volume()
     		end
@@ -152,7 +152,7 @@ local globalKeys = awful.util.table.join(
 	}), 
 	awful.key({}, 'XF86AudioRaiseVolume', 
 		function()
-    	awful.spawn.easy_async('amixer -D pulse sset Master 5%+',
+    	awful.spawn.easy_async_with_shell('~/.scripts/notify/audio --spkr-i ',
 				function()
         	_G.update_volume()
     		end
@@ -163,7 +163,7 @@ local globalKeys = awful.util.table.join(
 	}), 
 	awful.key({}, 'XF86AudioLowerVolume',
 		function()
-    	awful.spawn.easy_async('amixer -D pulse sset Master 5%-',
+    	awful.spawn.easy_async_with_shell('~/.scripts/notify/audio --spkr-d ',
 				function()
         	_G.update_volume()
     		end
@@ -174,7 +174,7 @@ local globalKeys = awful.util.table.join(
 	}), 
 	awful.key({altkey}, 'j', 
 		function()
-    	awful.spawn.easy_async('amixer -D pulse sset Master 5%-',
+    	awful.spawn.easy_async_with_shell('~/.scripts/notify/audio --spkr-d ',
 				function()
         	_G.update_volume()
     		end
@@ -185,7 +185,7 @@ local globalKeys = awful.util.table.join(
 	}), 
 	awful.key({altkey}, 'm', 
 		function()
-    	awful.spawn('amixer -D pulse set Master 1+ toggle')
+    	awful.spawn.with_shell('~/.scripts/notify/audio --spkr-toggle')
 	   	_G.update_volume()
 		end, {
     	description = 'toggle mute',
@@ -193,7 +193,7 @@ local globalKeys = awful.util.table.join(
 	}), 
 	awful.key({}, 'XF86AudioMute', 
 		function()
-    	awful.spawn('amixer -D pulse set Master 1+ toggle')
+    	awful.spawn.with_shell('~/.scripts/notify/audio --spkr-toggle')
     	_G.update_volume()
 		end, {
    		description = 'toggle mute',
@@ -201,36 +201,35 @@ local globalKeys = awful.util.table.join(
 	}), 
 	awful.key({}, 'XF86AudioMicMute',
 		function()
-    	awful.spawn('amixer set Capture toggle')
-    	_G.update_volume()
+    	awful.spawn.with_shell('~/.scripts/notify/audio --mic-toggle')
 		end, {
     	description = 'toggle mic mute',
 	    group = 'Audio'
 	}),
 	awful.key({}, 'XF86AudioPlay',
 		function()
-    	awful.spawn('playerctl play-pause && echo "play-pause" | ~/.local/bin/usr_notification_helper media')
+    	awful.spawn.with_shell('~/.scripts/notify/media --pp')
 		end, {
     	description = 'Play / Pause',
 	    group = 'Audio'
 	}),
 	awful.key({}, 'XF86AudioStop',
 		function()
-    	awful.spawn('playerctl stop && echo "Stopped" | ~/.local/bin/usr_notification_helper media')
+    	awful.spawn.with_shell('~/.scripts/notify/media --stop')
 		end, {
     	description = 'Stop',
 	    group = 'Audio'
 	}),
 	awful.key({}, 'XF86AudioPrev',
 		function()
-    	awful.spawn('playerctl previous && echo "Now Playing" | ~/.local/bin/usr_notification_helper media')
+    	awful.spawn.with_shell('~/.scripts/notify/media --prev')
 		end, {
     	description = 'Previous',
 	    group = 'Audio'
 	}),
 	awful.key({}, 'XF86AudioNext',
 		function()
-    	awful.spawn('playerctl next && echo "Now Playing" | ~/.local/bin/usr_notification_helper media')
+    	awful.spawn.with_shell('~/.scripts/notify/media --next')
 		end, {
     	description = 'Next',
 	    group = 'Audio'
