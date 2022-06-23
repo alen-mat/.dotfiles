@@ -10,6 +10,10 @@ pywal_get() {
 	wal -i "$1" -q -t
 }
 
+change_waybar(){
+	/bin/cp -f ~/.cache/wal/way-bar-colors.css ~/.config/waybar/block/colors.css
+}
+
 change_xmonad(){
  XMONAD_MONNET="$HOME/.xmonad/lib/My/Themes/Monnet.hs"
  sed -i -e "s/colorBack = .*/colorBack = \"#${BG}\"/g" $XMONAD_MONNET
@@ -82,6 +86,7 @@ change_color() {
 
   change_xmonad
 	change_awesome
+	change_waybar
 	current_wm="$(wmctrl -m | grep -i "name" | cut -d: -f 2 | cut -d ' ' -f2)"
 	#acitve_window="$(wmctrl -lp | grep $(xprop -root | grep _NET_ACTIVE_WINDOW | head -1 | awk '{print $5}' | sed 's/,//' | sed 's/^0x/0x0/') | awk '{print $1}')"
 	#acitve_window="$(printf 0x%x $(xdotool getactivewindow))"
