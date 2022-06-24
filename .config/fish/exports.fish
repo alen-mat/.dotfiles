@@ -25,7 +25,7 @@ set -x WM "xmonad"
 set -x __WS         '~/WorkSpace'
 set -x SUDO_PROMPT  '[sudo] %p 🔒 : '
 
-set -x QT_STYLE_OVERRIDE            kvantum
+#set -x QT_STYLE_OVERRIDE            kvantum
 set -x QT_QPA_PLATFORMTHEME         "qt5ct"  
 set -x QT_AUTO_SCREEN_SCALE_FACTOR  1
 set -x GTK_IM_MODULE               'fcitx'
@@ -41,7 +41,7 @@ set -x QT_SCREEN_SCALE_FACTORS "1;1;1"
 set -x GDK_SCALE 1
 set -x GDK_DPI_SCALE 1
 
-set -x TERM      xterm-color
+#set -x TERM      xterm-color
 set -x CLICOLOR  1
 set -x LS_COLORS 'rs 0:di 01;34:ln 01;36:mh 00:pi 40;33'
 
@@ -98,7 +98,7 @@ set -x HISTFILE "$HOME/.local/share/history"
 set -x DICS "/usr/share/stardict/dic/"
 set -x SUDO_ASKPASS "$HOME/.config/rofi/applets/askpass.sh"
 set -x FZF_DEFAULT_OPTS "--layout reverse --height 40%"
-set -x QT_QPA_PLATFORMTHEME "gtk2"	# Have QT use gtk2 theme.
+#set -x QT_QPA_PLATFORMTHEME "gtk2" # Have QT use gtk2 theme.
 set -x MOZ_USE_XINPUT2 "1"		# Mozilla smooth scrolling/touchpads.
 set -x AWT_TOOLKIT "MToolkit wmname LG3D"	#May have to install wmname
 set -x _JAVA_AWT_WM_NONREPARENTING 1	# Fix for Java applications in dwm
