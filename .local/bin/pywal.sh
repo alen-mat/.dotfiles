@@ -14,6 +14,18 @@ change_waybar(){
 	/bin/cp -f ~/.cache/wal/way-bar-colors.css ~/.config/waybar/block/colors.css
 }
 
+change_cava(){
+	CAVA_CONF="$HOME/.config/cava/config"
+  sed -i -e "s/gradient_color_1 = .*/gradient_color_1 = \"${color1}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_2 = .*/gradient_color_2 = \"${color2}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_3 = .*/gradient_color_3 = \"${color3}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_4 = .*/gradient_color_4 = \"${color4}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_5 = .*/gradient_color_5 = \"${color5}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_6 = .*/gradient_color_6 = \"${color6}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_7 = .*/gradient_color_7 = \"${color7}\"/g" $CAVA_CONF 
+  sed -i -e "s/gradient_color_8 = .*/gradient_color_8 = \"${color8}\"/g" $CAVA_CONF 
+}
+
 change_xmonad(){
  XMONAD_MONNET="$HOME/.xmonad/lib/My/Themes/Monnet.hs"
  sed -i -e "s/colorBack = .*/colorBack = \"#${BG}\"/g" $XMONAD_MONNET
@@ -87,6 +99,7 @@ change_color() {
   change_xmonad
 	change_awesome
 	change_waybar
+  change_cava
 	current_wm="$(wmctrl -m | grep -i "name" | cut -d: -f 2 | cut -d ' ' -f2)"
 	#acitve_window="$(wmctrl -lp | grep $(xprop -root | grep _NET_ACTIVE_WINDOW | head -1 | awk '{print $5}' | sed 's/,//' | sed 's/^0x/0x0/') | awk '{print $1}')"
 	#acitve_window="$(printf 0x%x $(xdotool getactivewindow))"
