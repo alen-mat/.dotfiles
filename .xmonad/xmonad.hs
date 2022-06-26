@@ -284,10 +284,10 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "System"
     [ key "Toggle status bar gap"          (modm                      , xK_b )     toggleStruts
     , key "Logout (quit XMonad)"           (modm .|. shiftMask        , xK_q )     $ io exitSuccess
-    , key "Restart XMonad"                 (modm                      , xK_q )     $ spawn "xmonad --recompile; xmonad --restart"
-    , key "Capture entire screen to file"  (modm                      , xK_Print)  $ spawn "flameshot full -p ~/Pictures/Screenshots/"
-    , key "Capture entire screen to clip"  (controlMask               , xK_Print)  $ spawn "flameshot full -c"
-    , key "Capture partial screen to clip" (controlMask .|. shiftMask , xK_Print)  $ spawn "flameshot gui"
+    , key "Restart XMonad"                 (modm                      , xK_q )     $ spawn "xmonad --restart"
+    , key "Capture entire screen to file"  (modm                      , xK_Print)  $ spawn "~/.local/bin/maim_helper screen"
+    , key "Capture entire screen to clip"  (controlMask               , xK_Print)  $ spawn "~/.local/bin/maim_helper screen clip"
+    , key "Capture partial screen to clip" (controlMask .|. shiftMask , xK_Print)  $ spawn "~/.local/bin/maim_helper selection clip"
     ] ^++^
   keySet "Layouts"
     [ key "Next"                (modm              , xK_space ) $ sendMessage NextLayout
@@ -494,6 +494,8 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
 
   isSplash            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
   isNotify            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+  isDia               = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DIALOG"
+  isMenu              = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_MENU"
   isKDE               = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
   isRole              = stringProperty "WM_WINDOW_ROLE"
 
@@ -524,6 +526,8 @@ myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
             , isPopup
             , isSplash
             , isNotify
+            , isDia
+            , isMenu
             , isKDE
             ]                                  -?> doCenterFloat
     , title =? "Picture in picture"            -?> doFloat
@@ -655,7 +659,7 @@ polybarHook dbus =
           --, ppTitle           = wrapper purple . shorten 90
           }
 
-myPolybarLogHook dbus = myLogHook <+> dynamicLogWithPP (polybarHook dbus)
+myPolybarLogHook dbus = fadeLogHook <+> dynamicLogWithPP (polybarHook dbus)
 
 
 ------------------------------------------------------------------------
@@ -681,7 +685,9 @@ myEventHook = do
 -- See the 'XMonad.Hooks.DynamicLog' extension for examples.
 --
 -- myLogHook = return ()
-myLogHook = fadeInactiveLogHook 0.9
+fadeLogHook :: X ()
+fadeLogHook = fadeInactiveLogHook fadeAmount
+    where fadeAmount = 0.7
 
 ------------------------------------------------------------------------
 -- Startup hook
