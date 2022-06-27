@@ -1,0 +1,25 @@
+#!/bin/sh
+#FROM : https://github.com/psamim/dotfiles/blob/master/bin/reboot-p
+
+# Script to check if kernel needs a reboot to upgrade
+
+NEXTLINE=0
+FIND=""
+for I in `file /boot/vmlinuz*`; do
+    if [ ${NEXTLINE} -eq 1 ]; then
+        FIND="${I}"
+        NEXTLINE=0
+    else
+        if [ "${I}" = "version" ]; then NEXTLINE=1; fi
+    fi
+done
+if [ ! "${FIND}" = "" ]; then
+    CURRENT_KERNEL=`uname -r`
+    if [ ! "${CURRENT_KERNEL}" = "${FIND}" ]; then
+        echo " REBOOT REQUIRED "
+        echo
+        echo \#D32F2F
+				notify-send "System Update" "Reboot Required"
+        # exit 33
+    fi
+fi
