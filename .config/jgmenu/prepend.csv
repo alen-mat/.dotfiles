@@ -1,31 +1,28 @@
-Terminal,alacritty,/home/alen/.config/jgmenu/MenuIcons/terminal.png
-File manager,thunar,/home/alen/.config/jgmenu/MenuIcons/file-manager.png
-Web Browser,firefox,/home/alen/.config/jgmenu/MenuIcons/web-browser.png
-Text Editor,mousepad,/home/alen/.config/jgmenu/MenuIcons/text-editor.png
+Terminal,alacritty,/home/alen/.local/share/.assets/MenuIcons/terminal.png
+File manager,thunar,/home/alen/.local/share/.assets/MenuIcons/file-manager.png
+Web Browser,firefox,/home/alen/.local/share/.assets/MenuIcons/web-browser.png
+Text Editor,mousepad,/home/alen/.local/share/.assets/MenuIcons/text-editor.png
 ^sep()
-Applications,^checkout(lx-apps),/home/alen/.config/jgmenu/MenuIcons/applications.png
-Apps as Root,^checkout(root-apps),/home/alen/.config/jgmenu/MenuIcons/root-apps.png
-Quick Commands, ^checkout(quick-cmds), /home/alen/.config/jgmenu/MenuIcons/quick-cmds.png
-Screenshot, ^checkout(screenshot), /home/alen/.config/jgmenu/MenuIcons/screenshot.png
+Applications,^checkout(lx-apps),/home/alen/.local/share/.assets/MenuIcons/applications.png
+Apps as Root,^checkout(root-apps),/home/alen/.local/share/.assets/MenuIcons//root-apps.png
+Quick Commands, ^checkout(quick-cmds), /home/alen/.local/share/.assets/MenuIcons/quick-cmds.png
+Screenshot, ^checkout(screenshot), /home/alen/.local/share/.assets/MenuIcons/screenshot.png
 ^sep()
-Lock,$HOME/.scripts/lock-run,/home/alen/.config/jgmenu/MenuIcons/lock.png
-Exit Worm,eww -c $HOME/.config/eww/Powermenu/ open-many --toggle background background-closer buttons-exit profile-exit quotes-exit close-exit,/home/alen/.config/jgmenu/MenuIcons/system.png
+Lock,$HOME/.scripts/lock-run,/home/alen/.local/share/.assets/MenuIcons//lock.png
+Exit Worm,eww -c $HOME/.config/eww/Powermenu/ open-many --toggle background background-closer buttons-exit profile-exit quotes-exit close-exit,/home/alen/.local/share/.assets/MenuIcons/system.png
 
 
 
 ^tag(root-apps)
-Terminal (Root), gksu alacritty, /home/alen/.config/jgmenu/MenuIcons/terminal.png
-File Manager (Root), gksu thunar, /home/alen/.config/jgmenu/MenuIcons/file-manager.png
-Vim (Root), fakeroot vim /, /home/alen/.config/jgmenu/MenuIcons/text-editor.png
-GParted (Root), gksu gparted, /home/alen/.config/jgmenu/MenuIcons/places.png
+Terminal (Root), gksu alacritty, /home/alen/.local/share/.assets/MenuIcons/terminal.png
+File Manager (Root), gksu thunar, /home/alen/.local/share/.assets/MenuIcons/file-manager.png
+Vim (Root), fakeroot vim /, /home/alen/.local/share/.assets/MenuIcons/text-editor.png
+GParted (Root), gksu gparted, /home/alen/.local/share/.assets/MenuIcons/places.png
 
 
 ^tag(quick-cmds)
-Color Picker, ~/.config/jgmenu/scripts/color-gpicker, cs-color
-Furminal, ~/.config/jgmenu/scripts/furminal, utilities-terminal
-Visualizer, ~/.config/jgmenu/scripts/visualizer, sonic-visualiser
-Sticky Notes, primenote -c new, sticky
-
+Color Picker, ~/.scripts/utils/color-picker-x, cs-color
+Visualizer, ~/.scripts/utils/visualizer, sonic-visualiser
 
 ^tag(screenshot)
 Screenshot Now, ~/.config/jgmenu/scripts/screenshot --now, /home/alen/.config/jgmenu/MenuIcons/screenshot.png

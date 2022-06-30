@@ -4,5 +4,4 @@
 ## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
 
 ## Fullscreen terminal
-
-alacritty --class 'Fullscreen,Fullscreen' -o window.startup_mode=fullscreen window.padding.x=45 window.padding.y=45 window.opacity=1.0 font.size=12 --command cava
+kitty  --hold --single-instance --detach --wait-for-single-instance-window-close --start-as normal --class "kitty-cava" cava

@@ -322,7 +322,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "" (altMask .|. shiftMask,   xK_g ) $ tagPrompt myXPConfig (\s -> withTaggedGlobalP s shiftHere)
     , key "" (altMask .|. controlMask, xK_g ) $ tagPrompt myXPConfig (\s -> focusUpTaggedGlobal s)
     ] ^++^
-  keySet "Bar & Widgets"
+  keySet "Misc"
     [ key "Polybar Toggle"           (modm , xK_equal ) togglePolybar
     , key "Eww widget Toggle"        (modm , xK_minus ) $ spawn "~/.config/eww/launch_eww"
     ] ^++^
@@ -385,6 +385,9 @@ myMouseBindings (XConfig {XMonad.modMask = modm}) = M.fromList $
     -- mod-button3, Set the window to floating mode and resize by dragging
     , ((modm, button3), (\w -> focus w >> mouseResizeWindow w
                                        >> windows W.shiftMaster))
+
+    , ((modm .|. shiftMask, button3), (const $ spawn $ "~/.scripts/color-pick"))
+
     -- , ((modm, button3), (\w -> focus w >> Flex.mouseResizeWindow w))
 
     -- , ((mySup, 1), (\w -> focus w >> windows W.swapUp))
@@ -442,6 +445,21 @@ myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts float
 
 ------------------------------------------------------------------------
 -- Window rules:
+windowRules = composeAll . concat $
+    [ 
+      [className =? c --> doCenterFloat | c <- myCFloats]
+    , [title =? t --> doCenterFloat | t <- myTFloats]
+    , [resource =? r --> doFloat | r <- myRFloats]
+    , [resource =? i --> doIgnore | i <- myIgnores]
+    ]
+    where
+		myCFloats = ["alacritty-float", "MPlayer", "mpv","kitty-cava"
+					,"Gimp", "feh", "Viewnior", "Gpicview"
+					,"Kvantum Manager", "qt5ct", "VirtualBox Manager", "qemu", "Qemu-system-x86_64"
+					,"Lxappearance", "Nitrogen", "Arandr", "Xfce4-power-manager-settings", "Nm-connection-editor"]
+		myTFloats = ["Downloads", "Save As..."]
+		myRFloats = []
+		myIgnores = ["desktop_window"]
 
 -- Execute arbitrary actions and WindowSet manipulations when managing
 -- a new window. You can use this to, for example, always float a
@@ -486,7 +504,7 @@ xmonKeYad = TitleApp "xmonad-keys-yad"      "yad --text-info --text 'XMonad' --s
 kterm     = ClassApp "kitty-scratch"        "kitty --class 'kitty-scratch'"
 emScratch = TitleApp "_emacs_scratchpad_"   "emacsclient --frame-parameters '((name . \"_emacs_scratchpad_\"))' -nc"
 
-myManageHook =  manageApps <+> manageSpawn <+> manageScratchpads
+myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
  where
   isBrowserDialog     = isDialog <&&> className =? "Brave-browser"
   isFileChooserDialog = isRole =? "GtkFileChooserDialog"

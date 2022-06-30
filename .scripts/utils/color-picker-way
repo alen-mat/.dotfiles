@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+# wayland : https://www.reddit.com/r/wayland/comments/fbhiez/color_picker_eyedropper_on_wayland/ 
+
+color="$(grim -g "$(slurp -p)" - -t png -o | convert png:- -format '%[pixel:s]\n' info:- | awk -F '[(,)]' '{printf("#%02x%02x%02x\n",$2,$3,$4)}')"
+
+image=/tmp/${color}.png
+
+main() {
+	if [[ "$color" ]]; then
+		# generate preview
+		convert -size 48x48 xc:"$color" ${image}
+		# notify about it
+		dunstify -u low --replace=69 -i ${image} "$color, copied to clipboard."
+    # copy color code to clipboard
+		echo $color | tr -d "\n" | xclip -selection clipboard
+		exit 0
+	fi
+}
+
+# Run the script
+main
