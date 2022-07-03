@@ -1,6 +1,18 @@
 #!/usr/bin/env sh
 #~/.local/bin/bartoggle & #tint2
-~/.config/polybar/minimal/launch.sh       
+#~/.config/polybar/minimal/launch.sh       
+~/.config/polybar/xmo-bar/launch
 
 command -v hhp >/dev/null 2>&1 && hhp&
-command -v conky >/dev/null 2>&1 && sleep 5;~/.config/conky/hax_os/start&
+command -v conky >/dev/null 2>&1 && sleep 2;~/.config/conky/hax_os/start&
+
+if [[ $(pidof dunst) ]]; then
+   pkill dunst
+fi
+
+dunst -config .config/dunst/xmonad-dunstrc  &&
+
+killall -q picom
+while pgrep -u $UID -x picom >/dev/null; do sleep 1; done
+picom -f --config ~/.config/picom/picom.conf -b &
+

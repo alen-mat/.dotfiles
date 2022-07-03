@@ -1,7 +1,11 @@
 add_newline = true
-format = """
-[┌────](bold white)$directory$hg_branch
-[└─](bold white)$character"""
+#format = """
+#[┌────](bold white)\\[$directory\\]$hg_branch
+#[└─](bold white)$character"""
+format = """$git_commit $git_state $git_status
+(bold cyan)Ψ $directory$hg_branch$git_branch
+➜ 
+"""
 right_format = "$status$cmd_duration $username"
 scan_timeout = 10
 
@@ -44,6 +48,13 @@ vagrant.disabled = true
 vlang.disabled = true
 zig.disabled = true
 
+[aws]
+symbol = "  "
+format = '\[[$symbol($profile)(\($region\))(\[$duration\])]($style)\]'
+
+[docker_context]
+symbol = " "
+format = '\[[$symbol$context]($style)\]'
 
 [character]
 vicmd_symbol = "[❮](bold green)"
@@ -56,7 +67,7 @@ truncation_symbol = "…/"
 repo_root_format="[$before_root_path]($style)[$repo_root]($repo_root_style)[$path]($style)[$read_only]($read_only_style) "
 read_only="🔒"
 read_only_style="red"
-format="\\[[$path]($style)[$read_only]($read_only_style)\\]  "
+format="[$path]($style)[$read_only]($read_only_style)"
 
 [directory.substitutions]
 
@@ -95,5 +106,33 @@ show_always = true
 
 [hg_branch]
 format = "\\([🌱 $branch](bold purple)\\)"
-truncation_length = 4
-truncation_symbol = ""
+truncation_length = 17
+truncation_symbol = ".~."
+
+[git_branch]
+symbol = ""
+format = '\[[$symbol$branch]($style)\]'
+truncation_length = 17
+truncation_symbol = ".~."
+ignore_branches = []
+
+[git_commit]
+commit_hash_length = 8
+style = "bold white"
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+
+[git_status]
+conflicted = "⚔️ "
+ahead = "🏎️ 💨 ×${count}"
+behind = "🐢 ×${count}"
+diverged = "🔱 🏎️ 💨 ×${ahead_count} 🐢 ×${behind_count}"
+untracked = "🛤️  ×${count}"
+stashed = "📦 "
+modified = "📝 ×${count}"
+staged = "🗃️  ×${count}"
+renamed = "📛 ×${count}"
+deleted = "🗑️  ×${count}"
+style = "bright-white"
+format = "$all_status$ahead_behind"

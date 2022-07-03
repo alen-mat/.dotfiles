@@ -7,6 +7,13 @@ then
         compton -f --config ~/.config/compton.conf -b 
     fi
 
+		_ps=(ksuperkey mpd xfce-polkit xfce4-power-manager)
+		for _prs in "${_ps[@]}"; do
+			if [[ `pidof ${_prs}` ]]; then
+				killall -9 ${_prs}
+			fi
+		done
+
     xsetroot -cursor_name left_ptr &
 
     deviceid="$(xinput list | grep "Touchpad" | awk '{print $5}'|cut -d= -f2)"
@@ -17,16 +24,29 @@ then
     	done
     fi
 
-    command -v setxkbmap >/dev/null 2>&1 && setxkbmap -option ctrl:nocaps
-    command -v xcape >/dev/null 2>&1   && xcape -e 'Control_L=Escape'
-
+    if [[ $(command -v setxkbmap >/dev/null 2>&1) ]] ;then
+			setxkbmap -option ctrl:nocaps
+			xmodmap -e "keycode 9 = Caps_Lock NoSymbol Caps_Lock"
+			setxkbmap -option caps:swapescape
+			xmodmap -e "keycode 66 = Escape NoSymbol Escape"
+		fi
+    if [[ $(command -v xcape >/dev/null 2>&1) ]]; then 
+			xcape -e 'Control_L=Escape'
+			xcape -e '#66=Escape'
+		fi
+	
     #bluetooth
-    blueman-applet&
-    nm-applet&
-    ulauncher&
+    command -v blueman-applet >/dev/null 2>&1 && blueman-applet&
+    command -v nm-applet >/dev/null 2>&1 && nm-applet&
+    command -v ulauncher >/dev/null 2>&1 && ulauncher&
+		command -v touchegg >/dev/null 2>&1 && touchegg&
+		command -v mpd >/dev/null 2>&1 && exec mpd &
 
     pactl load-module module-bluetooth-discover
 
+		[[ -f /usr/lib/xfce-polkit/xfce-polkit ]] && /usr/lib/xfce-polkit/xfce-polkit &
+		command -v xfce4-power-manager >/dev/null 2>&1 && xfce4-power-manager &
+ 
     [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
     [[ -f ~/.cache/wal/colors.Xresources ]] && xrdb -merge ~/.cache/wal/colors.Xresources
 

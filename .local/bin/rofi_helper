@@ -1,35 +1,33 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 case $1 in
      -a|--app-launcher) 
-			#~/.config/Rofi/scripts/app_launcher.sh
-			~/.config/rofi/launchers/slate/launcher.sh
-     	#~/.config/rofi/bin/launcher_slate
+			~/.config/rofi/scripts/app_launcher.sh
 			;;
 		 -bm|--bluetooth-manager)
-			~/.config/Rofi/scripts/bluetooth-manager.sh
+			~/.config/rofi/scripts/bluetooth-manager.sh
 			;;
 		 -nm|--network-manager)
-			~/.config/Rofi/scripts/network-manager.sh
+			~/.config/rofi/scripts/network-manager.sh
 			;;
 		 -p|--power-menu)
-			~/.config/Rofi/scripts/powermenu.sh
+			~/.config/rofi/scripts/powermenu.sh
 			#~/.config/rofi/bin/powermenu
 			;;
 		 -bw|--bitwarden)
- 			 ~/.config/Rofi/scripts/bwmenu main
+ 			 ~/.config/rofi/scripts/bwmenu main
 			;;
 		 -gc|--greenclip)
-			~/.config/Rofi/scripts/greenclip
+			~/.config/rofi/scripts/greenclip
 			;;
 		 -ep|--emoji-picker)
 			rofimoji
       ;;
      -ss|--simple-switcher)
-      rofi -show window combi-modes: [windowcd,window,ssh,run] -modes combi -theme "~/.config/Rofi/styles/window-swith.rasi"
+      rofi -show window combi-modes: [windowcd,window,ssh,run] -modes combi #-theme "~/.config/Rofi/styles/window-swith.rasi"
       ;;
      -bb|--buku-bookmarks)
-      ~/.config/Rofi/scripts/buku  
+      ~/.config/rofi/scripts/buku  
       ;;
 		 *)
 			;;
