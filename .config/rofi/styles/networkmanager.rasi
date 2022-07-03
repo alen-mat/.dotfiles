@@ -8,7 +8,7 @@
  */
 
 
-@import "/home/alen/.config/Rofi/styles/colors.rasi"
+@import "/home/alen/.config/rofi/styles/colors.rasi"
 
 configuration {
 	show-icons:		false;

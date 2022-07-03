@@ -1,6 +1,6 @@
 /* Confirm Dialog */
 
-@import "~/.config/Rofi/styles/colors.rasi"
+@import "~/.config/rofi/styles/colors.rasi"
 
 * {
     background-color:       @bga;
@@ -9,7 +9,7 @@
 }
 
 window {
-    width:      			225px;
+    width:      			320px;
     padding:    			25px;
     border:					0px;
     border-radius:          0px;
@@ -22,4 +22,3 @@ entry {
     expand: 				true;
     text-color:				@ac;
 }
-

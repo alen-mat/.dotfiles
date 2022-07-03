@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+## Copyright (C) 2020-2022 Aditya Shakya <adi1090x@gmail.com>
+## Everyone is permitted to copy and distribute copies of this file under GNU-GPL3
+
+DIR="$HOME/.config/rofi"
+rofi_command="rofi -theme $DIR/styles/$1/screenshot.rasi"
+
+# Buttons
+screen=""
+area=""
+window=""
+infive=""
+inten=""
+
+# Variable passed to rofi
+options="$screen\n$area\n$window\n$infive\n$inten"
+
+chosen="$(echo -e "$options" | $rofi_command -p 'Take Screenshot' -dmenu -selected-row 0)"
+case $chosen in
+	$screen)
+		~/.local/bin/maim_helper screen
+    ;;
+	$area)
+		~/.local/bin/maim_helper selection
+    ;;
+  $window)
+		~/.local/bin/maim_helper active_window
+		;;
+  $infive)
+		~/.local/bin/maim_helper shot 5
+		;;
+  $inten)
+		~/.local/bin/maim_helper shot 10
+        ;;
+esac
+
