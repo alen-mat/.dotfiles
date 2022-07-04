@@ -5,7 +5,7 @@
 
 DIR="$HOME/.config/rofi"
 
-rofi_command="rofi -theme $DIR/styles/$2/powermenu.rasi"
+rofi_command="rofi -theme $DIR/styles/$1/powermenu.rasi"
 
 uptime=$(uptime -p | sed -e 's/up //g')
 
