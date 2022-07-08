@@ -31,8 +31,16 @@ alias cp="cp -iv"
 alias mv="mv -iv"
 alias rm="rm -vi"
 alias mkd="mkdir -pv"
-alias yt="youtube-dl --add-metadata -i"
+
+if [ -x "$(command -v yt-dlp)" ];then
+ alias _yt="yt-dlp"
+elif [ -x "$(command -v youtube-dl)" ]; then
+	alias _yt="youtube-dl"
+fi
+
+alias yt="_yt --add-metadata -i"
 alias yta="yt -x -f bestaudio/best"
+alias ytmp3="yt -x --audio-format mp3"
 alias ffmpeg="ffmpeg -hide_banner"
 
 alias grep="grep --color=auto"

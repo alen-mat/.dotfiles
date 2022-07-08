@@ -58,7 +58,8 @@
 	enabled = true
 [core]
 	#editor = st -n -w    # Sublime Text
-	editor = code -n -w    # VS Code
+	#editor = code -n -w    # VS Code
+	editor = vim   
 	ignorecase = false
 	excludesfile = ~/.gitignore_global
 [color]
@@ -88,3 +89,21 @@
 	clean = git-lfs clean -- %f
 [status]
 	short = true
+[pretty]
+	q = The author of %h was %an, %ar%nThe title was >>%s<<%n
+[color]
+  ui = auto
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[color "status"]
+	added = green normal
+	changed = yellow normal bold
+	untracked = magenta normal dim
+	header = white normal dim

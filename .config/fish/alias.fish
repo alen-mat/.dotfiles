@@ -36,8 +36,16 @@ alias cp="cp -iv"
 alias mv="mv -iv"
 alias rm="rm -vi"
 alias mkd="mkdir -pv"
-alias yt="youtube-dl --add-metadata -i"
+
+if type -q yt-dlp
+ alias _yt="yt-dlp"
+else if type -q youtube-dl
+	alias _yt="youtube-dl"
+end
+
+alias yt="_yt --add-metadata -i"
 alias yta="yt -x -f bestaudio/best"
+alias ytmp3="yt -x --audio-format mp3"
 alias ffmpeg="ffmpeg -hide_banner"
 
 alias grep="grep --color=auto"
@@ -61,5 +69,3 @@ alias nis='npm i -S'
 alias set_server_opts='export JAVA_OPTS="-XX:PermSize=250M -XX:MaxPermSize=250M -Xms256m -Xmx512m -Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n,address=8991"'
 
 alias j!=jbang
-
-alias ytube-mp3="youtube-dl --extract-audio --audio-format mp3 "

@@ -7,38 +7,57 @@ else
 fi
 
 
-file_name="Screen_shot_$(date +%s).png" 
+time="$(date +%Y-%m-%d-%H-%M-%S)"
+geometry="$(xrandr | head -n1 | cut -d',' -f2 | tr -d '[:blank:],current')"
+
+file_name="Screenshot_${time}_${geometry}.png" 
 action="~/Pictures/Screenshots/${file_name}"
-notification_content="Screenshoet saved - ${file_name}"
-if [[ ${2-} ]];then
+icon="~/.local/share/.assets/MenuIcons/screenshot.png"
+timericon=""
+
+notification_content="Screenshot saved - ${file_name}"
+if [  ${MAIM} = "shot" ];then
+	 timer=$2
+elif [[ ${2-} ]];then
   if [ $2 = "clip" ]; then
      action="| xclip -selection clipboard -t image/png"
      notification_content="Screenshot saved to clipboard"
   fi
 fi
 
+# countdown
+countdown () {
+	for sec in $(seq $1 -1 1); do
+		dunstify -t 1000 --replace=699 -i "$timericon" "Taking shot in : $sec"
+		sleep 1
+	done
+}
+
 take_screen_shot(){
-  echo $MAIM
   case $MAIM in
     screen)
-      cmnd="maim ${action}" 
+      cmnd="maim -f png  ${action}" 
       ;;
 
     selection)
-      cmnd="maim -s ${action}"
+      cmnd="maim -f png -s ${action}"
       ;;
 
     active_window)
-      cmnd="maim -i $(xdotool getactivewindow) ${action}"
+      cmnd="maim -f png -i $(xdotool getactivewindow) ${action}"
+      ;;
+
+    shot)
+			countdown "$timer"
+      cmnd="maim -f png  ${action}" 
       ;;
 
     *)
-      notify-send "¯\_(ツ)_/¯"
+      notification_content="¯\_(ツ)_/¯"
   		return
       ;;
   esac
-  eval $cmnd
-  notify-send "${notification_content}"
+  eval "$cmnd" && dunstify -u low --replace=699 -i "$icon" "$notification_content" 
 }
 
 take_screen_shot

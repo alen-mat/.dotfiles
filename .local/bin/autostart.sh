@@ -2,14 +2,14 @@
 if [[ ! -f /tmp/autostart_done ]]
 then
     if [ -x "$(command -v picom)" ]; then
-        picom -f --experimental-backend --config ~/.config/picom/picom  -b&
+        pgrep picom || picom -f --experimental-backend --config ~/.config/picom/picom  -b&
     else
-        compton -f --config ~/.config/compton.conf -b 
+        pgrep compton ||compton -f --config ~/.config/compton.conf -b 
     fi
 
 		_ps=(ksuperkey mpd xfce-polkit xfce4-power-manager)
 		for _prs in "${_ps[@]}"; do
-			if [[ `pidof ${_prs}` ]]; then
+			if [[ $(pidof ${_prs}) ]]; then
 				killall -9 ${_prs}
 			fi
 		done
