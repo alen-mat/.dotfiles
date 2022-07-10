@@ -86,7 +86,7 @@ import XMonad.Layout.ToggleLayouts (toggleLayouts, ToggleLayout(Toggle))
 import XMonad.Layout.WindowArranger (windowArrange, WindowArrangerMsg(..))
 import XMonad.Layout.WindowNavigation
 
-import XMonad.Prompt ( defaultXPConfig, XPConfig(..), XPPosition(CenteredAt))
+import XMonad.Prompt ( XPConfig(..), XPPosition(CenteredAt))
 
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
 import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating, defaultFloating, namedScratchpadAction, namedScratchpadManageHook)
@@ -363,7 +363,7 @@ nextWS' = switchWS Next
 prevWS' = switchWS Prev
 
 switchWS dir =
-  findWorkspace filterOutNSP dir AnyWS 1 >>= windows . W.view
+  findWorkspace filterOutNSP dir anyWS 1 >>= windows . W.view
 
 filterOutNSP =
   let g f xs = filter (\(W.Workspace t _ _) -> t /= "NSP") (f xs)
@@ -695,7 +695,7 @@ myDynamicEventHook = dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> flo
 
 
 myEventHook = do
-               handleEventHook myBaseConfig <+> fullscreenEventHook <+> docksEventHook <+> ewmhDesktopsEventHook <+> screenCornerEventHook <+> myDynamicEventHook <+> serverModeEventHook 
+               handleEventHook myBaseConfig <+> fullscreenEventHook <+> screenCornerEventHook <+> myDynamicEventHook <+> serverModeEventHook 
 ------------------------------------------------------------------------
 -- Status bars and logging
 

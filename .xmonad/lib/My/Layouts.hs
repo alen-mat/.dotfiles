@@ -53,7 +53,7 @@ tall     = renamed [Replace "tall"]
            $ limitWindows 12
            $ mySpacing 5
            $ ResizableTall 1 (3/100) (1/2) []
-magnify  = renamed [Replace "magnify"]
+_magnify  = renamed [Replace "magnify"]
            $ smartBorders
            $ windowNavigation
            $ addTabs shrinkText myTabTheme
@@ -116,7 +116,7 @@ wideAccordion  = renamed [Replace "wideAccordion"]
 -----------------------------------------------------
 
 defaultLayouts = withBorder myBorderWidth tall
-                                 ||| magnify
+                                 ||| _magnify
                                  ||| noBorders monocle
                                  ||| floats
                                  ||| noBorders tabs
