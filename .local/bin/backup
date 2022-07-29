@@ -1,9 +1,39 @@
 #!/usr/bin/env bash
+progressIndicator(){
+	pid="$1"
+	content="$2"
+
+	spin='-\|/'
+
+	i=0
+	while kill -0 $pid 2>/dev/null
+	do
+  	i=$(( (i+1) %4 ))
+	  _printf_ "[${spin:$i:1}] $content"
+  	sleep .1
+	done	
+}
+
+_printf_(){
+	first_arg="$1"
+	shift
+	printf "\r$first_arg" "$@"
+}
+
 echo "">~/.config/.restore-setup/aur_packages
+echo "[*]Cleared AUR backup"
+
+aur_pkg_no=0
 aura -Qm | cut -d ' ' -f1 | while read line
 do
-        aura -As $line | grep "installed"| cut -d ' ' -f1 | cut -d/ -f2 >> ~/.config/.restore-setup/aur_packages
+        aura -As $line | grep "installed"| cut -d ' ' -f1 | cut -d/ -f2 >> ~/.config/.restore-setup/aur_packages&
+				((++aur_pkg_no))
+				progressIndicator "$!" "${aur_pkg_no} Backing up AUR packages"
 done
-pacman -Qqe > ~/.config/.restore-setup/pacman_packages
+_printf_ "[*] ${aur_pkg_no} Backed up AUR packages\n"
 
-pacman -S --needed $(comm -12 <(pacman -Slq | sort) <(sort ~/.config/.restore-setup/pacman_packages))
+pacman -Qqe > ~/.config/.restore-setup/pacman_packages&
+progressIndicator "$!" "Backing up packages"
+_printf_ "[*]Backup Complete\n"
+
+notify-send "Backup" "Complete"

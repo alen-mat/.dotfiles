@@ -1,0 +1,4 @@
+alias pacmanbkp "pacman -Qqe | grep -v "(pacman -Qqm)" > /tmp/pacman.lst"
+alis aur_bkp "pacman -Qm"
+alias a  "pacman -Qtdq | pacman -Rns -"
+alias all_installed_package "pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'"

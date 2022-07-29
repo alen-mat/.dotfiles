@@ -32,7 +32,7 @@ conky.config = {
 	color2 = '#DC143C',
 	color3 = '#FFFF00',
   own_window_class = 'Conky_trans',
-	own_window_type = 'desktop',
+	own_window_type = 'dock',
 	own_window_argb_visual = true,
 
 
@@ -43,7 +43,7 @@ conky.text = [[
  ┌──────────┐
 ┌┤ FORECAST │
 │└───┬──────┘
-${texeci 900 python2.7 pyweath.py | head -n 7 && cp /home/$USER/.conky_weather_icons/$(python2.7 pyweath.py | grep "Condition" | awk '{print $4}').png /home/$USER/Sky.png}
+${texeci 900 ~/.config/conky/hax_os/scripts/weather | head -n 7 && cp /home/$USER/.conky_weather_icons/$(python2.7 pyweath.py | grep "Condition" | awk '{print $4}').png /home/$USER/Sky.png}
 │
 │
 ▼

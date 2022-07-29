@@ -37,6 +37,7 @@
 	pl = !git pull --rebase origin $(git cb)
 	ps = !git push origin $(git cb)
 	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all
+	out = log --branches --not --remotes=origin
 	who = shortlog -s --
 	push-hash = !sh -c 'git push origin $1:refs/heads/$(git cb)' -    # requires a SHA or the remote branch will be deleted!!
 	reset-tags = "!f() { git tag -l | xargs git tag -d; git fetch; }; f"

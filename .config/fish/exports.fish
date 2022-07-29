@@ -25,7 +25,7 @@ set -x WM "xmonad"
 set -x __WS         '~/WorkSpace'
 set -x SUDO_PROMPT  '[sudo] %p 🔒 : '
 
-#set -x QT_STYLE_OVERRIDE            kvantum
+set -x QT_STYLE_OVERRIDE            kvantum #kvantum-dark 
 set -x QT_QPA_PLATFORMTHEME         "qt5ct"  
 set -x QT_AUTO_SCREEN_SCALE_FACTOR  1
 set -x GTK_IM_MODULE               'fcitx'

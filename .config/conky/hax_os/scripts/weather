@@ -1,0 +1,42 @@
+#!/usr/bin/env python
+# vim: set fileencoding=UTF-8 :
+
+import urllib
+import urllib.request
+import json
+
+def wttr(place):
+    url = f"http://wttr.in/{place}?format=j1"
+
+    req = urllib.request.urlopen(url)
+    data = req.read()
+    encoding = req.info().get_content_charset('utf-8')
+    json_object = json.loads(data.decode(encoding))
+    return {
+    	'current_condition':json_object['current_condition'][0]['weatherDesc'][0]['value'],
+	'current_temp':json_object['current_condition'][0]['temp_C'],
+	'feel_like':json_object['current_condition'][0]['FeelsLikeC'],
+	'wind':json_object['current_condition'][0]['windspeedKmph'],
+	'humidity': '',
+	'sunrise':json_object['weather'][0]['astronomy'][0]['sunrise'],
+	'sunset':json_object['weather'][0]['astronomy'][0]['sunset'],
+	'forecasts': [] ,
+    }
+
+
+def main():
+    a=wttr("Chennai")
+    print(f'├ Temperature: {a["current_temp"]}°C')
+    print(f'├ Condition  : {a["current_condition"]}')
+    print(f'├ Feels Like : {a["feel_like"]} °C')
+    print(f'├ Wind Speed : {a["wind"]} km/h')
+    print(f'├ Humidity   : {a["humidity"]} %')
+    print(f'├ Sunrise    : {a["sunrise"]}')
+    print(f'├ Sunset     : {a["sunset"]}')
+    print(f'├ Tomorrow   :')#,a['forecasts'][2]['date'])
+    print(f'├ Highs      :')#,a['forecasts'][2]['high'],'°C')
+    print(f'├ Lows       :')#,a['forecasts'][2]['low'],'°C')
+    print(f'├ Sky        :')#,a['forecasts'][2]['condition'])
+
+if __name__ == "__main__":
+    main()

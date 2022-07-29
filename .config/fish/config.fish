@@ -36,3 +36,7 @@ end
 #https://superuser.com/questions/719531/what-is-the-equivalent-of-bashs-and-in-the-fish-shell
 
 starship init fish | source
+
+if set -q VIRTUAL_ENV
+    echo -n -s (set_color -b blue white) "(" (basename "$VIRTUAL_ENV") ")" (set_color normal) " "
+end

@@ -7,7 +7,7 @@ then
         pgrep compton ||compton -f --config ~/.config/compton.conf -b 
     fi
 
-		_ps=(ksuperkey mpd xfce-polkit xfce4-power-manager)
+		_ps=(ksuperkey mpd xfce-polkit xfce4-power-manager poweralertd polkit-dumb-agent)
 		for _prs in "${_ps[@]}"; do
 			if [[ $(pidof ${_prs}) ]]; then
 				killall -9 ${_prs}
@@ -44,8 +44,10 @@ then
 
     pactl load-module module-bluetooth-discover
 
-		[[ -f /usr/lib/xfce-polkit/xfce-polkit ]] && /usr/lib/xfce-polkit/xfce-polkit &
-		command -v xfce4-power-manager >/dev/null 2>&1 && xfce4-power-manager &
+		#[[ -f /usr/lib/xfce-polkit/xfce-polkit ]] && /usr/lib/xfce-polkit/xfce-polkit &
+		command -v polkit-dumb-agent >/dev/null 2>&1 && polkit-dumb-agent&
+		#command -v xfce4-power-manager >/dev/null 2>&1 && xfce4-power-manager &
+		command -v poweralertd >/dev/null 2>&1 && poweralertd&
  
     [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
     [[ -f ~/.cache/wal/colors.Xresources ]] && xrdb -merge ~/.cache/wal/colors.Xresources
