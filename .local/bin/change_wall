@@ -4,13 +4,6 @@ if [ -r ~/.local/share/Xdbus ]; then
 fi
 WALL_DIR=~/Pictures/wallpapers
 WALLPAPER=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
-DispSer=$(loginctl show-session $(loginctl|grep $(whoami) |awk '{print $1}') -p Type | cut -d= -f 2)
 ~/.local/bin/pywal.sh "$WALLPAPER"
-if [[ "$DispSer" == "wayland" ]]; then
- DISPLAY=:0 swaybg --image "$WALLPAPER" -m fit 
-elif [[ "$DispSer" == "x11" ]]; then 
- DISPLAY=:0 feh --bg-fill "$WALLPAPER"
-else
-  return 
-fi
+DISPLAY=:0 feh --bg-fill "$WALLPAPER"
 

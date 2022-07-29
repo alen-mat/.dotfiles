@@ -2,7 +2,7 @@
 
 # https://github.com/hyprwm/Hyprland/issues/103
 
-background=$(find $HOME/Pictures/Wallpaper -type f | shuf -n 1)
+background=$(find $HOME/Pictures/wallpapers -type f | shuf -n 1)
 swaybg --image $background -m fill&
 
 function handle {
