@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+. ~/.scripts/lock/lock-script --source-only
 
 fg_color=fefefe00
 wrong_color=f82a11aa
@@ -24,13 +25,16 @@ slowfade () {
 }
 
 #playerctl -a pause
-$HOME/.scripts/cycle-dim &
+$HOME/.scripts/lock/cycle-dim &
 #pkill -u "$USER" -USR1 dunst
 $HOME/.scripts/wait-suspend &
 sleep 1 && eww -c ~/.config/eww/Lock/ open-many player-spotify battery-lock volume-slider-lock lock-weather &
 #slowfade start
-WALL_DIR=~/Pictures/wall
-WALLPAPER=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
+
+_pre
+_create_lock_img
+
+WALLPAPER="/tmp/lockscreen.png"
 i3lock -n --force-clock -i "$WALLPAPER" \
 --ind-pos="w/2:h/2+158" --time-pos="w/2:h/4-5" --date-pos="w/2:h/4+55" --greeter-pos="w/2:h/2" \
 --insidever-color=5f5f5f66 --insidewrong-color=$wrong_color --inside-color=5f5f5f00 \
@@ -44,5 +48,7 @@ i3lock -n --force-clock -i "$WALLPAPER" \
 --verif-text=""  --wrong-text="" --noinput-text="" \
 --clock --date-font="Arillo" --time-font="Arillo" \
 --pass-media-keys
+
+_revert
 #slowfade end
 

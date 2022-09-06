@@ -1,0 +1,49 @@
+#!/bin/bash
+TEXT="/tmp/locktext.png"
+WALL_DIR="$HOME/Pictures/wallpapers"
+IMAGE="/tmp/lockscreen.png"
+
+
+_revert() {
+  xset dpms 0 0 0
+}
+
+_create_lock_img(){
+
+    RES="$(xdpyinfo   |  grep  dimensions  | awk '{print $2}')"
+    #WALL=$(find $WALL_DIR -name '*' -type f -exec file {} \; | grep -o -P '^.+: \w+ image'| cut -d: -f1)
+    echo "$WALL"
+
+    WALL=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0| shuf -n1 -z )
+
+    #convert $WALL -scale 10% -scale 1000% -fill black -colorize 25% $IMAGE
+
+    convert "$WALL" -gravity center -resize "$RES" -extent "$RES" "$IMAGE"
+
+    [ -f $TEXT ] || { 
+        convert -size 3000x60 xc:white -font Liberation-Sans -pointsize 26 -fill black -gravity center -annotate +0+0 'Type password to unlock' $TEXT;
+        convert $TEXT -alpha set -channel A -evaluate set 50% $TEXT; 
+    }
+
+    convert $IMAGE $TEXT -gravity center -geometry +0+200 -composite $IMAGE
+
+}
+
+_pre(){
+    xset +dpms dpms 5 5 5
+}
+
+_lock_screen(){
+    #pgrep i3lock || ffmpeg  -loglevel panic -f x11grab -video_size  $(xdpyinfo | grep dimensions | sed -r 's/^[^0-9]*([0-9]+x[0-9]+).*$/\1/') -y -i :0.0+,20 -i "$IMG" -filter_complex "boxblur=9,overlay=(main_w-overlay_w)/3:(main_h-overlay_h)/2" -vframes 1 "/tmp/newimg"
+    i3lock -e -f -n -i "$IMAGE" 
+}
+
+if [ "${1}" != "--source-only" ]; then
+    trap revert HUP INT TERM
+    _pre
+    _create_lock_img
+    _lock_screen
+    _revert
+    exit 0
+fi
+

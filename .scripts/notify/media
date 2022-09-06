@@ -22,6 +22,12 @@ case $1 in
 		playerctl next 
 		echo 'Now Playing' | HELPER
 		;;
-	*)
+	--shuffle)
+        playerctl shuffle toggle
+        echo 'shuffle' | HELPER
 		;;
+    --repeat)
+        playerctl loop Track
+        echo 'repeat' | HELPER
+        ;;
 esac
