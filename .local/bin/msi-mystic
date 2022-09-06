@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+MYST_FILE="$XDG_CACHE_HOME/_.cache/mystic_light_color"
+
+. ~/workspace/python/.py_env/bin/activate
+if [[ ! -f "$MYST_FILE" ]]; then
+
+cat > "$MYST_FILE" <<EOF
+COLOR="a3c273"
+EOF
+
+fi
+. "$MYST_FILE"
+
+while getopts "c:Tt" arg; do
+    case $arg in
+        c)
+            python ~/.scripts/msi-mystic-1563.py -c $OPTARG -B 3
+            sed -i -e "s/COLOR=*/COLOR=\"$OPTARG\"/g" "$MYST_FILE"
+            ;;
+        t)
+            . "$XDG_CACHE_HOME/wal/colors.sh"
+            AC=$(printf "%s\n" "$color1")
+            python ~/.scripts/msi-mystic-1563.py -c $AC -B 3
+            sed -i -e "s/COLOR=*/COLOR=\"$AC\"/g" "$MYST_FILE"
+            ;;
+        T)
+            if [[ -f "/tmp/_mystic_light_off" ]]; then
+                python ~/.scripts/msi-mystic-1563.py -c $COLOR -B 3
+                rm "/tmp/_mystic_light_off"
+            else
+                python ~/.scripts/msi-mystic-1563.py -o
+                touch "/tmp/_mystic_light_off"
+            fi
+            ;;
+    esac
+done
+
