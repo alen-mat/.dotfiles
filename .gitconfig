@@ -48,6 +48,7 @@
 	prune-all = !git remote | xargs -n 1 git remote prune
 	find = !sh -c 'git lg --grep="$@"'    # search for a string in the commit message log
 	srch = !sh -c 'git grep "$@" $(git rev-list --all)'    # search for a string in all commits
+    srch-l = !sh -c 'git rev-list --all | (while read rev; do git grep -e <regexp> $rev; done)'  # fix arg to long 
 	fixup = !sh -c 'git commit --fixup=$1' -
 	squash = !sh -c 'git commit --squash=$1' -
 	ri = rebase --interactive --autosquash --rebase-merges
@@ -55,6 +56,8 @@
 	delete-tag = "!f() { git tag -d $1; git push origin :refs/tags/$1; }; f"
 	info = !sh -c 'git-info' -    # requires https://github.com/gitbits/git-info
 	submodule-list = !git ls-files --stage | grep 16000
+    purge = clean -f -d #untracked files and directories
+    purge-all = clean -f -d -x #and ignored files
 [rerere]
 	enabled = true
 [core]
