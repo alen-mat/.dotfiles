@@ -239,17 +239,18 @@ showKeybindings x = addName "Show Keybindings" . io $
 
 myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
-    [ key "Terminal"                 (modm .|. shiftMask, xK_Return      ) $ spawn (XMonad.terminal conf)
-    , key "Apps (Rofi)"              (modm              , xK_p           ) $ spawn $ "~/.local/bin/rofi_helper -a"
-    , key "Bluetooth Manager (Rofi)" (modm              , xK_bracketleft ) $ spawn $ "~/.local/bin/rofi_helper -bm"
-    , key "Network Manager (Rofi)"   (modm              , xK_bracketright) $ spawn $ "~/.local/bin/rofi_helper -nm"
-    , key "Power Menu (Rofi)"        (modm              , xK_semicolon   ) $ spawn $ "~/.local/bin/rofi_helper -p"
-    , key "ClipBoard (Rofi)"         (modm              , xK_v           ) $ spawn $ "~/.local/bin/rofi_helper -gc"
-    , key "Switcher (Rofi)"          (modm              , xK_Tab         ) $ spawn $ "~/.local/bin/rofi_helper -ss"
-    , key "Emoji Picker (Rofi)"      (modm .|. altMask  , xK_period      ) $ spawn $ "~/.local/bin/rofi_helper -ep"
-    , key "Buku BookMarks (Rofi)"    (modm .|. altMask  , xK_b           ) $ spawn $ "~/.local/bin/rofi_helper -bb"
-    , key "Bitwarden (Rofi)"         (modm .|. altMask  , xK_slash       ) $ spawn $ "~/.local/bin/rofi_helper -bw"
-    , key "Lock screen"              (modm .|. altMask  , xK_l           ) $ spawn $ "betterlockscreen -l"
+    [ key "Terminal"                 (modm .|. shiftMask, xK_Return        ) $ spawn (XMonad.terminal conf)
+    , key "Apps (Rofi)"              (modm              , xK_p             ) $ spawn $ "~/.local/bin/rofi_helper -a"
+    , key "Bluetooth Manager (Rofi)" (modm              , xK_bracketleft   ) $ spawn $ "~/.local/bin/rofi_helper -bm"
+    , key "Network Manager (Rofi)"   (modm              , xK_bracketright  ) $ spawn $ "~/.local/bin/rofi_helper -nm"
+    , key "Power Menu (Rofi)"        (modm              , xK_semicolon     ) $ spawn $ "~/.local/bin/rofi_helper -p"
+    , key "ClipBoard (Rofi)"         (modm              , xK_v             ) $ spawn $ "~/.local/bin/rofi_helper -gc"
+    , key "Switcher (Rofi)"          (modm              , xK_Tab           ) $ spawn $ "~/.local/bin/rofi_helper -ss"
+    , key "Emoji Picker (Rofi)"      (modm .|. altMask  , xK_period        ) $ spawn $ "~/.local/bin/rofi_helper -ep"
+    , key "Buku BookMarks (Rofi)"    (modm .|. altMask  , xK_b             ) $ spawn $ "~/.local/bin/rofi_helper -bb"
+    , key "Bitwarden (Rofi)"         (modm .|. altMask  , xK_slash         ) $ spawn $ "~/.local/bin/rofi_helper -bw"
+    , key "Playerctl (Rofi)"         (modm              , xF86XK_AudioPlay ) $ spawn $ "~/.local/bin/rofi_helper -pctl"
+    , key "Lock screen"              (modm              , xK_l             ) $ spawn $ "~/.local/bin/lock-x-session"
     ] ^++^
   keySet "Audio"
     [ key "Mic Mute"      (0, xF86XK_AudioMicMute           ) $ spawn $ "~/.scripts/notify/audio --mic-toggle"
@@ -305,14 +306,15 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Swap master"     (modm              , xK_Return   ) $ windows W.swapMaster
     , key "Swap next"       (modm .|. shiftMask, xK_j        ) $ windows W.swapDown
     , key "Swap previous"   (modm .|. shiftMask, xK_k        ) $ windows W.swapUp
-    , key "Shrink master"   (modm              , xK_h        ) $ sendMessage Shrink
-    , key "Expand master"   (modm              , xK_l        ) $ sendMessage Expand
+    , key "Shrink master"   (modm .|. shiftMask, xK_h        ) $ sendMessage Shrink
+    , key "Expand master"   (modm .|. shiftMask, xK_l        ) $ sendMessage Expand
     , key "Switch to tile"  (modm              , xK_t        ) $ withFocused (windows . W.sink)
     , key "Rotate slaves"   (modm .|. shiftMask, xK_Tab      ) rotSlavesUp
     , key "Decrease size"   (modm              , xK_d        ) $ withFocused (keysResizeWindow (-10,-10) (1,1))
     , key "Increase size"   (modm              , xK_s        ) $ withFocused (keysResizeWindow (10,10) (1,1))
     , key "Decr  abs size"  (modm .|. shiftMask, xK_d        ) $ withFocused (keysAbsResizeWindow (-10,-10) (1024,752))
     , key "Incr  abs size"  (modm .|. shiftMask, xK_s        ) $ withFocused (keysAbsResizeWindow (10,10) (1024,752))
+    , key "Invert Window"   (modm              , xK_i        ) $ spawn "~/.scripts/invert-window"
     ] ^++^
   keySet "Tag Windows"
     [ key "" (modm,                    xK_g ) $ tagPrompt myXPConfig (\ s -> withFocused (addTag s))
@@ -433,10 +435,10 @@ addEWMHFullscreen   = do
 fullscreenLayout = renamed [PrependWords "fullscreen"]
                    ( noBorders $ Full )
 
-myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts )
+myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts ) 
 
 -- myLayoutHook = showWName' myShowWNameTheme $ myLayout
-myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ T.toggleLayouts floats
+myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ onWorkspace "6" imLayout $T.toggleLayouts floats
                $ screenCornerLayoutHook $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) defaultLayouts
 
 
@@ -549,12 +551,13 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
             , isKDE
             ]                                  -?> doCenterFloat
     , title =? "Picture in picture"            -?> doFloat
-		, className =? "Yad"                       -?> doFloat
-		, className =? "Xboard"                    -?> doFloat
-		, className =? "Blueman-manager"           -?> doCenterFloat
+	, className =? "Yad"                       -?> doFloat
+	, className =? "Xboard"                    -?> doFloat
+	, className =? "Blueman-manager"           -?> doCenterFloat
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  -?> doFloat
     , isFullscreen                             -?> doFullFloat
     , pure True                                -?> tileBelow
+    , className =? "Wfica" <&&> title =? "WorkSpace Enterprise_SG2_PROD_01 "                     -?> doShift "9"
     ]
 
 isInstance (ClassApp c _) = className =? c
@@ -618,8 +621,8 @@ projects =
 myXPConfig :: XPConfig
 myXPConfig = def
   { bgHLight = color4
-  , bgColor = color0
-  , fgColor = color1
+  , bgColor = colorBack
+  , fgColor = colorFore
   , fgHLight = color2
   , borderColor= color13
   , font     = "xft:Bitstream Vera Sans Mono:size=8:antialias=true"
@@ -705,7 +708,7 @@ myEventHook = do
 -- myLogHook = return ()
 fadeLogHook :: X ()
 fadeLogHook = fadeInactiveLogHook fadeAmount
-    where fadeAmount = 0.7
+    where fadeAmount = 1.0
 
 ------------------------------------------------------------------------
 -- Startup hook

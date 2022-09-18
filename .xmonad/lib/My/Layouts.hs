@@ -1,17 +1,25 @@
-module My.Layouts(defaultLayouts, floats)  where
+module My.Layouts(defaultLayouts, floats, imLayout)  where
 import My.Themes.Monnet
 
+import Data.Ratio ((%))
 import Data.Semigroup
+
 import XMonad.Layout
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(MIRROR))
 import XMonad.Layout.Renamed
 
 import XMonad.Layout.Accordion
+import XMonad.Layout.Column
+import XMonad.Layout.Combo
+import XMonad.Layout.ComboP
 import XMonad.Layout.GridVariants (Grid(Grid))
+import XMonad.Layout.IM
 import XMonad.Layout.Spiral
+import XMonad.Layout.Reflect
 import XMonad.Layout.ResizableTile
 import XMonad.Layout.Tabbed
 import XMonad.Layout.ThreeColumns
+import XMonad.Layout.TwoPane
 import XMonad.Layout.Simplest
 import XMonad.Layout.SimplestFloat
 import XMonad.Layout.Magnifier
@@ -112,10 +120,32 @@ tallAccordion  = renamed [Replace "tallAccordion"]
            $ Accordion
 wideAccordion  = renamed [Replace "wideAccordion"]
            $ Mirror Accordion
+------------------------------------------------------------------------
+rosterLayout    = Column 1
+tabbedLayout    = noBorders (tabbed shrinkText myTabTheme ) --{ fontName = myTabFont })
+imLayout1        = withIM (2%8) (ClassName "KotatogramDesktop") $ chatLayout where
+    chatLayout      = combineTwoP (TwoPane 0.5 0.2) rosterLayout tabbedLayout rosters
+    rosters         = (pidginRoster `Or` skypeRoster `Or` odeskRoster `Or` kotogram)
+    pidginRoster    = (ClassName "Pidgin")          `And` (Title "Buddy List")
+    skypeRoster     = (ClassName "Skype")           `And` (Not (Title "Options")) `And` (Not (Role "Chats")) `And` (Not (Role "CallWindowForm"))
+    odeskRoster     = (ClassName "Odeskteam.bin")   `And` (Title "oDesk Team Room")
+    kotogram        = (ClassName "kotatogram-desktop")
 
+imLayout = withIM (1%7) pidginRoster 
+    $ reflectHoriz 
+    $ withIM (2%8) skypeRoster 
+    $ withIM (2%8) kotogram
+    (grid ||| Full ||| tabs)
+    where
+        pidginRoster = And (ClassName "Pidgin") (Role "buddy_list")
+        --This doesn't quite work with the latest version of Skype,
+        --so a new conversation/call may snap to the right and push
+        --the buddy list into the center tiled area
+        kotogram= (ClassName "KotatogramDesktop")
+        skypeRoster = (ClassName "Skype") `And` (Not (Title "Options")) `And` (Not (Role "ConversationsWindow")) `And` (Not (Role "CallWindow"))
 -----------------------------------------------------
 
-defaultLayouts = withBorder myBorderWidth tall
+defaultLayouts =  withBorder myBorderWidth $ tall
                                  ||| _magnify
                                  ||| noBorders monocle
                                  ||| floats
