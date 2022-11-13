@@ -1,10 +1,19 @@
 #!/usr/bin/env bash
 
+_lock-run_revert(){
+    $HOME/.local/bin/eww -c ~/.config/eww/Lock/ close-all
+}
+
+trap _lock-run_revert HUP INT TERM
+
+notify-send "Locking" 
 $HOME/.scripts/lock/i3lock-widgets &&
 
 #pkill -u "$USER" -USR2 dunst
 pkill cycle-dim
 pkill wait-suspend
 kill $(ps -ef | grep ".scripts/lock/cycle-dim" |  grep -v grep  | awk '{print $2}')
-sleep 1 && eww -c ~/.config/eww/Lock/ close-all
+_lock-run_revert
+
+
 #$HOME/.scripts/unlock-bg

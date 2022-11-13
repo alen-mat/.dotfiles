@@ -4,7 +4,7 @@
 ~/.config/polybar/xmo-bar/launch
 
 command -v hhp >/dev/null 2>&1 && hhp&
-#command -v conky >/dev/null 2>&1 && sleep 2;~/.config/conky/hax_os/start&
+command -v conky >/dev/null 2>&1 && sleep 2;~/.config/conky/hax_os/start&
 
 if [[ $(pidof dunst) ]]; then
    pkill dunst
