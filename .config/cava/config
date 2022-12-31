@@ -59,16 +59,16 @@
 # For alsa 'source' will be the capture device.
 # For fifo 'source' will be the path to fifo-file.
 # For shmem 'source' will be /squeezelite-AA:BB:CC:DD:EE:FF where 'AA:BB:CC:DD:EE:FF' will be squeezelite's MAC address
-; method = pulse
-; source = auto
+ method = pulse
+ source = 71
 
 ; method = alsa
 ; source = hw:Loopback,1
 
- method = fifo
- source = /tmp/mpd.fifo
- sample_rate = 44100
- sample_bits = 16
+;method = fifo
+;source = /tmp/mpd.fifo
+;sample_rate = 44100
+;sample_bits = 16
 
 ; method = shmem
 ; source = /squeezelite-AA:BB:CC:DD:EE:FF
@@ -145,14 +145,14 @@
 # You can define as many as 8 different colors. They range from bottom to top of screen
 gradient = 1
 gradient_count = 8
-gradient_color_1 = "#8D5502"
-gradient_color_2 = "#AD6A04"
-gradient_color_3 = "#CA7902"
-gradient_color_4 = "#8D724B"
-gradient_color_5 = "#E09503"
-gradient_color_6 = "#DCB616"
-gradient_color_7 = "#b5b6b7"
-gradient_color_8 = "#7e7f80"
+gradient_color_1 = "#6e3627"
+gradient_color_2 = "#207884"
+gradient_color_3 = "#d53617"
+gradient_color_4 = "#7b6444"
+gradient_color_5 = "#877a69"
+gradient_color_6 = "#e17f1d"
+gradient_color_7 = "#c4c5c5"
+gradient_color_8 = "#505151"
 
 
 

@@ -2,8 +2,12 @@
 if [ -r ~/.local/share/Xdbus ]; then
   source ~/.local/share/Xdbus
 fi
-WALL_DIR=~/Pictures/wallpapers
-WALLPAPER=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
+if [ -z "$1" ] ; then
+  WALL_DIR=~/Pictures/wallpapers
+  WALLPAPER=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0 | shuf -n1 -z )
+else 
+  WALLPAPER=$1
+fi 
 ~/.local/bin/pywal.sh "$WALLPAPER"
 DISPLAY=:0 feh --bg-fill "$WALLPAPER"
 

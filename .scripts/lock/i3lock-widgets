@@ -5,9 +5,10 @@ _on_exit(){
     _revert
 }
 
-WALLPAPER="/tmp/lockscreen.png"
-
+WALLPAPER="/home/$USER/.cache/_.cache/lockscreen.png"
 trap _on_exit HUP INT TERM
+
+#_create_lock_img
 
 fg_color=fefefe00
 wrong_color=f82a11aa
@@ -32,12 +33,11 @@ slowfade () {
     fi
 }
 
-#playerctl -a pause
+playerctl -a pause
 $HOME/.scripts/lock/cycle-dim &
 #pkill -u "$USER" -USR1 dunst
 $HOME/.scripts/wait-suspend &
 
-_create_lock_img &&
 sleep 3 && $HOME/.local/bin/eww -c ~/.config/eww/Lock/ open-many player-spotify battery-lock volume-slider-lock lock-weather &
 #slowfade start
 

@@ -13,6 +13,8 @@ HELPER(){
 	echo $foo | ~/.scripts/notification_helper $@
 }
 
+
+if [ "$1" != "--source-only" ]; then
 case $1 in
 	--spkr-i)
 		pactl set-sink-volume @DEFAULT_SINK@ +3%
@@ -37,3 +39,4 @@ case $1 in
 	*)
 		;;
 esac
+fi

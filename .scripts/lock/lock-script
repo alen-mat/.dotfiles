@@ -1,7 +1,8 @@
 #!/bin/bash
 TEXT="/tmp/locktext.png"
+LOCK_ICON="$HOME/.config/eww/Lock/lock-icon.png "
 WALL_DIR="$HOME/Pictures/wallpapers"
-IMAGE="/tmp/lockscreen.png"
+IMAGE="$XDG_CACHE_HOME/_.cache/lockscreen.png"
 
 
 _revert() {
@@ -13,9 +14,13 @@ _create_lock_img(){
     RES="$(xdpyinfo   |  grep  dimensions  | awk '{print $2}')"
     #WALL=$(find $WALL_DIR -name '*' -type f -exec file {} \; | grep -o -P '^.+: \w+ image'| cut -d: -f1)
     echo "$WALL"
-
-    WALL=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0| shuf -n1 -z )
-
+    if [ -z "$1" ];then 
+        WALL=$( find $WALL_DIR -type f \( -name '*.jpg' -o -name '*.png' \) -print0| shuf -n1 -z )
+    else
+        WALL="$1"
+    fi
+    echo "RES : ${RES}"
+    echo "IMG : ${WALL}"
     #convert $WALL -scale 10% -scale 1000% -fill black -colorize 25% $IMAGE
 
     convert "$WALL" -gravity center -resize "$RES" -extent "$RES" "$IMAGE"
@@ -25,8 +30,9 @@ _create_lock_img(){
         convert $TEXT -alpha set -channel A -evaluate set 50% $TEXT; 
     }
 
-    convert $IMAGE $TEXT -gravity center -geometry +0+200 -composite $IMAGE
-
+    convert $IMAGE $TEXT -gravity south -geometry +0+0 -composite $IMAGE
+    convert $IMAGE $LOCK_ICON -gravity center -geometry +0+150 -composite $IMAGE
+    echo "LMG : ${IMAGE}"
 }
 
 _pre(){
@@ -37,8 +43,9 @@ _lock_screen(){
     #pgrep i3lock || ffmpeg  -loglevel panic -f x11grab -video_size  $(xdpyinfo | grep dimensions | sed -r 's/^[^0-9]*([0-9]+x[0-9]+).*$/\1/') -y -i :0.0+,20 -i "$IMG" -filter_complex "boxblur=9,overlay=(main_w-overlay_w)/3:(main_h-overlay_h)/2" -vframes 1 "/tmp/newimg"
     i3lock -e -f -n -i "$IMAGE" 
 }
-
-if [ "${1}" != "--source-only" ]; then
+if [ "${1}" == "--lock-img" ]; then
+    _create_lock_img $2
+elif [ "${1}" != "--source-only" ]; then
     trap revert HUP INT TERM
     _pre
     _create_lock_img

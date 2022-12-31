@@ -40,19 +40,20 @@ then
     command -v blueman-applet >/dev/null 2>&1 && blueman-applet&
     command -v nm-applet >/dev/null 2>&1 && nm-applet&
     command -v ulauncher >/dev/null 2>&1 && ulauncher&
-		command -v touchegg >/dev/null 2>&1 && touchegg&
-		command -v mpd >/dev/null 2>&1 && exec mpd &
+	command -v touchegg >/dev/null 2>&1 && touchegg&
+	command -v mpd >/dev/null 2>&1 && exec mpd &
 
     pactl load-module module-bluetooth-discover
 
-		#[[ -f /usr/lib/xfce-polkit/xfce-polkit ]] && /usr/lib/xfce-polkit/xfce-polkit &
-		command -v polkit-dumb-agent >/dev/null 2>&1 && polkit-dumb-agent&
-		#command -v xfce4-power-manager >/dev/null 2>&1 && xfce4-power-manager &
-		command -v poweralertd >/dev/null 2>&1 && poweralertd&
+	#[[ -f /usr/lib/xfce-polkit/xfce-polkit ]] && /usr/lib/xfce-polkit/xfce-polkit &
+	command -v polkit-dumb-agent >/dev/null 2>&1 && polkit-dumb-agent&
+	#command -v xfce4-power-manager >/dev/null 2>&1 && xfce4-power-manager &
+	command -v poweralertd >/dev/null 2>&1 && poweralertd&
  
     [[ -f ~/.Xresources ]] && xrdb -merge ~/.Xresources
     [[ -f ~/.cache/wal/colors.Xresources ]] && xrdb -merge ~/.cache/wal/colors.Xresources
 
     systemctl start --user greenclip.service&
+    ~/.fehbg &
     touch /tmp/autostart_done
 fi
