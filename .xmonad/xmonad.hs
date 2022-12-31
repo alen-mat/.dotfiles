@@ -9,9 +9,12 @@
   - https://github.com/psamim/dotfiles
   - https://github.com/yuttie
   - https://github.com/boogy
+  - https://www.reddit.com/r/xmonad/comments/hheua0/detect_multiple_monitors/
+  - https://github.com/jameslikeslinux/dotfiles/
+  - https://github.com/zmanian/xmonad-config/blob/master/xmonad.hs
 --}
 
-import Control.Monad ( join, when, replicateM_,liftM2)
+import Control.Monad ( filterM, join, when, replicateM_,liftM2)
 
 import Data.Foldable ( traverse_ )
 import Data.Maybe (maybeToList)
@@ -40,6 +43,8 @@ import XMonad.Actions.WithAll (killAll)
 
 import XMonad.Config.Azerty
 import XMonad.Config.Desktop
+
+import XMonad.Core
 
 import My.Layouts
 import My.Themes.Monnet
@@ -71,7 +76,7 @@ import XMonad.Layout.Maximize (maximize, maximizeRestore)
 import XMonad.Layout.Minimize(minimize)
 import XMonad.Layout.MultiToggle (Toggle(..), mkToggle, single, EOT(EOT), (??))
 import XMonad.Layout.MultiToggle.Instances
-import XMonad.Layout.NoBorders
+import qualified XMonad.Layout.NoBorders as NOB
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.Renamed
 import XMonad.Layout.ResizableTile
@@ -101,19 +106,35 @@ import qualified DBus as D
 import qualified DBus.Client as D
 import qualified Data.ByteString as B
 import qualified Data.Map as M
+import Graphics.X11.Xinerama as X11
+import Graphics.X11.Xinerama (getScreenInfo)
 import qualified XMonad.Layout.ToggleLayouts as T
 import qualified XMonad.Layout.MultiToggle as MT
 import qualified XMonad.StackSet as W
 import qualified XMonad.Util.NamedWindows as W
 
+import System.Environment
+
+workSpacePerMonitor = False --getScreens > 1
+--result <- readCreateProcess (shell "xrandr | grep " connected " | awk '{ print$1 }'|wc -l") myHaskellString
+--workSpacePerMonitor = if (result > 1) then True else False
+
+-- | Get an association list of ScreenId => output name
+-- monitorIds = do
+--  output <- T.pack <$> outputOf "xrandr --listactivemonitors 2>/dev/null | awk '{print $1 $4}'"
+--  return $ mapMaybe parseMonitor . drop 1 $ T.lines output
+--  where
+--    parseMonitor :: T.Text -> Maybe (Int, T.Text)
+--    parseMonitor text = do
+--      let (idText, monitorText) = T.breakOn ":" text
+--      monitor <- T.stripPrefix ":" monitorText
+--      id <- readMaybe . T.unpack $ idText
+--      return (id, monitor)
+
 {--
 Run X () actions by touching the edge of your screen with your mouse
 https://wiki.archlinux.org/title/xmonad#Controlling_xmonad_with_external_scripts
 --}
-workSpacePerMonitor = False
---result <- readCreateProcess (shell "xrandr | grep " connected " | awk '{ print$1 }'|wc -l") myHaskellString
---workSpacePerMonitor = if (result > 1) then True else False
-
 myHaskellString :: String
 myHaskellString = "string"
 
@@ -165,7 +186,7 @@ myAppGrid = [ ("Audacity", "audacity")
 ------------------------------------------------------------------------
 
 myBaseConfig = desktopConfig
-myTerminal      = "kitty"
+myTerminal      = "contour"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -433,12 +454,12 @@ addEWMHFullscreen   = do
 --
 
 fullscreenLayout = renamed [PrependWords "fullscreen"]
-                   ( noBorders $ Full )
+                   ( NOB.noBorders $ Full )
 
-myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ smartBorders ( defaultLayouts ) 
+myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ NOB.smartBorders ( defaultLayouts ) 
 
 -- myLayoutHook = showWName' myShowWNameTheme $ myLayout
-myLayoutHook = avoidStruts $ mouseResize $ windowArrange $ onWorkspace "6" imLayout $T.toggleLayouts floats
+myLayoutHook = NOB.lessBorders NOB.Never $ avoidStruts $ mouseResize $ windowArrange $ onWorkspace "6" imLayout $T.toggleLayouts floats
                $ screenCornerLayoutHook $ mkToggle (NBFULL ?? NOBORDERS ?? EOT) defaultLayouts
 
 
@@ -506,6 +527,10 @@ xmonKeYad = TitleApp "xmonad-keys-yad"      "yad --text-info --text 'XMonad' --s
 kterm     = ClassApp "kitty-scratch"        "kitty --class 'kitty-scratch'"
 emScratch = TitleApp "_emacs_scratchpad_"   "emacsclient --frame-parameters '((name . \"_emacs_scratchpad_\"))' -nc"
 
+
+
+
+
 myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
  where
   isBrowserDialog     = isDialog <&&> className =? "Brave-browser"
@@ -513,16 +538,49 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
   isPopup             = isRole =? "pop-up"
 
   isSplash            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_SPLASH"
-  isNotify            = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
+  isNotification      = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_NOTIFICATION"
   isDia               = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DIALOG"
   isMenu              = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_MENU"
   isKDE               = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_OVERRIDE"
   isRole              = stringProperty "WM_WINDOW_ROLE"
+  isDesktop           = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DESKTOP"
+  isDock              = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DOCK"
+  isOSD               = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY"
+  isXmonadTagF        = isInProperty "_XMONAD_TAGS" "float"
 
-  tileBelow           = insertPosition Below Newer
+  tileBelow         = insertPosition Below Newer
   doCalendarFloat   = customFloating (W.RationalRect (11 / 15) (1 / 48) (1 / 4) (1 / 4))
   doYadDiagFloat    = customFloating (W.RationalRect (1 / 6)   (1 / 6)  (2 / 3) (2 / 3))
   manageScratchpads = namedScratchpadManageHook scratchpads
+
+  sendToBottom :: Window -> X ()
+  sendToBottom window = withDisplay $ \display ->
+      io $ lowerWindow display window
+
+  raiseWindow' :: Window -> X ()
+  raiseWindow' window = withDisplay $ \display ->
+      io $ raiseWindow display window
+
+  allWindowsByType :: Query Bool -> X [Window]
+  allWindowsByType query = withDisplay $ \display -> do
+      (_, _, windows) <- asks theRoot >>= io . queryTree display
+      filterM (runQuery query) windows
+
+  sendToJustAboveDesktop :: Window -> X ()
+  sendToJustAboveDesktop window = do
+      sendToBottom window
+      allWindowsByType isDesktop >>= mapM_ sendToBottom
+
+  doWindowAction :: (Window -> X ()) -> ManageHook
+  doWindowAction action = ask >>= liftX . action >> idHook
+
+  raiseAllNotifications :: X ()
+  raiseAllNotifications = allWindowsByType isNotification >>= mapM_ raiseWindow'
+
+  raiseAllNotificationsHook :: ManageHook
+  raiseAllNotificationsHook = liftX raiseAllNotifications >> idHook
+
+
   anyOf :: [Query Bool] -> Query Bool
   anyOf = foldl (<||>) (pure False)
   match :: [App] -> Query Bool
@@ -545,10 +603,11 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
             , isDialog
             , isPopup
             , isSplash
-            , isNotify
+            , isNotification
             , isDia
             , isMenu
             , isKDE
+            , isXmonadTagF
             ]                                  -?> doCenterFloat
     , title =? "Picture in picture"            -?> doFloat
 	, className =? "Yad"                       -?> doFloat
@@ -558,6 +617,10 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
     , isFullscreen                             -?> doFullFloat
     , pure True                                -?> tileBelow
     , className =? "Wfica" <&&> title =? "WorkSpace Enterprise_SG2_PROD_01 "                     -?> doShift "9"
+    , pure True                     -?> insertPosition Below Newer
+    , isDesktop                     -?> doWindowAction sendToBottom
+    , isDock                        -?> doWindowAction sendToJustAboveDesktop
+    , isOSD                         -?> doCenterFloat
     ]
 
 isInstance (ClassApp c _) = className =? c
