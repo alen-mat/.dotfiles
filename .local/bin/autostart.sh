@@ -35,6 +35,7 @@ then
 			xcape -e '#66=Escape'
 		fi
 	
+    command -v lxqt-policykit-agent >/dev/null 2>&1 && lxqt-policykit-agent&
     #bluetooth
     command -v blueman-applet >/dev/null 2>&1 && blueman-applet&
     command -v nm-applet >/dev/null 2>&1 && nm-applet&

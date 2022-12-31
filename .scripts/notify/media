@@ -5,6 +5,8 @@ HELPER(){
 	echo $foo | ~/.scripts/notification_helper media
 }
 
+
+
 case $1 in
 	--pp)
 		playerctl play-pause
@@ -27,7 +29,17 @@ case $1 in
         echo 'shuffle' | HELPER
 		;;
     --repeat)
-        playerctl loop Track
+        my_array=(None Track Playlist)
+        value="$(playerctl metadata --format '{{loop}}')"
+        for i in "${!my_array[@]}"; do
+            if [[ "${my_array[$i]}" = "${value}" ]]; then
+                loop="${i}";
+            fi
+        done
+        loop=$((loop+1))
+        loop=$((loop%3))
+
+        playerctl loop "${my_array[loop]}"
         echo 'repeat' | HELPER
         ;;
 esac

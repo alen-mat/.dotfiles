@@ -84,12 +84,12 @@ notifyMedia(){
         shuffle)
             not_title_A="$player"
             not_title_B="Shuffle : $shuffle"
-            not_content="
+            not_content=""
             ;;
         repeat)
             not_title_A="$player"
             not_title_B="Repeat : $repeat"
-not_content="
+            not_content=""
             ;;
         *)
             if [ "$player" == 'spotify' ];then
