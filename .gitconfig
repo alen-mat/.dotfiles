@@ -17,7 +17,6 @@ name = alen-mat
 [init]
     defaultBranch = main
 [core]
-    editor = vim
     ignorecase = false
     excludesfile = ~/.gitignore_global
 [fetch]
@@ -29,7 +28,7 @@ name = alen-mat
     branch-name = !git cb    # alias to "cb" alias
     st = status #status
     ci = commit #commit
-    cie = commit --allow-empty-message -m ''#empty commit
+    cie = commit --allow-empty -m #empty commit
     cp = cherry-pick #cherry pick
     br = branch #current branch
     co = checkout #checkout
@@ -77,7 +76,6 @@ name = alen-mat
 [core]
     #editor = st -n -w    # Sublime Text
     #editor = code -n -w    # VS Code
-    editor = vim   
     ignorecase = false
     excludesfile = ~/.gitignore_global
 [color]
