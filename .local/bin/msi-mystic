@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-MYST_FILE="$XDG_CACHE_HOME/_.cache/mystic_light_color"
+MYST_FILE="$HOME/.cache/_.cache/mystic_light_color"
 
-. ~/workspace/python/.py_env/bin/activate
+. $HOME/workspace/python/.py_env/bin/activate
 if [[ ! -f "$MYST_FILE" ]]; then
 
 cat > "$MYST_FILE" <<EOF

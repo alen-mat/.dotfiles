@@ -1,34 +1,43 @@
 #!/usr/bin/env bash
 
 case $1 in
-     -a|--app-launcher) 
-			~/.config/rofi/scripts/app_launcher.sh
-			;;
-		 -bm|--bluetooth-manager)
-			~/.config/rofi/scripts/bluetooth-manager.sh
-			;;
-		 -nm|--network-manager)
-			~/.config/rofi/scripts/network-manager.sh
-			;;
-		 -p|--power-menu)
-			~/.config/rofi/scripts/powermenu.sh
-			#~/.config/rofi/bin/powermenu
-			;;
-		 -bw|--bitwarden)
- 			 ~/.config/rofi/scripts/bwmenu main
-			;;
-		 -gc|--greenclip)
-			~/.config/rofi/scripts/greenclip
-			;;
-		 -ep|--emoji-picker)
-			rofimoji
-      ;;
-     -ss|--simple-switcher)
-      rofi -show window combi-modes: [windowcd,window,ssh,run] -modes combi #-theme "~/.config/Rofi/styles/window-swith.rasi"
-      ;;
-     -bb|--buku-bookmarks)
-      ~/.config/rofi/scripts/buku  
-      ;;
-		 *)
-			;;
+    -a|--app-launcher) 
+	~/.config/rofi/scripts/app_launcher.sh
+	;;
+    -bm|--bluetooth-manager)
+        ~/.config/rofi/scripts/bluetooth-manager.sh
+        ;;
+    -nm|--network-manager)
+        ~/.config/rofi/scripts/network-manager.sh
+        ;;
+    -p|--power-menu)
+        ~/.config/rofi/scripts/powermenu.sh
+        #~/.config/rofi/bin/powermenu
+        ;;
+    -bw|--bitwarden)
+        ~/.config/rofi/scripts/bwmenu main
+        ;;
+    -gc|--greenclip)
+        ~/.config/rofi/scripts/greenclip
+        ;;
+    -ep|--emoji-picker)
+        rofimoji
+	;;
+    -ss|--simple-switcher)
+	rofi -show window combi-modes: [windowcd,window,ssh,run] -modes combi #-theme "~/.config/Rofi/styles/window-swith.rasi"
+	;;
+    -bb|--buku-bookmarks)
+	~/.config/rofi/scripts/buku  
+	;;
+    -pctl|--player-ctl)
+	~/.config/rofi/bin/player-ctl red-black
+	;;
+    -mpd|--mpd)
+        ~/.config/rofi/bin/mpd red-black
+        ;;
+    -u|--utils)
+	~/.config/rofi/bin/utils red-black
+        ;;
+    *)
+        ;;
 esac

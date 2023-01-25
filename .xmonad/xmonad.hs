@@ -186,7 +186,7 @@ myAppGrid = [ ("Audacity", "audacity")
 ------------------------------------------------------------------------
 
 myBaseConfig = desktopConfig
-myTerminal      = "contour"
+myTerminal      = "alacritty"
 
 -- Whether focus follows the mouse pointer.
 myFocusFollowsMouse :: Bool
@@ -271,7 +271,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Buku BookMarks (Rofi)"    (modm .|. altMask  , xK_b             ) $ spawn $ "~/.local/bin/rofi_helper -bb"
     , key "Bitwarden (Rofi)"         (modm .|. altMask  , xK_slash         ) $ spawn $ "~/.local/bin/rofi_helper -bw"
     , key "Playerctl (Rofi)"         (modm              , xF86XK_AudioPlay ) $ spawn $ "~/.local/bin/rofi_helper -pctl"
-    , key "Lock screen"              (modm              , xK_l             ) $ spawn $ "~/.local/bin/lock-x-session"
+    , key "Utils (Rofi)"             (modm              , xK_slash         ) $ spawn $ "~/.local/bin/rofi_helper -u"
+    , key "Lock screen"              (modm .|. altMask  , xK_l             ) $ spawn $ "~/.local/bin/lock-x-session"
     ] ^++^
   keySet "Audio"
     [ key "Mic Mute"      (0, xF86XK_AudioMicMute           ) $ spawn $ "~/.scripts/notify/audio --mic-toggle"
@@ -438,7 +439,9 @@ addEWMHFullscreen :: X ()
 addEWMHFullscreen   = do
     wms <- getAtom "_NET_WM_STATE"
     wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
-    mapM_ addNETSupported [wms, wfs]
+    sa  <- getAtom "_NET_WM_STATE_ABOVE"
+    sky <- getAtom "_NET_WM_STATE_STICKY"
+    mapM_ addNETSupported [wms, wfs, sa, sky]
 
 
 ------------------------------------------------------------------------
@@ -456,7 +459,7 @@ addEWMHFullscreen   = do
 fullscreenLayout = renamed [PrependWords "fullscreen"]
                    ( NOB.noBorders $ Full )
 
-myLayout = gaps [(U,36), (D,5), (R,5), (L,5)] $ NOB.smartBorders ( defaultLayouts ) 
+myLayout = gaps [(U,5), (D,5), (R,5), (L,5)] $ NOB.smartBorders ( defaultLayouts ) 
 
 -- myLayoutHook = showWName' myShowWNameTheme $ myLayout
 myLayoutHook = NOB.lessBorders NOB.Never $ avoidStruts $ mouseResize $ windowArrange $ onWorkspace "6" imLayout $T.toggleLayouts floats
@@ -818,7 +821,7 @@ main' dbus = xmonad . ewmh . docks . dynProjects . keybindings . urgencyHook$ fu
   manageHook         = fullscreenManageHook <+> manageSpawn <+> manageDocks <+>  myManageHook <+> manageHook myBaseConfig,
   handleEventHook    = myEventHook,
   logHook            = myPolybarLogHook dbus,
-  startupHook        = myStartupHook -- >> addEWMHFullscreen
+  startupHook        = myStartupHook <+> addEWMHFullscreen
   }
   where
     dynProjects = dynamicProjects projects

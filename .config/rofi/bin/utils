@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+
+DIR="$HOME/.config/rofi/"
+
+rofi_command="rofi -theme $DIR/styles/$1/mpd.rasi"
+keyboard=""
+record="壘"
+recording_status="$($HOME/.scripts/record status)"
+keyboard_backlight="on"
+
+if [[ "$recording_status" == "" ]];then
+	active="-a 1"
+	urgant="-u 1"
+fi
+
+if [[ "$keyboard_backlight" == "on" ]];then
+	[ -n "$active" ] && active+=",2" || active="-a 2"
+	[ -n "$urgent" ] && urgent+=",2" || urgent="-u 2"
+fi
+
+options="$keyboard\n$record"
+
+chosen="$(echo -e "$options" | $rofi_command -p "$current" -dmenu $active $urgent -selected-row 0)"
+
+case $chosen in
+	$keyboard)
+		$HOME/.local/bin/msi-mystic -T
+		;;
+	$record)
+		if [[ "$recording_status" = "Record inactive" ]]; then
+			$HOME/.scripts/record start
+		else
+			$HOME/.scripts/record stop
+		fi
+		;;
+esac
