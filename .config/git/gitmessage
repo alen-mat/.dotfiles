@@ -1,0 +1,14 @@
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+
+############################
+# type : feat|fix|chore|refactor|docs|style|test|perf|ci|build|revert
+# 
+# Footer
+#   BREAKING CHANGE: <summary>
+#   <BLANK LINE>
+#   Fixes #<issue>
+#   Closes #<pr>
