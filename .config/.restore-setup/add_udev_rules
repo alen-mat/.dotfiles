@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+_add_battery_rule(){
+cat <<EOF> /etc/udev/rules.d/95-battery.rules
+SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="0", \
+    RUN+="/home/user/.config/polybar/battery-combined-udev.sh --update"
+SUBSYSTEM=="power_supply", ENV{POWER_SUPPLY_ONLINE}=="1", \
+    RUN+="/home/user/.config/polybar/battery-combined-udev.sh --update"
+EOF
+}
+
+_add_usb_rule(){
+cat <<EOF>/etc/udev/rules.d/95-usb.rules
+KERNEL=="sd*", ACTION=="add", ATTR{removable}=="1", \
+    RUN+="/home/user/.config/polybar/system-usb-udev.sh --update"
+KERNEL=="sd*", ACTION=="remove", \
+    RUN+="/home/user/.config/polybar/system-usb-udev.sh --update"
+EOF
+}
+
+_add_usb_rule

@@ -11,13 +11,13 @@
 # Determine "Microphone" Source
 #pacmd list-sources | egrep '^\s+name:'
 
-#pactl load-module module-null-sink sink_name="FakeMicrophone" sink_properties=device.description="FakeMicrophone"
+pactl load-module module-null-sink sink_name="FakeMicrophone" sink_properties=device.description="FakeMicrophone"
 echo "[*]Created fake Microphone"
 
-#pactl load-module module-loopback latency_msec=1 source=alsa_input.usb-Blue_Microphones_Yeti_Stereo_Microphone_X-00.analog-stereo sink=FakeMicrophone
+pactl load-module module-loopback latency_msec=1 source=alsa_input.usb-Blue_Microphones_Yeti_Stereo_Microphone_X-00.analog-stereo sink=FakeMicrophone
 echo "[*]Tied fake mic with real mic"
 
-#pactl load-module module-loopback latency_msec=1 source=alsa_output.pci-0000_00_1b.0.analog-surround-21.monitor sink=FakeMicrophone
+pactl load-module module-loopback latency_msec=1 source=alsa_output.pci-0000_00_1b.0.analog-surround-21.monitor sink=FakeMicrophone
 echo "[*]Connected \"Computer Audio\" Monitor to fake mic"
 
 echo "[*]Setup complete

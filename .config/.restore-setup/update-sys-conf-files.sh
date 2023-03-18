@@ -1,5 +1,15 @@
 #/usr/bin/env bash
-
+_add_touchpad_conf(){
+cat <<EOF>/etc
+section "InputClass"
+        Identifier "touchpad"
+        Driver "libinput"
+        MatchIsTouchpad "on"
+        Option "Tapping" "on"
+				Option "TappingButtonMap" "lrm"
+EndSection
+EOF
+}
 _add_tlp_conf(){
 cat << EOF > /etc/tlp.d/00-custom.conf
 TLP_ENABLE=1

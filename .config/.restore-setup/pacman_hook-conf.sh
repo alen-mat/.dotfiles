@@ -14,6 +14,8 @@ Depends = xmonad
 Exec = /bin/sh -c "runuser -l $( who | cut -d ' ' -f1 | uniq) -c 'xmonad --recompile'"
 EOF
 
+echo "[*]Added Haskell Post Update Hook"
+
 cat << EOF >/etc/pacman.d/hooks/xmonad_post_update.hook
 [Trigger]
 Operation = Upgrade
@@ -26,4 +28,8 @@ When = PostTransaction
 Depends = xmonad
 Exec = /bin/sh -c "runuser -l $( who | cut -d ' ' -f1 | uniq) -c 'xmonad --recompile'"
 EOF
+
+echo "[*]Added Xmonad Post Update Hook"
 }
+
+addPacmanHooks
