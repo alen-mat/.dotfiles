@@ -18,7 +18,7 @@ import Control.Monad ( filterM, join, when, replicateM_,liftM2)
 
 import Data.Foldable ( traverse_ )
 import Data.Maybe (maybeToList)
-import Data.List (elemIndex)
+import Data.List (elemIndex, isInfixOf, isSuffixOf, isPrefixOf )
 import Data.Semigroup
 
 import Graphics.X11.ExtraTypes.XF86
@@ -28,6 +28,7 @@ import System.IO
 import System.Process
 
 import XMonad
+import XMonad.Actions.CopyWindow
 import XMonad.Actions.CycleWS
 import XMonad.Actions.DynamicProjects ( Project(..), dynamicProjects, switchProjectPrompt)
 import XMonad.Actions.DynamicWorkspaces ( removeWorkspace )
@@ -94,7 +95,7 @@ import XMonad.Layout.WindowNavigation
 import XMonad.Prompt ( XPConfig(..), XPPosition(CenteredAt))
 
 import XMonad.Util.EZConfig (additionalKeys, additionalMouseBindings)
-import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating, defaultFloating, namedScratchpadAction, namedScratchpadManageHook)
+import XMonad.Util.NamedScratchpad ( NamedScratchpad(..), customFloating, defaultFloating, namedScratchpadAction, namedScratchpadManageHook ,toggleDynamicNSP ,dynamicNSPAction)
 import XMonad.Util.NamedActions ((^++^), NamedAction (..), addDescrKeys', addName, showKm, subtitle)
 import XMonad.Util.Run (safeSpawn,spawnPipe)
 import XMonad.Util.SpawnOnce
@@ -253,6 +254,9 @@ toggleFullScreen = do
 -- Key bindings. Add, modify or remove key bindings here.
 -- https://wiki.linuxquestions.org/wiki/XF86_keyboard_symbols
 --
+kill8 ss | Just w <- W.peek ss = W.insertUp w $ W.delete w ss
+  | otherwise = ss
+--
 
 showKeybindings :: [((KeyMask, KeySym), NamedAction)] -> NamedAction
 showKeybindings x = addName "Show Keybindings" . io $
@@ -261,7 +265,7 @@ showKeybindings x = addName "Show Keybindings" . io $
 myKeys conf@XConfig {XMonad.modMask = modm} =
   keySet "Launchers"
     [ key "Terminal"                 (modm .|. shiftMask, xK_Return        ) $ spawn (XMonad.terminal conf)
-    , key "Apps (Rofi)"              (modm              , xK_p             ) $ spawn $ "~/.local/bin/rofi_helper -a"
+    , key "Apps (Rofi)"              (modm              , xK_l             ) $ spawn $ "~/.local/bin/rofi_helper -a"
     , key "Bluetooth Manager (Rofi)" (modm              , xK_bracketleft   ) $ spawn $ "~/.local/bin/rofi_helper -bm"
     , key "Network Manager (Rofi)"   (modm              , xK_bracketright  ) $ spawn $ "~/.local/bin/rofi_helper -nm"
     , key "Power Menu (Rofi)"        (modm              , xK_semicolon     ) $ spawn $ "~/.local/bin/rofi_helper -p"
@@ -294,6 +298,7 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Mail"       (0, xF86XK_Mail      ) $ runOrRaise "thunderbird" (resource =? "thunderbird")
     , key "Calculator" (0, xF86XK_Calculator) $ runOrRaise "qalculate-gtk" (resource =? "qalculate-gtk")
     , key "Eject"      (0, xF86XK_Eject     ) $ spawn "toggleeject"
+    , key "Project"    (modm, xK_p          ) $ runOrRaise "arandr" (className =? "Arandr") 
     ] ^++^
   keySet "Scratchpads"
     [ key "Audacious"       (modm .|. controlMask,  xK_a    ) $ runScratchpadApp audacious
@@ -301,8 +306,13 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Files"           (modm .|. controlMask,  xK_f    ) $ runScratchpadApp nautilus
     , key "Screen recorder" (modm .|. controlMask,  xK_r    ) $ runScratchpadApp scr
     , key "Spotify"         (modm .|. controlMask,  xK_s    ) $ runScratchpadApp spotify
-    , key "Kitty"           (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
+    , key "Alacritty"       (modm .|. controlMask,  xK_t    ) $ runScratchpadApp kterm
     , key "Emacs"           (modm .|. controlMask,  xK_e    ) $ runScratchpadApp emScratch
+
+    , key "Dynamic scratchpad 1"  (modm .|. controlMask .|. shiftMask,  xK_e ) $ withFocused $ toggleDynamicNSP "dyn1"
+    , key "Dynamic scratchpad 2"  (modm .|. controlMask .|. shiftMask,  xK_e ) $ withFocused $ toggleDynamicNSP "dyn2"
+    , key "Toggle SP 1"           (modm .|. controlMask,  xK_e    ) $  dynamicNSPAction "dyn1"
+    , key "Toggle SP 2"           (modm .|. controlMask,  xK_e    ) $ dynamicNSPAction "dyn2"
     ] ^++^
   keySet "System"
     [ key "Toggle status bar gap"          (modm                      , xK_b )     toggleStruts
@@ -337,6 +347,8 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Decr  abs size"  (modm .|. shiftMask, xK_d        ) $ withFocused (keysAbsResizeWindow (-10,-10) (1024,752))
     , key "Incr  abs size"  (modm .|. shiftMask, xK_s        ) $ withFocused (keysAbsResizeWindow (10,10) (1024,752))
     , key "Invert Window"   (modm              , xK_i        ) $ spawn "~/.scripts/invert-window"
+    , key "float everywhere"(modm              , xK_a        ) $ sequence_ $ [windows $ copy i | i <- XMonad.workspaces conf]    -- Pin to all workspaces
+    , key "float everywhere"(modm .|. shiftMask, xK_a        ) $ windows $ kill8      -- remove from all but current
     ] ^++^
   keySet "Tag Windows"
     [ key "" (modm,                    xK_g ) $ tagPrompt myXPConfig (\ s -> withFocused (addTag s))
@@ -477,16 +489,44 @@ windowRules = composeAll . concat $
     , [title =? t --> doCenterFloat | t <- myTFloats]
     , [resource =? r --> doFloat | r <- myRFloats]
     , [resource =? i --> doIgnore | i <- myIgnores]
+    , [ myIsPrefixOf "zoom"            className <&&> myIsPrefixOf "zoom"            title --> doShiftAndGo "6"]
+    , [ myIsPrefixOf "Microsoft Teams" className <&&> myIsPrefixOf "Microsoft Teams" title --> doShiftAndGo "6"]
+
+    -- move windows to specific workspaces
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "1" | x <- my1Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "2" | x <- my2Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "3" | x <- my3Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "4" | x <- my4Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "5" | x <- my5Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "6" | x <- my6Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "7" | x <- my7Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "8" | x <- my8Shifts ]
+    , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9" | x <- my9Shifts ]
     ]
     where
-		myCFloats = ["alacritty-float", "MPlayer", "mpv","kitty-cava"
+                doShiftAndGo = doF . liftM2 (.) W.greedyView W.shift
+		myCFloats = ["alacritty-float", "MPlayer", "mpv","alacritty-cava"
 					,"Gimp", "feh", "Viewnior", "Gpicview"
 					,"Kvantum Manager", "qt5ct", "VirtualBox Manager", "qemu", "Qemu-system-x86_64"
-					,"Lxappearance", "Nitrogen", "Arandr", "Xfce4-power-manager-settings", "Nm-connection-editor"]
+					,"Lxappearance", "Nitrogen", "Arandr", "Xfce4-power-manager-settings", "Nm-connection-editor","scrcpy"]
 		myTFloats = ["Downloads", "Save As..."]
 		myRFloats = []
 		myIgnores = ["desktop_window"]
+                my1Shifts = []
+                my2Shifts = []
+                my3Shifts = []
+                my4Shifts = []
+                my5Shifts = []
+                my6Shifts = ["zoom", "Zoom Meeting", "Zoom - Licensed Account","Skype"]
+                my7Shifts = []
+                my8Shifts = []
+                my9Shifts = []
 
+myIsInfixOf str = do
+    fmap $ isInfixOf str
+
+myIsPrefixOf str = do
+    fmap $ isPrefixOf str
 -- Execute arbitrary actions and WindowSet manipulations when managing
 -- a new window. You can use this to, for example, always float a
 -- particular program, or have a client always appear on a particular
@@ -527,7 +567,7 @@ spotify   = ClassApp "Spotify"              "spotify"
 vlc       = ClassApp "Vlc"                  "vlc"
 xmonKeYad = TitleApp "xmonad-keys-yad"      "yad --text-info --text 'XMonad' --show-uri --width=300 --height=200 --center --wrap --window-icon='text-editor' --no-buttons --undecorated --title='xmonad-keys-yad' # --back=COLOR --fore=COLOR "
 
-kterm     = ClassApp "kitty-scratch"        "kitty --class 'kitty-scratch'"
+kterm     = ClassApp "alacritty-scratch"    "alacritty -o alacritty -o 'window.dimensions.lines=25' -o 'window.dimensions.columns=82' --class 'alacritty-scratch'"
 emScratch = TitleApp "_emacs_scratchpad_"   "emacsclient --frame-parameters '((name . \"_emacs_scratchpad_\"))' -nc"
 
 
@@ -760,7 +800,7 @@ myPolybarLogHook dbus = fadeLogHook <+> dynamicLogWithPP (polybarHook dbus)
 --
 myDynamicEventHook :: Event -> X All
 myDynamicEventHook = dynamicPropertyChange "WM_NAME" (title =? "Spotify" --> floating)
-        where floating = customFloating $ W.RationalRect (1/6) (1/6) (2/3) (2/3)
+        where floating = customFloating $ W.RationalRect (1/6) (1/12) (1/6) (1/4)
 
 
 myEventHook = do
@@ -774,7 +814,7 @@ myEventHook = do
 -- myLogHook = return ()
 fadeLogHook :: X ()
 fadeLogHook = fadeInactiveLogHook fadeAmount
-    where fadeAmount = 1.0
+    where fadeAmount = 0.9
 
 ------------------------------------------------------------------------
 -- Startup hook
@@ -785,8 +825,8 @@ fadeLogHook = fadeInactiveLogHook fadeAmount
 --
 -- By default, do nothing.
 myStartupHook = do
-  addScreenCorners [ (SCLowerLeft,  prevWS)
-                   , (SCLowerRight, nextWS)
+  addScreenCorners [ (SCLowerLeft,  prevWS')
+                   , (SCLowerRight, nextWS')
                    , (SCUpperLeft, spawnSelected' myAppGrid)
                    , (SCUpperRight, goToSelected $ mygridConfig myColorizer)
                  ]
