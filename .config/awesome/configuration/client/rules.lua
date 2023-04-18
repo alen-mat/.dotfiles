@@ -36,6 +36,7 @@ awful.rules.rules = {{
       'Blueman-manager',
       'Gpick',
       'Tor Browser',
+			'[Ss]potify', -- spotify is weird
     },
     name = {
       'Event Tester'
