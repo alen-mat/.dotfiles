@@ -8,22 +8,24 @@ local rofi_command = 'env /usr/bin/rofi -show drun -display-drun -run-command "/
 return {
     -- List of apps to start by default on some actions
     default = {
-        terminal = 'kitty',
+        terminal = 'alacritty',
 
         rofi = '~/.local/bin/rofi_helper -a',
         power_command = '~/.local/bin/rofi_helper -p',
 
         lock = '~/.config/awesome/lkscrip',
-        splash = 'kitty -T SplashTerminal -o background_opacity=0.95',
 
-				screenshot_file = '~/.local/bin/maim_helper screen',
+
+        splash = "alacritty -o alacritty -o 'window.dimensions.lines=25' -o 'window.dimensions.columns=82' --class 'alacritty-scratch'",
+
+	screenshot_file = '~/.local/bin/maim_helper screen',
         screenshot_clip = '~/.local/bin/maim_helper screen clip',
-				region_screenshot = '~/.local/bin/maim_helper selection clip',
-				active_window_screenshot_clip = '~/.local/bin/maim_helper active_window clip',
-				active_window_screenshot = '~/.local/bin/maim_helper active_window',
+	region_screenshot = '~/.local/bin/maim_helper selection clip',
+	active_window_screenshot_clip = '~/.local/bin/maim_helper active_window clip',
+	active_window_screenshot = '~/.local/bin/maim_helper active_window',
 
         browser = 'env firefox',
-        editor = 'kitty',
+        editor = 'neovide',
         social = 'env discord',
         files = 'pcmanfm',
         power_manager = 'gnome-power-statistics'

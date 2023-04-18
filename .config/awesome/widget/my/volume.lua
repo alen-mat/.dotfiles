@@ -15,22 +15,23 @@ volume_widget.font = beautiful.font
 local volume
 
 function update_volume()
-    awful.spawn.easy_async_with_shell("bash -c 'amixer -D pulse sget Master'", function(stdout)
-        volume = string.match(stdout, '(%d?%d?%d)%%')
-        awful.spawn.easy_async_with_shell("bash -c 'pacmd list-sinks | awk '/muted/ { print $2 }''", function(muted)
+    awful.spawn.easy_async_with_shell("bash -c 'wpctl get-volume @DEFAULT_AUDIO_SINK@ | sed \"s/Volume: //\"'", function(stdout)
+        local muted = stdout:match('(MUTED)') ~= nil
+        volume =  stdout:match('(%d*.%d*)')
+        if not muted then
+            volume = (volume) * 100
             volume_widget.text = volume
-            muted = string.gsub(muted, "%s+", "")
-            if muted == 'muted:no' and (volume > '35' or volume == '100') then
+            if volume > 35 or volume == 100 then
                 volume_icon.text = '墳'
-            elseif muted == 'muted:no' and volume <= '35' and volume > '0' then
+            elseif  volume <= 35 and volume > 0 then
                 volume_icon.text = '奔'
-            elseif muted == 'muted:yes' then
-                volume_icon.text = '婢'
-                volume_widget.text = 'M'
             elseif volume == '0' then
                 volume_icon.text = '奄'
             end
-        end)
+        else
+            volume_icon.text = '婢'
+            volume_widget.text = 'M'
+        end
         collectgarbage('collect')
     end)
 end

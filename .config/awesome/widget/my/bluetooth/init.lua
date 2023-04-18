@@ -32,7 +32,7 @@ local return_button = function()
 	}
 
 	widget_button:buttons(gears.table.join(awful.button({}, 1, nil, function()
-		awful.spawn("kitty --name Bluetooth bluetoothctl", false)
+		awful.spawn(" --name Bluetooth bluetoothctl", false)
 	end)))
 
 	local bluetooth_tooltip = awful.tooltip {

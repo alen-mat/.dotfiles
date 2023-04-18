@@ -13,21 +13,33 @@ awful.rules.rules = {{
     keys = client_keys,
     buttons = client_buttons,
     screen = awful.screen.preferred,
-    placement = awful.placement.no_offscreen,
+    placement =  awful.placement.no_overlap + awful.placement.no_offscreen,
     floating = false,
     maximized = false,
     above = false,
     below = false,
     ontop = false,
     sticky = false,
+    honor_workarea = true,
+    honor_padding = true,
     maximized_horizontal = false,
     maximized_vertical = false
   }
-}, 
+},
 {
 	rule_any = {
   	type = {'dialog'},
-    class = {'Wicd-client.py', 'calendar.google.com'}
+    class = {
+      'Wicd-client.py',
+      'calendar.google.com',
+      'Arandr',
+      'Blueman-manager',
+      'Gpick',
+      'Tor Browser',
+    },
+    name = {
+      'Event Tester'
+    }
   },
   properties = {
     placement = awful.placement.centered,
@@ -41,7 +53,7 @@ awful.rules.rules = {{
     end,
     skip_decoration = true
   }
-}, 
+},
 {
 	rule_any = {
     type = {'modal'}
@@ -53,7 +65,7 @@ awful.rules.rules = {{
     skip_decoration = true,
     placement = awful.placement.centered
   }
-}, 
+},
 {
 	rule_any = {
     type = {'utility'}
@@ -67,18 +79,8 @@ awful.rules.rules = {{
 },
 {
 	rule_any = {
+    name = {'Discord Updater'},
     type = {'splash'},
-    name = {'Discord Updater'}
-  },
-  properties = {
-    floating = true,
-    above = true,
-    skip_decoration = true,
-    placement = awful.placement.centered
-  }
-},
-{
-	rule_any = {
 		role = {
 			"AlarmWindow",
 			"pop-up",
@@ -91,7 +93,7 @@ awful.rules.rules = {{
 		floating = true,
 		above = true,
 		skip_decoration = true,
-    placement = awful.placement.centered	
+    placement = awful.placement.centered
   }
 },
 {
@@ -104,7 +106,7 @@ awful.rules.rules = {{
 		above = true,
 		skip_decoration = true,
     placement = awful.placement.top_right(panel, {
-	  	honor_workarea = true,	
+	  	honor_workarea = true,
 	  	margins = {
 				top = dpi(8),
 				right = dpi(8),
