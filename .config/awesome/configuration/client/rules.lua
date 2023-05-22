@@ -39,8 +39,9 @@ awful.rules.rules = {{
 			'[Ss]potify', -- spotify is weird
     },
     name = {
-      'Event Tester'
-    }
+      'Event Tester',
+    },
+		instance = {"Toolkit"},
   },
   properties = {
     placement = awful.placement.centered,
@@ -69,7 +70,7 @@ awful.rules.rules = {{
 },
 {
 	rule_any = {
-    type = {'utility'}
+    type = {'utility'},
   },
   properties = {
     titlebars_enabled = false,
