@@ -1,19 +1,7 @@
-[diff]
-  tool = kitty
-  guitool = kitty.gui
-[difftool]
-  prompt = false
-  trustExitCode = true
-[difftool "kitty"]
-  cmd = kitty +kitten diff $LOCAL $REMOTE
-[difftool "kitty.gui"]
-  cmd = kitty kitty +kitten diff $LOCAL $REMOTE
 [user]
-name = alen-mat
+    name = alen-mat
     email = 26516117+alen-mat@users.noreply.github.com
     signingkey = B11BE0D2D33B5131
-[color]
-    ui = true
 [init]
     defaultBranch = main
 [core]
@@ -23,6 +11,9 @@ name = alen-mat
     prune = false
 [alias]
     aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | sort    # list all aliases
+
+    clone = clone --filter=blob:none # no blob clone
+
     delete-local-merged = !git fetch && git branch --merged | egrep -v 'master' | xargs git branch -d
     cb = !git branch | grep ^* | cut -d' ' -f2
     branch-name = !git cb    # alias to "cb" alias
@@ -37,17 +28,22 @@ name = alen-mat
     ps = !git push origin $(git cb)
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all #pretty log
     out = log --branches --not --remotes=origin # similar to hg outgoing
-    who = shortlog -s --
-    push-hash = !sh -c 'git push origin $1:refs/heads/$(git cb)' -    # requires a SHA or the remote branch will be deleted!!
-    reset-tags = "!f() { git tag -l | xargs git tag -d; git fetch; }; f"
-    clone-nb = clone --filter=blob:none # no blob clone
-    serve = !git daemon --reuseaddr --verbose --base-path=. --export-all ./.git 
-    save = stash save -u # similar to git stash
+
+    purge = clean -f -d #untracked files and directories
+    purge-all = clean -f -d -x #and ignored files
+
     prune-local = !git branch --merged | grep -v master | grep -v dev | xargs -n 1 git branch -d # prune local
     prune-all = !git remote | xargs -n 1 git remote prune # prune all
+
     find = !sh -c 'git lg --grep="$@"'    # search for a string in the commit message log
     srch = !sh -c 'git grep "$@" $(git rev-list --all)'    # search for a string in all commits
     srch-l = !sh -c 'git rev-list --all | (while read rev; do git grep -e <regexp> $rev; done)'  # fix arg to long 
+
+    who = shortlog -s --
+    push-hash = !sh -c 'git push origin $1:refs/heads/$(git cb)' -    # requires a SHA or the remote branch will be deleted!!
+    reset-tags = "!f() { git tag -l | xargs git tag -d; git fetch; }; f"
+    serve = !git daemon --reuseaddr --verbose --base-path=. --export-all ./.git 
+    save = stash save -u # similar to git stash
     fixup = !sh -c 'git commit --fixup=$1' - #git ammend?
     squash = !sh -c 'git commit --squash=$1' - #squash commit
     ri = rebase --interactive --autosquash --rebase-merges #interactie rebase
@@ -55,21 +51,31 @@ name = alen-mat
     delete-tag = "!f() { git tag -d $1; git push origin :refs/tags/$1; }; f"#delete tag
     info = !sh -c 'git-info' -    # requires https://github.com/gitbits/git-info
     submodule-list = !git ls-files --stage | grep 16000
-    purge = clean -f -d #untracked files and directories
-    purge-all = clean -f -d -x #and ignored files
     fakeignore = update-index --assume-unchanged
     ignore = update-index --assume-unchanged
+
     undo = reset --soft --keep HEAD^
     unstage = reset HEAD
+    fit = reset --hard
+
+    lg = log --graph --decorate --abbrev-commit
+    lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
     ph = log --graph --pretty=pretty-history --abbrev-commit --date=relative
     standup = !sh -c 'git log --pretty=format:\"%Cred%h%Creset - %Cgreen%cr%Creset : %s\" --since=\"`date -v-1d \"+%Y-%m-%d 00:00:00\"`\" --until=\"`date \"+%Y-%m-%d 00:00:00\"`\" --all --author=\"$(git config --get user.name)\"'
+
     first = !sh -c 'git log origin/master --pretty=format:%H  --reverse | head -1'
     lasttag = !sh -c 'git log --simplify-by-decoration --decorate=short --tags --format="%H" |head -1'
-    quicklog = log --pretty=format:'%Cblue%h %Cred%cD %Creset%cn %Cgreen%s%Creset' --date-order --graph
     changes = log --oneline --decorate
     changelog = show --name-only
+
     svnup = svn rebase
     svnpush = svn dcommit
+
+[pretty]
+    pretty-history = format:%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset
+    ql = %Cblue%h %Cred%cD %Creset%cn %Cgreen%s%Creset
+
 [rerere]
     enabled = true
 [core]
@@ -77,20 +83,15 @@ name = alen-mat
     #editor = code -n -w    # VS Code
     ignorecase = false
     excludesfile = ~/.gitignore_global
-	editor = vim
-[color]
-    ui = true
+    editor = vim
 [branch]
     autosetuprebase = always
-[dude]
-    # notify-command = growlnotify -n \"$app_name\" -s --image \"$ICON_PATH\" -m \"$DESCRIPTION\" \"$TITLE\"
-    # icon ~/.git-dude/github_32.png
-    # notify-command = osascript -e \"display notification \\\"$DESCRIPTION\\\" with title \\\"$TITLE\\\"\"
-    notify-command = osascript -e \"display notification \\\"$DESCRIPTION\\\" with title \\\"$TITLE\\\" sound name \\\"Hero\\\"\"
+
 [push]
     default = upstream
 [credential]
     helper = osxkeychain
+
 [filter "media"]
     clean = git-media-clean %f
     smudge = git-media-smudge %f
@@ -103,19 +104,22 @@ name = alen-mat
     process = git-lfs filter-process
     required = true
     clean = git-lfs clean -- %f
+
 [status]
     short = true
-[pretty]
-    q = The author of %h was %an, %ar%nThe title was >>%s<<%n
-    pretty-history = format:%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset
+
 [color]
     ui = auto
+    branch = auto
+    diff = auto
+    interactive = auto
+    status = auto
 [color "branch"]
     current = yellow reverse
     local = yellow
     remote = green
 [color "diff"]
-	meta = blue black bold
+    meta = blue black bold
     frag = magenta bold
     old = red bold
     new = green bold
@@ -124,13 +128,31 @@ name = alen-mat
     changed = yellow normal bold
     untracked = magenta normal dim
     header = white normal dim
+
+[diff]
+    tool = 
+    guitool = 
+[difftool]
+    prompt = false
+    trustExitCode = true
+[mergetool]
+    keepBackup = true
+
+
+[mergetool "vimdiff"]
+    layout = "LOCAL,BASE,REMOTE / MERGED + BASE,LOCAL + BASE,REMOTE"
+
 [difftool "sourcetree"]
     cmd = opendiff \"$LOCAL\" \"$REMOTE\"
     path =
 [mergetool "sourcetree"]
     cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
     trustExitCode = true
-[mergetool]
-    keepBackup = true
+
+[difftool "kitty"]
+    cmd = kitty +kitten diff $LOCAL $REMOTE
+[difftool "kitty.gui"]
+    cmd = kitty kitty +kitten diff $LOCAL $REMOTE
+
 [commit]
-	template = /home/alen/.config/git/gitmessage
+    template = ~/.config/git/gitmessage
