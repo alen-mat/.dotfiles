@@ -56,24 +56,8 @@ fish_add_path $HOME/.jbang/bin
 set -Ux LANG en_US.UTF-8
 set -Ux LESS "-R"
 
-if type -q bat
-	set -Ux BAT_CONFIG_DIR "$XDG_CONFIG_HOME/batcat"
-	set -Ux BAT_CONFIG_PATH "$BAT_CONFIG_DIR/batcat.cfg"
-	set -Ux MANPAGER "sh -c 'col -bx | bat -l man -p'"
-else
-	set -Ux LESS_TERMCAP_mb (printf '%b' '\e[1;31m')
-	set -x LESS_TERMCAP_md (printf '%b' '\e[1;36m')
-	set -Ux LESS_TERMCAP_me (printf '%b' '\e[0m')
-	set -Ux LESS_TERMCAP_so (printf '%b' '\e[01;44;33m')
-	set -Ux LESS_TERMCAP_se (printf '%b' '\e[0m')
-	set -Ux LESS_TERMCAP_us (printf '%b' '\e[1;32m')
-	set -Ux LESS_TERMCAP_ue (printf '%b' '\e[0m')
-	set -Ux LESSOPEN "| /usr/bin/highlight -O ansi %s 2>/dev/null"
 
-	set -Ux MANPAGER "less -R --use-color -Dd+r -Du+b"
-end
-
-set -x JAVA_HOME /usr/lib/jvm/java-8-openjdk 
+set -x JAVA_HOME '/usr/lib/jvm/default'
 
 #set -Ux XINITRC "${XDG_CONFIG_HOME:-$HOME/.config}/x11/xinitrc"
 #set -Ux XAUTHORITY "$XDG_RUNTIME_DIR/Xauthority" # This line will break some DMs.
@@ -98,89 +82,9 @@ set -Ux HISTFILE "$HOME/.local/share/history"
 
 # Other program settings:
 set -Ux DICS "/usr/share/stardict/dic/"
-set -Ux SUDO_ASKPASS "$HOME/.config/rofi/applets/askpass.sh"
+set -Ux SUDO_ASKPASS "$HOME/.config/rofi/scripts/askpass.sh"
 set -Ux FZF_DEFAULT_OPTS "--layout reverse --height 40%"
 #set -Ux QT_QPA_PLATFORMTHEME "gtk2" # Have QT use gtk2 theme.
 set -Ux MOZ_USE_XINPUT2 "1"		# Mozilla smooth scrolling/touchpads.
 set -Ux AWT_TOOLKIT "MToolkit wmname LG3D"	#May have to install wmname
 set -Ux _JAVA_AWT_WM_NONREPARENTING 1	# Fix for Java applications in dwm
-
-# This is the list for lf icons:
-set -Ux LF_ICONS "di 📁:\
-fi 📃:\
-tw 🤝:\
-ow 📂:\
-ln ⛓:\
-or ❌:\
-ex 🎯:\
-*.txt ✍:\
-*.mom ✍:\
-*.me ✍:\
-*.ms ✍:\
-*.png 🖼:\
-*.webp 🖼:\
-*.ico 🖼:\
-*.jpg 📸:\
-*.jpe 📸:\
-*.jpeg 📸:\
-*.gif 🖼:\
-*.svg 🗺:\
-*.tif 🖼:\
-*.tiff 🖼:\
-*.xcf 🖌:\
-*.html 🌎:\
-*.xml 📰:\
-*.gpg 🔒:\
-*.css 🎨:\
-*.pdf 📚:\
-*.djvu 📚:\
-*.epub 📚:\
-*.csv 📓:\
-*.xlsx 📓:\
-*.tex 📜:\
-*.md 📘:\
-*.r 📊:\
-*.R 📊:\
-*.rmd 📊:\
-*.Rmd 📊:\
-*.m 📊:\
-*.mp3 🎵:\
-*.opus 🎵:\
-*.ogg 🎵:\
-*.m4a 🎵:\
-*.flac 🎼:\
-*.wav 🎼:\
-*.mkv 🎥:\
-*.mp4 🎥:\
-*.webm 🎥:\
-*.mpeg 🎥:\
-*.avi 🎥:\
-*.mov 🎥:\
-*.mpg 🎥:\
-*.wmv 🎥:\
-*.m4b 🎥:\
-*.flv 🎥:\
-*.zip 📦:\
-*.rar 📦:\
-*.7z 📦:\
-*.tar.gz 📦:\
-*.z64 🎮:\
-*.v64 🎮:\
-*.n64 🎮:\
-*.gba 🎮:\
-*.nes 🎮:\
-*.gdi 🎮:\
-*.1 ℹ:\
-*.nfo ℹ:\
-*.info ℹ:\
-*.log 📙:\
-*.iso 📀:\
-*.img 📀:\
-*.bib 🎓:\
-*.ged 👪:\
-*.part 💔:\
-*.torrent 🔽:\
-*.jar ♨:\
-*.java ♨:\
-"
-
