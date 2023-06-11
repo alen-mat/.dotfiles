@@ -62,23 +62,12 @@ nmap <Leader>P "+P
 " when I pasted. I don't loose the previous thing I YANKED!
 vnoremap <leader>p "_dP
 
-" Splitting Windows
-nmap <Leader>\ :vsplit<CR>
-nmap <Leader>v :vsplit<CR>
-nmap <Leader>- :split<CR>
-nmap <Leader>h :split<CR>
-
 " nmap <leader>fs :action FileStructurePopup<CR>
 
 
 " Some search and replace shortcuts
 " nnoremap <Leader><Leader>r :%s///g<Left><Left>
 " nnoremap <Leader><Leader>rc :%s///g<Left><Left><Left>
-nnoremap <Leader><Leader>r :%s//g<Left><Left>
-"" Visual Mode
-" xnoremap <Leader><Leader>r :s///g<Left><Left>
-" xnoremap <Leader><Leader>rc :s///g<Left><Left><Left>
-xnoremap <Leader><Leader>r :s//g<Left><Left>
 
 " Project Shortcuts
 " =================
@@ -160,13 +149,6 @@ nmap <Leader>rt :action Refactorings.QuickListPopupAction<CR>
 "nmap csw' :action Macro.surround_with_single_quote<CR>
 
 " Move visual block
-vnoremap J :m '>+1<CR>
-" xnoremap K :m '<-2<CR>
-vnoremap K :m '<-2<CR>
-
-" Put search results in the middle of the screen
-nnoremap n nzz
-nnoremap N Nzz
 
 " Laravel Mappings
 " ================

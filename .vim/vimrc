@@ -12,25 +12,6 @@ if &compatible
 	set nocompatible               " Be iMproved
 endif
 
-set runtimepath+=~/.cache/dein/repos/github.com/Shougo/dein.vim
-
-" Required:
-call dein#begin('~/.cache/dein')
-	call dein#add('~/.cache/dein/repos/github.com/Shougo/dein.vim')
-	source ~/.vim/plugin_conf/_NERDTree.vim
-	call dein#add('ludovicchabant/vim-lawrencium')
-	call dein#add('tpope/vim-fugitive')
-	call dein#add('terryma/vim-multiple-cursors')
-	source ~/.vim/plugin_conf/_ale.vim
-	"call dein#add('Shougo/neosnippet.vim')
-	""call dein#add('Shougo/neosnippet-snippets')
-call dein#end()
-
-" If you want to install not installed plugins on startup.
-if dein#check_install()
-	call dein#install()
-endif
-
 "End dein ---------------------------------------
 
 if has('syntax')
@@ -106,7 +87,41 @@ command FileSyn execute "vnew | r !file_sync # "
 command FormatJSON execute "%!json_pp"
 command FormatXML execute "%!python -c 'import sys; import xml.dom.minidom; s=sys.stdin.read(); print(xml.dom.minidom.parseString(s).toprettyxml())'"
 
-"BUILD INTEGRATION
-"set makeprg= <__COMMAND__>
+aug StdIn
+  au! 
+  au StdinReadPost * echomsg "In pager mode!"
+  silent loadview
+aug END
 
-nmap <F6> :NERDTreeToggle<CR>
+function! ToggleEnterMapping()
+  if empty(mapcheck('<CR>', 'i'))
+    inoremap <CR> <Esc>`^
+    return "\<Esc>"
+  else
+    iunmap <CR>
+    return "\<CR>"
+  endif
+endfunction
+
+call ToggleEnterMapping()
+inoremap <expr> <S-CR> ToggleEnterMapping()
+" Optional (so <CR> cancels prefix, selection, operator).
+nnoremap <CR> <Esc>
+vnoremap <CR> <Esc>gV
+onoremap <CR> <Esc>
+
+
+nmap <Leader>\ :vsplit<CR>
+nmap <Leader>- :split<CR>
+
+nnoremap <Leader><Leader>r :%s//g<Left><Left>
+xnoremap <Leader><Leader>r :s//g<Left><Left>
+
+vnoremap J :m '>+1<CR>
+" xnoremap K :m '<-2<CR>
+vnoremap K :m '<-2<CR>
+
+" Put search results in the middle of the screen
+nnoremap n nzz
+nnoremap N Nzz
+
