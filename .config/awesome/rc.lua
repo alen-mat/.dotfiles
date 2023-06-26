@@ -1,119 +1,125 @@
-require("awful.autofocus")
+-- If LuaRocks is installed, make sure that packages installed through it are
+-- found (e.g. lgi). If LuaRocks is not installed, do nothing.
+pcall(require, "luarocks.loader")
+require('config.env')
+local root = root
+local screen = screen
+-- Standard awesome library
 local gears = require("gears")
 local awful = require("awful")
-local naughty = require("naughty")
-local dpi = require("beautiful").xresources.apply_dpi
+require("awful.autofocus")
+require('config.notifications')
+-- Theme handling library
 local beautiful = require("beautiful")
+-- Enable hotkeys help widget for VIM and other apps
+-- when client with a matching name is opened:
+require("awful.hotkeys_popup.keys")
 
--- Theme
-beautiful.init(require("theme"))
+require('utils.autorun')
 
--- Layout
-require("bars")
 
--- Init all modules
-require("module.notifications")
-require("module.auto-start")
-require("module.decorate-client")
-require("module.splash-terminal")
 
--- Setup all configurations
-require("configuration.client")
-require("configuration.tags")
-_G.root.keys(require("configuration.keys.global"))
+-- {{{ Variable definitions
+-- Themes define colours, icons, font and wallpapers.
+--beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
+user_home = os.getenv('HOME')
+theme_dir = user_home .. '/.config/awesome/themes/' .. 'default' .. '/'
+--beautiful.init(theme_dir .. "theme.lua")
 
--- Signal function to execute when a new client appears.
-_G.client.connect_signal(
-"manage",
-function(c)
-   -- Set the windows at the slave,
-   -- i.e. put it at the end of others instead of setting it master.
-   if not _G.awesome.startup then
-      awful.client.setslave(c)
-   end
+beautiful.init(require("themes.default"))
 
-   if _G.awesome.startup and not c.size_hints.user_position and not c.size_hints.program_position then
-      -- Prevent clients from being unreachable after screen count changes.
-      awful.placement.no_offscreen(c)
-   end
-end
-)
+-- This is used later as the default terminal and editor to run.
+terminal = "alacritty"
+editor = os.getenv("EDITOR") or "nano"
+editor_cmd = editor
 
--- Move cursor to focused window
-function Move_mouse_onto_focused_client()
-   local c = _G.client.focus
-   gears.timer(
-   {
-      timeout = 0.1,
-      autostart = true,
-      single_shot = true,
-      callback = function()
-      if _G.mouse.object_under_pointer() ~= c then
-         local geometry = c:geometry()
-         local x = geometry.x + geometry.width / 2
-         local y = geometry.y + geometry.height / 2
-         _G.mouse.coords(
-         {
-            x = x,
-            y = y
-         },
-         true
-         )
-      end
-   end
+-- Default modkey.
+-- Usually, Mod4 is the key with a logo between Control and Alt.
+-- If you do not like this or do not have such a key,
+-- I suggest you to remap Mod4 to another key using xmodmap or other tools.
+-- However, you can use another modifier like Mod1, but it may interact with others.
+modkey = "Mod4"
+altkey = "Mod1"
+shiftkey = "Shift"
+ctrlkey = "Control"
+
+-- Table of layouts to cover with awful.layout.inc, order matters.
+awful.layout.layouts = {
+    awful.layout.suit.tile,
+    awful.layout.suit.tile.left,
+    awful.layout.suit.tile.bottom,
+    awful.layout.suit.tile.top,
+    awful.layout.suit.fair,
+    awful.layout.suit.fair.horizontal,
+    awful.layout.suit.spiral,
+    awful.layout.suit.spiral.dwindle,
+    awful.layout.suit.max,
+    awful.layout.suit.max.fullscreen,
+    awful.layout.suit.magnifier,
+    awful.layout.suit.corner.nw,
+    awful.layout.suit.floating,
+    -- awful.layout.suit.corner.ne,
+    -- awful.layout.suit.corner.sw,
+    -- awful.layout.suit.corner.se,
 }
-)
+-- }}}
+
+local function set_wallpaper(s)
+    if beautiful.wallpaper then
+        local wallpaper = beautiful.wallpaper
+        -- If wallpaper is a function, call it with the screen
+        if type(wallpaper) == "function" then
+            wallpaper = wallpaper(s)
+        end
+        gears.wallpaper.maximized(wallpaper, s, false)
+    end
+    if beautiful.wallpaper_color then
+        gears.wallpaper.set(beautiful.wallpaper_color)
+    end
+    if beautiful.wallpaper_folder then
+        local f = io.popen("sh -c \"find " ..
+        beautiful.wallpaper_folder .. " -name '*.png' | shuf -n 1 | xargs echo -n\"")
+        if f == nil then
+            return
+        end
+        local wallpaper = f:read("*all")
+        f:close()
+        gears.wallpaper.maximized(wallpaper, s, false)
+    end
 end
 
---if beautiful.cursor_warp then
---  _G.client.connect_signal("focus", Move_mouse_onto_focused_client)
---  _G.client.connect_signal("swapped", Move_mouse_onto_focused_client)
---end
+-- Re-set wallpaper when a screen's geometry changes (e.g. different resolution)
+screen.connect_signal("property::geometry", set_wallpaper)
 
--- Enable sloppy focus, so that focus follows mouse.
---_G.client.connect_signal('mouse::enter', function(c)
---    c:emit_signal('request::activate', 'mouse_enter', {
---        raise = true
---    })
---end)
+awful.screen.connect_for_each_screen(function(s)
+    awful.tag({ "1", "2", "3", "4", "5", "6", "7", "8", "9" }, s, awful.layout.layouts[1])
+    -- Wallpaper
+    set_wallpaper(s)
 
--- Make the focused window have a glowing border
-_G.client.connect_signal(
-"focus",
-function(c)
-c.border_color = beautiful.border_focus
-end
-)
-_G.client.connect_signal(
-"unfocus",
-function(c)
-c.border_color = beautiful.border_normal
-end
-)
+    require('bars')(s)
+end)
+-- }}}
+-- {{{ Mouse bindings
+root.buttons(gears.table.join(
+    awful.button({}, 3, function() end),
+    awful.button({}, 4, awful.tag.viewnext),
+    awful.button({}, 5, awful.tag.viewprev)
+))
+-- }}}
 
---titlebar only when window is floating
--- add window rule with --> properties = { titlebars_enabled = true }
-client.connect_signal(
-"property::floating",
-function(c)
-if c.floating then
-   awful.titlebar.show(c)
-else
-   awful.titlebar.hide(c)
-end
-end
-)
+root.keys(require('config.keys'))
 
-if beautiful.title_bar then
--- Enable smart borders (https://github.com/intrntbrn/smart_borders)
-require("module.smart-borders") {
-   show_button_tooltips = true,
-   border_width = dpi(16),
-   rounded_corner = dpi(0),
-   positions = {"bottom"},
-   button_positions = {"bottom"},
-   button_size = dpi(40),
-   color_focus = beautiful.primary.hue_200,
-   color_normal = beautiful.primary.hue_100
+
+require('client.rules')
+require('client.signals')
+
+require('daemons.battery')
+require('daemons.network')
+
+
+
+gears.timer {
+    timeout = 30,
+    autostart = true,
+    callback = function() collectgarbage() end
 }
-end

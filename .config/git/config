@@ -62,7 +62,7 @@
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
 
     ph = log --graph --pretty=pretty-history --abbrev-commit --date=relative
-    standup = !sh -c 'git log --pretty=format:\"%Cred%h%Creset - %Cgreen%cr%Creset : %s\" --since=\"`date -v-1d \"+%Y-%m-%d 00:00:00\"`\" --until=\"`date \"+%Y-%m-%d 00:00:00\"`\" --all --author=\"$(git config --get user.name)\"'
+    standup = !sh -c 'git log --pretty=format:\"%Cred%h%Creset - %Cgreen%cr%Creset : %s\" --since=\"$(date -d yesterday \"+%Y-%m-%d 00:00:00\")\" --until=\"$(date \"+%Y-%m-%d 00:00:00\")\" --all --author=\"$(git config --get user.name)\"'
 
     first = !sh -c 'git log origin/master --pretty=format:%H  --reverse | head -1'
     lasttag = !sh -c 'git log --simplify-by-decoration --decorate=short --tags --format="%H" |head -1'
