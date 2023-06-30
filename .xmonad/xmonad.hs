@@ -342,10 +342,10 @@ myKeys conf@XConfig {XMonad.modMask = modm} =
     , key "Expand master"   (modm .|. shiftMask, xK_l        ) $ sendMessage Expand
     , key "Switch to tile"  (modm              , xK_t        ) $ withFocused (windows . W.sink)
     , key "Rotate slaves"   (modm .|. shiftMask, xK_Tab      ) rotSlavesUp
-    , key "Decrease size"   (modm              , xK_d        ) $ withFocused (keysResizeWindow (-10,-10) (1,1))
-    , key "Increase size"   (modm              , xK_s        ) $ withFocused (keysResizeWindow (10,10) (1,1))
-    , key "Decr  abs size"  (modm .|. shiftMask, xK_d        ) $ withFocused (keysAbsResizeWindow (-10,-10) (1024,752))
-    , key "Incr  abs size"  (modm .|. shiftMask, xK_s        ) $ withFocused (keysAbsResizeWindow (10,10) (1024,752))
+    , key "Decrease size"   (modm .|. altMask              , xK_d      ) $ withFocused (keysResizeWindow (-10,-10) (1,1))
+    , key "Increase size"   (modm .|. altMask              , xK_s      ) $ withFocused (keysResizeWindow (10,10) (1,1))
+    , key "Decr  abs size"  (modm .|. altMask .|. shiftMask, xK_d ) $ withFocused (keysAbsResizeWindow (-10,-10) (1024,752))
+    , key "Incr  abs size"  (modm .|. altMask .|. shiftMask, xK_s ) $ withFocused (keysAbsResizeWindow (10,10) (1024,752))
     , key "Invert Window"   (modm              , xK_i        ) $ spawn "~/.scripts/invert-window"
     , key "float everywhere"(modm              , xK_a        ) $ sequence_ $ [windows $ copy i | i <- XMonad.workspaces conf]    -- Pin to all workspaces
     , key "float everywhere"(modm .|. shiftMask, xK_a        ) $ windows $ kill8      -- remove from all but current
@@ -453,8 +453,9 @@ addEWMHFullscreen   = do
     wfs <- getAtom "_NET_WM_STATE_FULLSCREEN"
     sa  <- getAtom "_NET_WM_STATE_ABOVE"
     sky <- getAtom "_NET_WM_STATE_STICKY"
-    mapM_ addNETSupported [wms, wfs, sa, sky]
-
+    atn <- getAtom "_NET_WM_STATE_DEMANDS_ATTENTION"
+    wfm <- getAtom "_NET_WM_FULLSCREEN_MONITORS"
+    mapM_ addNETSupported [wms, wfs, sa, sky, atn, wfm]
 
 ------------------------------------------------------------------------
 -- Layouts:
@@ -499,6 +500,7 @@ windowRules = composeAll . concat $
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "4" | x <- my4Shifts ]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "5" | x <- my5Shifts ]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "6" | x <- my6Shifts ]
+    , [(title =? x ) --> doShiftAndGo "6" | x <- my6Shifts_title ]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "7" | x <- my7Shifts ]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "8" | x <- my8Shifts ]
     , [(className =? x <||> title =? x <||> resource =? x) --> doShiftAndGo "9" | x <- my9Shifts ]
@@ -517,7 +519,8 @@ windowRules = composeAll . concat $
                 my3Shifts = []
                 my4Shifts = []
                 my5Shifts = []
-                my6Shifts = ["zoom", "Zoom Meeting", "Zoom - Licensed Account","Skype"]
+                my6Shifts = ["zoom", "Zoom Meeting", "Zoom - Licensed Account"]
+                my6Shifts_title = ["Skype"]
                 my7Shifts = []
                 my8Shifts = []
                 my9Shifts = []
@@ -590,6 +593,8 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
   isDock              = isInProperty "_NET_WM_WINDOW_TYPE" "_NET_WM_WINDOW_TYPE_DOCK"
   isOSD               = isInProperty "_NET_WM_WINDOW_TYPE" "_KDE_NET_WM_WINDOW_TYPE_ON_SCREEN_DISPLAY"
   isXmonadTagF        = isInProperty "_XMONAD_TAGS" "float"
+  floatp              = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_ABOVE"
+  stickp              = isInProperty "_NET_WM_STATE" "_NET_WM_STATE_STICKY"
 
   tileBelow         = insertPosition Below Newer
   doCalendarFloat   = customFloating (W.RationalRect (11 / 15) (1 / 48) (1 / 4) (1 / 4))
@@ -631,7 +636,7 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
   manageApps = composeOne
     [ isInstance calendar                      -?> doCalendarFloat
     , isInstance xmonKeYad                     -?> doYadDiagFloat
-    , match [ gimp, office ]                   -?> doFloat
+    , match [ gimp, office ] <||> floatp       -?> doFloat
     , match [ audacious
             , eog
             , nautilus
@@ -659,11 +664,12 @@ myManageHook =  windowRules <+> manageApps <+> manageSpawn <+> manageScratchpads
     , (className =? "firefox" <&&> (resource =? "Toolkit" <||> resource =? "Dialog"))  -?> doFloat
     , isFullscreen                             -?> doFullFloat
     , pure True                                -?> tileBelow
-    , className =? "Wfica" <&&> title =? "WorkSpace Enterprise_SG2_PROD_01 "                     -?> doShift "9"
+    , className =? "Wfica"                     -?> doShift "9"
     , pure True                     -?> insertPosition Below Newer
     , isDesktop                     -?> doWindowAction sendToBottom
     , isDock                        -?> doWindowAction sendToJustAboveDesktop
     , isOSD                         -?> doCenterFloat
+    , stickp                        -?> doF copyToAll
     ]
 
 isInstance (ClassApp c _) = className =? c
