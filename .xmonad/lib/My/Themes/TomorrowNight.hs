@@ -1,6 +1,5 @@
 module My.Themes.TomorrowNight where
 
-import XMonad
 
 colorScheme = "tomorrow-night"
 

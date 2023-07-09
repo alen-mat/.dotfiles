@@ -1,8 +1,10 @@
+{-# OPTIONS_GHC -fno-warn-missing-signatures -fno-warn-unused-binds #-}
+
 module My.Layouts(defaultLayouts, floats, imLayout)  where
 import My.Themes.Monnet
 
 import Data.Ratio ((%))
-import Data.Semigroup
+--import Data.Semigroup
 
 import XMonad.Layout
 import XMonad.Layout.MultiToggle.Instances (StdTransformers(MIRROR))
@@ -10,7 +12,7 @@ import XMonad.Layout.Renamed
 
 import XMonad.Layout.Accordion
 import XMonad.Layout.Column
-import XMonad.Layout.Combo
+--import XMonad.Layout.Combo
 import XMonad.Layout.ComboP
 import XMonad.Layout.GridVariants (Grid(Grid))
 import XMonad.Layout.IM
