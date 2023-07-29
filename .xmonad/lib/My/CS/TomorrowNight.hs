@@ -1,4 +1,4 @@
-module My.Themes.TomorrowNight where
+module My.CS.TomorrowNight where
 
 
 colorScheme = "tomorrow-night"

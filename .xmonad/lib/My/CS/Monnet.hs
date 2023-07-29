@@ -1,8 +1,5 @@
-module My.Themes.Monnet where
+module My.CS.Monnet where
 
-import XMonad
-import Data.Word
-import XMonad.Layout.ShowWName
 {--
 Auto generated color from pywal
 --}
@@ -31,19 +28,4 @@ color15 = "#c6c5c5"
 
 colorTrayer :: String
 colorTrayer = "--tint 0x1d1f21"
-
-myBorderWidth::Word32 
-myBorderWidth   = 2
-
-myFont :: String
-myFont = "xft:SauceCodePro Nerd Font Mono:regular:size=9:antialias=true:hinting=true"
-
-myShowWNameTheme :: SWNConfig
-myShowWNameTheme = def
-    { swn_font              = "xft:Ubuntu:bold:size=60"
-    , swn_fade              = 1.0
-    , swn_bgcolor           = "#1c1f24"
-    , swn_color             = "#ffffff"
-    }
-
 
