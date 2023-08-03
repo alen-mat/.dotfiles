@@ -1,0 +1,3 @@
+[submodule "/home/alen/.config/dwm"]
+	path = /home/alen/.config/dwm
+	url = git@github.com:alen-mat/dwm.git
