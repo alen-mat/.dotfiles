@@ -94,6 +94,8 @@ nmap <Leader>m :action CodeGlance.toggle<CR>
 nmap <Leader>nt :NERDTreeToggle<CR>
 let g:NERDTreeMapActivateNode="l"
 let g:NERDTreeMapCloseDir="h"
+let NERDTreeQuitOnOpen=1
+let NERDTreeWinSize=35
 
 " Toggle ToggleDistractionFreeMode
 nmap - :action ToggleDistractionFreeMode<CR>
@@ -106,15 +108,11 @@ nnoremap <leader>q :q <CR>
 nnoremap <leader>cf :action ReformatCode<CR>
 
 " Git
-nmap <Leader>gs :action CheckinProject<CR>
-nmap <Leader>gc :action CheckinProject<CR>
 nmap <Leader>ga :action Git.Add<CR>
-nmap <Leader>gp :action Git.Pull<CR>
-nmap <Leader>gn :action Annotate<CR>
+nmap <Leader>gb :action Annotate<CR>
 nmap <Leader>gl :action Git.Log<CR>
-nmap <Leader>go :action Github.Open.In.Browser<CR>
-nmap <Leader>br :action Git.Branches<CR>
-nmap <Leader>gb :action Git.Branches<CR>
+nmap <Leader>gs :action Git.Branches<CR>
+nmap <Leader>gs :action CheckinProject<CR>
 
 " View my customize Quicklist
 nmap <Leader><leader>l :action QuickList.MyList<CR>
@@ -146,7 +144,20 @@ nmap gl <Action>(QuickJavaDoc)
 nmap gL <Action>(QuickImplementations)
 nmap gy <Action>(ShowErrorDescription)
 
-" debugger
+" run/debug
+nnoremap <Space>rc :action RunConfiguration<CR>
+noremap <Space>rr :action Run<CR>
+noremap <Space>rn :action RunClass<CR>
+nnoremap <Leader>cr :action ChooseRunConfiguration<CR>
+noremap <Space>dd :action Debug<CR>
+noremap <Space>dn :action DebugClass<CR>
+nnoremap <Leader>cd :action ChooseDebugConfiguration<CR>
+noremap <Space>cc :action Coverage<CR>
+noremap <Space>cn :action RunCoverage<CR>
+noremap <Space>sp   :action Stop<CR>
+"nnoremap <Leader>rr :action Rerun<CR>
+
+" debugging
 nnoremap <C-q> :action EvaluateExpression<CR>
 nnoremap <Delete> :action ToggleLineBreakpoint<CR>
 nnoremap <Left> :action StepOut<CR>
