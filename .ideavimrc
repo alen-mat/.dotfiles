@@ -1,3 +1,4 @@
+source ~/.vim/vimrc
 " To get a list of Actions run `:actionlist `
 " let mapleader = ','
 " let mapleader = " "
@@ -24,8 +25,10 @@ set exchange
 set multiple-cursors
 set sneak
 
+nmap <Leader>ir <Action>(IdeaVim.ReloadVimRc.reload)
+
 " clear the search buffer when hitting return
- nnoremap <Leader>/ :nohlsearch<cr>
+nnoremap <Leader>/ :nohlsearch<cr>
 
 " To copy text to the end-of-line, press Y.
 " This mapping sets up Y to be consistent with
@@ -34,20 +37,6 @@ set sneak
 " is to yank the whole line.
 nnoremap Y y$
 
-" Shortcut for escape
-imap jj <Esc>
-imap jk <Esc>
-
-" When in normal mode and I hit Enter,
-" then save file please
-nmap <CR> :action ReformatCode<CR> :write<CR>
-nnoremap <Leader>F  :action ReformatCode<CR> :write<CR>
-
-" Quick window navigation
-map <C-J> <C-W>j
-map <C-K> <C-W>k
-map <C-L> <C-W>l
-map <C-H> <C-W>h
 
 " Shortcut for copying to/from System Clipboard
 vmap <Leader>y "+y
@@ -80,7 +69,7 @@ vnoremap <leader>p "_dP
 nmap <Leader>w :action HideAllWindows<CR>
 
 " Open Global Find Dialog box
-nmap <Leader>fp :action FindInPath<CR>
+nmap <Leader>sg :action FindInPath<CR>
 
 " Open Terminal
 nmap <Leader>t :action ActivateTerminalToolWindow<CR>
@@ -94,16 +83,20 @@ nmap <Leader>fb :action RecentFiles<CR>
 nmap <Leader>ff :action GotoFile<CR>
 nmap <Leader>fg :action SearchEverywhere<CR>
 nmap <Leader><Leader>b :action RecentFiles<CR>
+nnoremap gO       :action FileStructurePopup<CR>
+nnoremap -        :action SelectInProjectView<CR>
 
 " Toggle code minimap
 nmap <Leader>m :action CodeGlance.toggle<CR>
 
-" Nerdtree want to be
+" Nerdtree
 " nmap <Leader>nt :action ActivateProjectToolWindow<CR>
 nmap <Leader>nt :NERDTreeToggle<CR>
+let g:NERDTreeMapActivateNode="l"
+let g:NERDTreeMapCloseDir="h"
 
 " Toggle ToggleDistractionFreeMode
-nmap <Leader>df :action ToggleDistractionFreeMode<CR>
+nmap - :action ToggleDistractionFreeMode<CR>
 
 " Quick Quite
 nnoremap <leader>q :q <CR>
@@ -111,17 +104,8 @@ nnoremap <leader>q :q <CR>
 "Coding Formating
 " ===============
 nnoremap <leader>cf :action ReformatCode<CR>
-nnoremap <leader>pcf :action Tool_External Tools_PHP CS Fixer<CR>
 
-
-" XDebug Shortcuts
-nmap <Leader>xl :action PhpListenDebugAction<CR>
-nmap <Leader>bp :action ToggleLineBreakpoint<CR>
-" Jump to Source
-nmap <C>] :action XDebugger.JumpToSource
-
-" Some Git Shortcuts for view status, pull, and branches
-" Mapping mimic Fugitive in my native vim
+" Git
 nmap <Leader>gs :action CheckinProject<CR>
 nmap <Leader>gc :action CheckinProject<CR>
 nmap <Leader>ga :action Git.Add<CR>
@@ -148,18 +132,34 @@ nmap <Leader>cb<Space> :action CommentByBlockComment<CR>
 nmap <Leader>rt :action Refactorings.QuickListPopupAction<CR>
 "nmap csw' :action Macro.surround_with_single_quote<CR>
 
-" Move visual block
+"Code Diagnostics
+nnoremap [q :action GotoPreviousError<CR>
+nnoremap ]q :action GotoNextError<CR>
+nmap <leader>s <Action>(ShowUsages)
+nmap <leader>t <Action>(TypeHierarchy)
+nmap <leader>u <Action>(FindUsages)
+nnoremap gD       :action GotoImplementation<CR>
+nmap gb <Action>(Back)
+nmap gD <Action>(GotoTypeDeclaration)
+nmap gf <Action>(Forward)
+nmap gl <Action>(QuickJavaDoc)
+nmap gL <Action>(QuickImplementations)
+nmap gy <Action>(ShowErrorDescription)
 
-" Laravel Mappings
-" ================
-" Open and edit routes file
-nmap <Leader>lc :e composer.json<cr>
-nmap <Leader>le :e .env<cr>
+" debugger
+nnoremap <C-q> :action EvaluateExpression<CR>
+nnoremap <Delete> :action ToggleLineBreakpoint<CR>
+nnoremap <Left> :action StepOut<CR>
+nnoremap <Right> :action StepOver<CR>
+nnoremap <A-Right> :action Resume<CR>
+nnoremap <F5> :action Resume<CR>
+nnoremap <Up> :action Debugger.FramePanelPopup<CR>
+nnoremap <Down> :action StepInto<CR>
+nnoremap <A-Down> :action SmartStepInto<CR>
+nnoremap <A-d> :action JavaDebuggerActions<CR>
+nmap <C>] :action XDebugger.JumpToSource
 
-" Shortcut for copying to/from System Clipboard
-"" Copy (Yank)
-vmap <Leader>y "+y
-"" Cute
-vmap <Leader>d "+d
-"" Paste
-nmap <Leader>P "+p
+
+"To be mapped
+" action ShowIntentionActions
+"FileStructurePopup
