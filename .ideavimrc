@@ -4,14 +4,17 @@ source ~/.vim/vimrc
 " let mapleader = " "
 let mapleader = "\<SPACE>"
 
-set NERDTree
-set surround
-set easymotion
-set commentary
 set ideajoin
-set exchange
-set multiple-cursors
 set sneak
+
+Plug 'preservim/nerdtree'
+Plug 'tpope/vim-surround'
+Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-commentary'
+Plug 'tommcdo/vim-exchange'
+Plug 'terryma/vim-multiple-cursors'
+Plug 'machakann/vim-highlightedyank'
+Plug 'vim-scripts/argtextobj.vim'
 
 nmap <Leader>ir <Action>(IdeaVim.ReloadVimRc.reload)
 
@@ -79,7 +82,6 @@ nnoremap <leader>q :q <CR>
 nnoremap <leader>cf :action ReformatCode<CR>
 
 " Git
-nmap <Leader>ga :action Git.Add<CR>
 nmap <Leader>gb :action Annotate<CR>
 nmap <Leader>gl :action Git.Log<CR>
 nmap <Leader>gs :action Git.Branches<CR>
