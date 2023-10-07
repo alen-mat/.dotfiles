@@ -1,0 +1,5 @@
+touchegg &
+wired &
+picom -f --vsync --dbus --experimental-backend --config ~/.config/picom/picom  -b &
+feh --bg-fill ~/Pictures/new-walls/wallhaven-landscape.jpg &
+~/.config/eww/controlewwr mybar open bar
