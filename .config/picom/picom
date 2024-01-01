@@ -311,10 +311,13 @@ blur-background-exclude = [
   "class_g = 'slop'",
   "class_g = 'Conky_trans'",
   "class_g = 'eww-volume-slider-lock'",
-	"class_g = 'eww-player-spotify'",
-	"class_g = 'eww-battery-lock'",
-	"class_g = 'eww-lock-weather'",
-  "_GTK_FRAME_EXTENTS@:c"
+  "class_g = 'eww-player-spotify'",
+  "class_g = 'eww-battery-lock'",
+  "class_g = 'eww-lock-weather'",
+  "class_g = 'zoom'",
+  "class_g = 'Awesome'",
+  "_GTK_FRAME_EXTENTS@:c",
+  "name *= 'react-overlay'"
 ];
 
 
