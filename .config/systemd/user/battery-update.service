@@ -1,0 +1,10 @@
+[Unit]
+Description=Update battery status when system is unplugged and plugged back in.
+
+[Service]
+Type=simple
+ExecStart=%h/.local/bin/battery-update.sh
+ExecStop=/bin/kill -s QUIT $MAINPID
+
+[Install]
+WantedBy=graphical.target
