@@ -1,4 +1,3 @@
-custom_cursor_colors = true
 live_config_reload = true
 
 [bell]
@@ -73,84 +72,6 @@ hide_when_typing = true
 [[mouse.bindings]]
 action = "PasteSelection"
 mouse = "Middle"
-
-[mouse.double_click]
-threshold = 300
-
-[mouse.triple_click]
-threshold = 300
-
-[schemes.tokyo-night.bright]
-black = "#444b6a"
-blue = "#7da6ff"
-cyan = "#0db9d7"
-green = "#b9f27c"
-magenta = "#bb9af7"
-red = "#ff7a93"
-white = "#acb0d0"
-yellow = "#ff9e64"
-
-[schemes.tokyo-night.normal]
-black = "#32344a"
-blue = "#7aa2f7"
-cyan = "#449dab"
-green = "#9ece6a"
-magenta = "#ad8ee6"
-red = "#f7768e"
-white = "#787c99"
-yellow = "#e0af68"
-
-[schemes.tokyo-night.primary]
-background = "#1a1b26"
-foreground = "#a9b1d6"
-
-[schemes.tokyo-night-storm.bright]
-black = "#444b6a"
-blue = "#7da6ff"
-cyan = "#0db9d7"
-green = "#b9f27c"
-magenta = "#bb9af7"
-red = "#ff7a93"
-white = "#acb0d0"
-yellow = "#ff9e64"
-
-[schemes.tokyo-night-storm.defult.bright]
-black = "#4e4e4e"
-blue = "#82aaff"
-cyan = "#89ddff"
-green = "#c3e88d"
-magenta = "#f07178"
-red = "#ff5370"
-white = "#ffffff"
-yellow = "#ffcb6b"
-
-[schemes.tokyo-night-storm.defult.normal]
-black = "#000000"
-blue = "#6182b8"
-cyan = "#39adb5"
-green = "#91b859"
-magenta = "#ff5370"
-red = "#e53935"
-white = "#a0a0a0"
-yellow = "#ffb62c"
-
-[schemes.tokyo-night-storm.defult.primary]
-background = "#263238"
-foreground = "#eeffff"
-
-[schemes.tokyo-night-storm.normal]
-black = "#32344a"
-blue = "#7aa2f7"
-cyan = "#449dab"
-green = "#9ece6a"
-magenta = "#ad8ee6"
-red = "#f7768e"
-white = "#9699a8"
-yellow = "#e0af68"
-
-[schemes.tokyo-night-storm.primary]
-background = "#24283b"
-foreground = "#a9b1d6"
 
 [selection]
 save_to_clipboard = false
