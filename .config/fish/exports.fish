@@ -88,3 +88,5 @@ set -Ux FZF_DEFAULT_OPTS "--layout reverse --height 40%"
 set -Ux MOZ_USE_XINPUT2 "1"		# Mozilla smooth scrolling/touchpads.
 set -Ux AWT_TOOLKIT "MToolkit wmname LG3D"	#May have to install wmname
 set -Ux _JAVA_AWT_WM_NONREPARENTING 1	# Fix for Java applications in dwm
+
+set -Ux ICAROOT /opt/Citrix/ICAClient
