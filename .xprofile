@@ -1,13 +1,80 @@
-touchegg &
-lxqt-policykit-agent&
-picom -f --vsync --dbus --experimental-backend --config ~/.config/picom/picom  -b &
-case $DESKTOP_SESSION in
-	awesome)
-		;;
-	*) 
-		wired &
-		feh --bg-fill ~/Pictures/new-walls/wallhaven-landscape.jpg &
-		~/.config/eww/controlewwr mybar open bar &
-		;;
-esac
+_check_running(){
+	if pgrep "$1" >/dev/null 2>&1 
+	then
+		return 0 #running  
+	else
+		return 1 # not running
+	fi
+}
 
+_touch_bar_ges(){
+	_check_running touchegg
+	if [ $? -eq 0 ]; then
+		echo "touchegg already running"
+	else
+		touchegg &
+	fi
+
+}
+
+_compositor(){
+	picom -f --vsync --dbus --config ~/.config/picom/picom  -b &
+}
+
+_polkit(){
+	polkit_agents=("/usr/bin/lxqt-policykit-agent" "/usr/lib/polkit-kde-authentication-agent-1")
+	for pa in "${polkit_agents[@]}"
+	do
+		if [ -f "$pa" ]; then
+			echo "found $pa"
+			_check_running $pa
+			if [ $? -eq 0 ]; then
+				echo "$pa already running"
+			else
+				echo "$pa not running"
+				"$pa" &
+			fi
+			break
+		fi
+	done
+}
+
+_apps(){
+	apps=("firewall-applet")
+	for a in "${apps[@]}"
+	do
+		command -v "$a" >/dev/null 2>&1 && {
+			_check_running $a
+			if [ $? -eq 0 ]; then
+				echo "$a already running"
+			else
+				echo "$a not running"
+				"$a" &
+			fi
+		}
+	done
+}
+
+_touch_bar_ges
+
+if [ "$DESKTOP_SESSION" == "plasma" ]
+then
+	echo "You are not SilverHand :)))"
+else
+	_polkit
+	_apps
+	_compositor
+	case $DESKTOP_SESSION in
+		awesome)
+			;;
+		*) 
+
+			wired &
+			feh --bg-fill ~/Pictures/new-walls/wallhaven-landscape.jpg &
+			~/.config/eww/controlewwr mybar open bar &
+			;;
+	esac
+	sleep 5 && notify-send "XProfile" "Start up complete"&
+fi
+
+# vim: set syntax=bash:
