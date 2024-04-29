@@ -96,6 +96,41 @@ au BufNewFile,BufRead *.py set tabstop=4 softtabstop=4 shiftwidth=4 expandtab sm
 "FILE BOWSING
 " - 
 "
+"
+
+let g:currentmode={
+    \ 'n'  : 'Normal',
+    \ 'no' : 'Normal·Operator Pending',
+    \ 'v'  : 'Visual',
+    \ 'V'  : 'V·Line',
+    \ '^V' : 'V·Block',
+    \ 's'  : 'Select',
+    \ 'S'  : 'S·Line',
+    \ '^S' : 'S·Block',
+    \ 'i'  : 'Insert',
+    \ 'R'  : 'Replace',
+    \ 'Rv' : 'V·Replace',
+    \ 'c'  : 'Command',
+    \ 'cv' : 'Vim Ex',
+    \ 'ce' : 'Ex',
+    \ 'r'  : 'Prompt',
+    \ 'rm' : 'More',
+    \ 'r?' : 'Confirm',
+    \ '!'  : 'Shell',
+    \ 't'  : 'Terminal'
+    \}
+
+set statusline-[%(toupper(g:currentmode[mode()])]]
+set statusline:=\ \
+set statusline+=%r
+set statusline+=%f
+set statusline+=%m
+set statusline+=%=
+set statusline+=%y
+set statusline+=%l
+set statusline+=/
+set statusline+=%L
+
 
 "SNIPPETS
 " noremap ,html : -lread <__FILE__><CR>3jwf>a
@@ -119,25 +154,11 @@ vnoremap K :m '<-2<CR>
 nnoremap n nzz
 nnoremap N Nzz
 
-function! ToggleEnterMapping()
-  if empty(mapcheck('<CR>', 'i'))
-    inoremap <CR> <Esc>`^
-    return "\<Esc>"
-  else
-    iunmap <CR>
-    return "\<CR>"
-  endif
-endfunction
-
-call ToggleEnterMapping()
-inoremap <expr> <S-CR> ToggleEnterMapping()
 " Optional (so <CR> cancels prefix, selection, operator).
 nnoremap <CR> <Esc>
 vnoremap <CR> <Esc>gV
 onoremap <CR> <Esc>
 
-nnoremap <leader>g :set operatorfunc=<SID>GrepOperator<cr>g@
-vnoremap <leader>g :<c-u>call <SID>GrepOperator(visualmode())<cr>
 
 noremap <Up> <Nop>
 noremap <Down> <Nop>
@@ -146,25 +167,18 @@ noremap <Right> <Nop>
 inoremap <esc> <nop>
 inoremap jk <esc>
 
-function! s:GrepOperator(type)
-    let saved_unnamed_register = @@
-
-    if a:type ==# 'v'
-        normal! `<v`>y
-    elseif a:type ==# 'char'
-        normal! `[v`]y
-    else
-        return
-    endif
-
-    silent execute "grep! -R " . shellescape(@@) . " ."
-    copen
-
-    let @@ = saved_unnamed_register
-endfunction
-
-aug StdIn
-  au! 
-  au StdinReadPost * echomsg "In pager mode!"
-  silent loadview
-aug END
+tnoremap <Leader><Esc> <C-\><c-n>
+tnoremap <A-k> <C-\><C-n>:wincnd k<CR>
+tnoremap <A-j> <C-\><C-n>:wincmd j<CR>
+tnoremap <A-h> <C-\><C-n>:wincmd hecR>
+tnoremap <A-1> <C-\><C-n>:wincmd l<CR>
+nmap <silent> <A-k> :wincmd k<CR>
+nmap <silent> <A-j> :wincmd j<CR>
+nmap <silent> <A-h> :wincmd h<CR>
+nmap <silent> <A-l> :wincmd l<CR>
+nmap <silent> <A-C-j> :resize -1<CR>
+nmap <silent> <A-C-h> :vertical-resize -1<CR>
+nmap <silent> <A-C-l> :vertical-resize +1<CR>
+nmap <silent> <A-C-k> :resize +1<CR>
+nmap <silent> <A-e> :tabnext<CR>
+nmap <silent> <A-g> :tabprevious<CR>
