@@ -170,7 +170,7 @@ inoremap jk <esc>
 tnoremap <Leader><Esc> <C-\><c-n>
 tnoremap <A-k> <C-\><C-n>:wincnd k<CR>
 tnoremap <A-j> <C-\><C-n>:wincmd j<CR>
-tnoremap <A-h> <C-\><C-n>:wincmd hecR>
+tnoremap <A-h> <C-\><C-n>:wincmd h<CR>
 tnoremap <A-1> <C-\><C-n>:wincmd l<CR>
 nmap <silent> <A-k> :wincmd k<CR>
 nmap <silent> <A-j> :wincmd j<CR>
@@ -181,4 +181,4 @@ nmap <silent> <A-C-h> :vertical-resize -1<CR>
 nmap <silent> <A-C-l> :vertical-resize +1<CR>
 nmap <silent> <A-C-k> :resize +1<CR>
 nmap <silent> <A-e> :tabnext<CR>
-nmap <silent> <A-g> :tabprevious<CR>
+nmap <silent> <A-q> :tabprevious<CR>
