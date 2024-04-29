@@ -45,7 +45,7 @@ set wildmenu
 " - * fuzzy search
 " - :b autocomplete open buffers
 
-set showmode
+set noshowmode
 set showcmd
 set hlsearch
 set ignorecase smartcase
@@ -171,7 +171,7 @@ tnoremap <Leader><Esc> <C-\><c-n>
 tnoremap <A-k> <C-\><C-n>:wincnd k<CR>
 tnoremap <A-j> <C-\><C-n>:wincmd j<CR>
 tnoremap <A-h> <C-\><C-n>:wincmd h<CR>
-tnoremap <A-1> <C-\><C-n>:wincmd l<CR>
+tnoremap <A-l> <C-\><C-n>:wincmd l<CR>
 nmap <silent> <A-k> :wincmd k<CR>
 nmap <silent> <A-j> :wincmd j<CR>
 nmap <silent> <A-h> :wincmd h<CR>
