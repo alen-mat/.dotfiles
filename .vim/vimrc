@@ -120,8 +120,8 @@ let g:currentmode={
     \ 't'  : 'Terminal'
     \}
 
-set statusline-[%(toupper(g:currentmode[mode()])]]
-set statusline:=\ \
+set statusline=[%{toupper(g:currentmode[mode()])}]
+set statusline+=\ 
 set statusline+=%r
 set statusline+=%f
 set statusline+=%m
