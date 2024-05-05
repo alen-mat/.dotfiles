@@ -19,12 +19,6 @@ keybinds {
             }
             TogglePaneEmbedOrFloating;
 	}
-        bind "Ctrl o" {
-	    	Run "bash" "-c" "~/.local/bin/launch_pad"{
-                close_on_exit true
-            }
-            TogglePaneEmbedOrFloating;
-	}
     }
 }
 
