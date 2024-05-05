@@ -40,14 +40,18 @@ unfocused_hollow = true
 TERM = "alacritty-direct"
 
 [font]
-size = 8
+size = 9
+
+[font.normal]
+family = "Wumpus Mono Pro"
+style = "Regular"
 
 [font.bold]
-family = "JetBrains Mono"
+family = "Anonymous Pro"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrains Mono"
+family = "Anonymous Pro"
 style = "Bold Italic"
 
 [font.glyph_offset]
@@ -55,12 +59,8 @@ x = 0
 y = 0
 
 [font.italic]
-family = "JetBrains Mono"
+family = "Anonymous Pro"
 style = "Italic"
-
-[font.normal]
-family = "JetBrains Mono"
-style = "Regular"
 
 [font.offset]
 x = 0
@@ -78,8 +78,8 @@ save_to_clipboard = false
 semantic_escape_chars = ",│`|:\"' ()[]{}<>"
 
 [shell]
-args = ["options", "--default-shell", "fish"]
-program = "/usr/bin/zellij"
+#args = ["options", "--default-shell", "fish"]
+program = "/usr/bin/fish"
 
 [window]
 dynamic_padding = true

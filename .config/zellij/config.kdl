@@ -1,7 +1,29 @@
+//layout_dir "~/.config/zellij/layouts"
+//theme_dir "$HOME/.config/zellij/themes"
+
+theme "tokyo-night"
+default_shell "fish"
+on_force_close "detach"
+default_layout "default_l"
+default_mode "locked"
+simplified_ui true
+pane_frames false
+copy_command "xclip -selection clipboard" // "wl-copy"
+scrollback_editor "/usr/bin/nvim"
+
 keybinds {
     shared {
     	bind "Ctrl b" {
-	    	Run "bash" "-c" "~/.scripts/utils/cht.sh"
+	    Run "bash" "-c" "~/.scripts/utils/cht.sh"{
+                close_on_exit true
+            }
+            TogglePaneEmbedOrFloating;
+	}
+        bind "Ctrl o" {
+	    	Run "bash" "-c" "~/.local/bin/launch_pad"{
+                close_on_exit true
+            }
+            TogglePaneEmbedOrFloating;
 	}
     }
 }
@@ -13,53 +35,56 @@ ui {
 }
 
 plugins {
-    tab-bar { path "tab-bar"; }
-    status-bar { path "status-bar"; }
-    strider { path "strider"; }
-    compact-bar { path "compact-bar"; }
-}
-
-default_shell "fish"
-
-themes {
-    tokyo-night-dark {
-        fg 169 177 214
-        bg 26 27 38
-        black 56 62 90
-        red 249 51 87
-        green 158 206 106
-        yellow 224 175 104
-        blue 122 162 247
-        magenta 187 154 247
-        cyan 42 195 222
-        white 192 202 245
-        orange 255 158 100
+    tab-bar location="zellij:tab-bar"
+    status-bar location="zellij:status-bar"
+    strider location="zellij:strider"
+    compact-bar location="zellij:compact-bar"
+    session-manager location="zellij:session-manager"
+    welcome-screen location="zellij:session-manager" {
+        welcome_screen true
     }
-   tokyo-night {
-        fg 169 177 214
-        bg 26 27 38
-        black 56 62 90
-        red 249 51 87
-        green 158 206 106
-        yellow 224 175 104
-        blue 122 162 247
-        magenta 187 154 247
-        cyan 42 195 222
-        white 192 202 245
-        orange 255 158 100
+    filepicker location="zellij:strider" {
+        cwd "./"
+    }
+    zstatus location="https://github.com/dj95/zjstatus/releases/latest/download/zjstatus.wasm"{
+        format_left   "{mode} #[fg=#89B4FA,bold]{session}"
+        format_center "{tabs}"
+        format_right  "{command_git_branch} {datetime}"
+        format_space  ""
+
+        border_enabled  "false"
+        border_char     "─"
+        border_format   "#[fg=#6C7086]{char}"
+        border_position "top"
+
+        hide_frame_for_single_pane "false"
+
+        mode_normal        "#[fg=#89B4FA] {name} "
+        mode_locked        "#[fg=#89B4FA] {name} "
+        mode_resize        "#[fg=#89B4FA] {name} "
+        mode_pane          "#[fg=#89B4FA] {name} "
+        mode_tab           "#[fg=#89B4FA] {name} "
+        mode_scroll        "#[fg=#89B4FA] {name} "
+        mode_enter_search  "#[fg=#89B4FA] {name} "
+        mode_search        "#[fg=#89B4FA] {name} "
+        mode_rename_tab    "#[fg=#89B4FA] {name} "
+        mode_rename_pane   "#[fg=#89B4FA] {name} "
+        mode_session       "#[fg=#89B4FA] {name} "
+        mode_move          "#[fg=#89B4FA] {name} "
+        mode_prompt        "#[fg=#89B4FA] {name} "
+        mode_tmux          "#[fg=#ffc387] {name} "
+
+        tab_normal   "#[fg=#6C7086] {name} "
+        tab_active   "#[fg=#9399B2,bold,italic] {name} "
+
+        command_git_branch_command     "git rev-parse --abbrev-ref HEAD"
+        command_git_branch_format      "#[fg=blue] {stdout} "
+        command_git_branch_interval    "10"
+        command_git_branch_rendermode  "static"
+
+        datetime        "#[fg=#6C7086,bold] {format} "
+        datetime_format "%A, %d %b %Y %H:%M"
+        datetime_timezone "Europe/Berlin"
     }
 }
-
-theme "tokyo-night"
-
-default_layout "compact"
-
-default_mode "locked"
-
-//mouse_mode false
-
-copy_command "xclip -selection clipboard" // x11
-// copy_command "wl-copy"                    // wayland
-
-scrollback_editor "/usr/bin/nvim"
 

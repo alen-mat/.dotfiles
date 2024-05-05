@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+opts="" 
+file="$HOME/.config/apps.launchpad"
+##
+#app name app_args  
+
+if [ "$XDG_SESSION_TYPE" = "wayland" ];then
+  opts=" spotify --enable-features=UseOzonePlatform --ozone-platform=wayland" 
+fi
+
+selected=$(cat $file | fzf)
+if [ -N "$var" ]; then
+   exit 0
+fi
+
+app=$(echo $selected | cut -d'~' -f1)
+name=$(echo $selected | cut -d'~' -f2)
+args=$(echo $selected | cut -d'~' -f3)
+
+
+app_handler(){
+   app="$1"
+   app_args="$2"
+   run=""
+   case "$app" in 
+     chrome) 
+        run="chromium --app=$app_args"
+      ;;
+     *)
+        run="$app $app_args"
+        ;;
+   esac
+   echo $app $app_args $opts
+   nohup $run $app_args $opts &> /dev/null &disown
+}
+
+app_handler $app $args
