@@ -53,8 +53,8 @@ plugins {
 
         hide_frame_for_single_pane "false"
 
-        mode_normal        "#[fg=#89B4FA] {name} "
-        mode_locked        "#[fg=#89B4FA] {name} "
+        mode_normal        "#[fg=#58d68d] {name} "
+        mode_locked        "#[fg=#6C7086] {name} "
         mode_resize        "#[fg=#89B4FA] {name} "
         mode_pane          "#[fg=#89B4FA] {name} "
         mode_tab           "#[fg=#89B4FA] {name} "
@@ -68,8 +68,19 @@ plugins {
         mode_prompt        "#[fg=#89B4FA] {name} "
         mode_tmux          "#[fg=#ffc387] {name} "
 
-        tab_normal   "#[fg=#6C7086] {name} "
-        tab_active   "#[fg=#9399B2,bold,italic] {name} "
+        tab_normal              "#[fg=#6C7086] {index} :: {name} "
+        tab_normal_fullscreen   "#[fg=#6C7086] {index} :: {name} [] "
+        tab_normal_sync         "#[fg=#6C7086] {index} :: {name} <> "
+
+        tab_active              "#[fg=#9399B2,bold,italic] {name} {floating_indicator}"
+        tab_active_fullscreen   "#[fg=#9399B2,bold,italic] {name} {fullscreen_indicator}"
+        tab_active_sync         "#[fg=#9399B2,bold,italic] {name} {sync_indicator}"
+
+        tab_separator           "#[fg=#6C7086,bg=#181825] | "
+
+        tab_sync_indicator       "<> "
+        tab_fullscreen_indicator "[] "
+        tab_floating_indicator   "⬚ "
 
         command_git_branch_command     "git rev-parse --abbrev-ref HEAD"
         command_git_branch_format      "#[fg=blue] {stdout} "
@@ -79,6 +90,10 @@ plugins {
         datetime        "#[fg=#6C7086,bold] {format} "
         datetime_format "%A, %d %b %Y %H:%M"
         datetime_timezone "Europe/Berlin"
+
+        notification_format_unread           "#[fg=#89B4FA,bg=#181825,blink]  #[fg=#89B4FA,bg=#181825] {message} "
+        notification_format_no_notifications "#[fg=#89B4FA,bg=#181825,dim]   "
+        notification_show_interval           "10"
     }
 }
 
