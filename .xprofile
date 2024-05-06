@@ -55,26 +55,32 @@ _apps(){
 	done
 }
 
-_touch_bar_ges
+~/.profile &
+_touch_bar_ges&
 
-if [ "$DESKTOP_SESSION" == "plasma" ]
-then
-	echo "You are not SilverHand :)))"
-else
-	_polkit
-	_apps
-	_compositor
-	case $DESKTOP_SESSION in
-		awesome)
-			;;
-		*) 
 
-			wired &
-			feh --bg-fill ~/Pictures/new-walls/wallhaven-landscape.jpg &
-			~/.config/eww/controlewwr mybar open bar &
-			;;
-	esac
-	sleep 5 && notify-send "XProfile" "Start up complete"&
+if [ "$XDG_SESSION_TYPE" = "x11" ];then
+	if [ "$DESKTOP_SESSION" == "plasma" ]
+	then
+		echo "You are not SilverHand :)))"
+	else
+		_polkit &
+		_apps &
+		_compositor &
+
+
+		case $DESKTOP_SESSION in
+			awesome)
+				;;
+			*) 
+
+				wired &
+				feh --bg-fill ~/Pictures/new-walls/wallhaven-landscape.jpg &
+				~/.config/eww/controlewwr mybar open bar &
+				;;
+		esac
+		sleep 5 && notify-send "XProfile" "Start up complete"&
+	fi
+
 fi
-
 # vim: set syntax=bash:
