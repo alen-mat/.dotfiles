@@ -1,3 +1,6 @@
 [submodule "/home/alen/.config/dwm"]
 	path = /home/alen/.config/dwm
 	url = git@github.com:alen-mat/dwm.git
+[submodule ".config/nvim"]
+	path = .config/nvim
+	url = git@github.com:alen-mat/config.nvim.git
