@@ -1,4 +1,4 @@
-source ~/.vim/vimrc
+source ~/.config/vim/vimrc
 " To get a list of Actions run `:actionlist `
 " let mapleader = ','
 " let mapleader = " "
@@ -20,6 +20,11 @@ nmap <Leader>ir <Action>(IdeaVim.ReloadVimRc.reload)
 
 " clear the search buffer when hitting return
 nnoremap <Leader>/ :nohlsearch<cr>
+
+nnoremap <expr> j (v:count <= 1 ? 'j' : "m'" . v:count . 'j')
+nnoremap <expr> k (v:count <= 1 ? 'k' : "m'" . v:count . 'k')
+xnoremap <expr> j (v:count <= 1 ? 'j' : "m'" . v:count . 'j')
+xnoremap <expr> k (v:count <= 1 ? 'k' : "m'" . v:count . 'k')
 
 " To copy text to the end-of-line, press Y.
 " This mapping sets up Y to be consistent with
@@ -53,10 +58,10 @@ nmap <Leader><Leader>m :action ManageRecentProjects<CR>
 
 " Mapping to mimic BufferExplorer
 " nmap <Leader>be :action Switcher<CR>
-nmap <Leader>fb :action RecentFiles<CR>
-nmap <Leader>ff :action GotoFile<CR>
+nmap <Leader>sr :action RecentFiles<CR>
+nmap <Leader>sf :action GotoFile<CR>
 "nmap <Leader>fg :action SearchEverywhere<CR>
-nmap <Leader>fg :action FindInPath<CR>
+nmap <Leader>sg :action FindInPath<CR>
 nnoremap gO       :action FileStructurePopup<CR>
 nnoremap -        :action SelectInProjectView<CR>
 
@@ -94,9 +99,8 @@ nmap <Leader><leader>l :action QuickList.MyList<CR>
 nmap <Leader><Leader>w :action AceAction<CR>
 
 " Commenting
-nmap <Leader>cb :action CommentByBlockComment<CR>
-nmap <Leader>c<Space> :action CommentByLineComment<CR>
-nmap <Leader>cb<Space> :action CommentByBlockComment<CR>
+nmap gcc :action CommentByBlockComment<CR>
+nmap gc :action CommentByLineComment<CR>
 
 " Refactoring
 nmap <Leader>rt :action Refactorings.QuickListPopupAction<CR>
@@ -145,8 +149,25 @@ nnoremap <A-Down> :action SmartStepInto<CR>
 nnoremap <A-d> :action JavaDebuggerActions<CR>
 nmap <C>] :action XDebugger.JumpToSource
 
+" Harpoon keybindings
+" Setting harpoons
+nnoremap <leader><leader>1 :action SetHarpoon1<CR>
+nnoremap <leader><leader>2 :action SetHarpoon2<CR>
+nnoremap <leader><leader>3 :action SetHarpoon3<CR>
+nnoremap <leader><leader>4 :action SetHarpoon4<CR>
+nnoremap <leader><leader>5 :action SetHarpoon5<CR>
+nnoremap <leader>u :action ShowHarpoon<CR>
 
-"To be mapped
+" Navigationing harpoons
+noremap <leader>1 :action GotoHarpoon1<CR>
+noremap <leader>2 :action GotoHarpoon2<CR>
+noremap <leader>3 :action GotoHarpoon3<CR>
+noremap <leader>4 :action GotoHarpoon4<CR>
+noremap <leader>5 :action GotoHarpoon5<CR>
+"END Harpoon keybindings
+
 " action ShowIntentionActions
-"FileStructurePopup
+" nmap gh <Action>(ShowIntentionActions)
+nmap gh <Action>(ShowHoverInfo)
+
 set ideastrictmode
