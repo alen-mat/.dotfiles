@@ -23,6 +23,7 @@ function Global:prompt {
 	$Host.UI.Write($([char]0x2192))
 	return " "
 }
+
 function branch-name-prompt{
 	$isBare = (git rev-parse --is-bare-repository)
 	$branch = (git rev-parse --abbrev-ref HEAD)
@@ -33,4 +34,8 @@ function branch-name-prompt{
 	}
 	$host.UI.RawUI.ForegroundColor = $color
 	$Host.UI.Write("("+$branch+")") 
+}
+
+function ll {
+	ls | Format-Wide Name -AutoSize
 }
