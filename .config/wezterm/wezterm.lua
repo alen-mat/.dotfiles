@@ -1,18 +1,75 @@
 local wezterm = require('wezterm')
 
 local config = {}
-local font_names = { 'JetBrains Mono' }
+
+if wezterm.config_builder then
+  config = wezterm.config_builder()
+end
+
+local font_names = {
+  { family = 'Wumpus Mono Pro', weight = 'Regular', scale = 1.1 }
+  , 'JetBrains Mono', "Anonymous Pro" }
 
 config.default_prog = { '/bin/fish' } --{ '/bin/fish', '-l' }
 config.color_scheme = 'tokyonight_night'
-config.font = wezterm.font_with_fallback(font_names, { bold = true })
+config.font = wezterm.font_with_fallback(font_names, { bold = false })
 config.warn_about_missing_glyphs = false
 config.font_size = 12
+config.font_rules = {
+  {
+    intensity = 'Bold',
+    italic = false,
+    font = wezterm.font_with_fallback(
+      {
+        family = 'Anonymous Pro',
+        weight = "Bold",
+        foreground = 'tomato'
+      }
+    ),
+  },
+  {
+    intensity = 'Bold',
+    italic = true,
+    font = wezterm.font_with_fallback {
+      family = 'Anonymous Pro',
+      weight = "Bold Italic",
+      italic = true,
+    },
+  },
+  {
+    intensity = 'Normal',
+    italic = true,
+    font = wezterm.font_with_fallback {
+       family = 'Wumpus Mono Pro',
+        weight = 'Regular',
+        scale = 1.1 
+    },
+  },
+  {
+    intensity = 'Half',
+    italic = true,
+    font = wezterm.font_with_fallback {
+      family = 'Operator Mono SSm Lig',
+      weight = 'Light',
+      italic = true,
+    },
+  },
+  {
+    intensity = 'Half',
+    italic = false,
+    font = wezterm.font_with_fallback {
+      family = 'Operator Mono SSm Lig',
+      weight = 'Light',
+    },
+  },
+}
 config.line_height = 1.0
 config.dpi = 96.0
 config.default_cursor_style = "BlinkingUnderline"
 config.enable_wayland = true
 config.bold_brightens_ansi_colors = true
+
+config.window_background_opacity = 0.9
 -- Padding
 config.window_padding = {
   left = 5,
