@@ -22,47 +22,6 @@ if has('mouse')
 	set mouse=a
 endif
 
-if has('clipboard')
-	if has("win32")
-		noremap <Leader>y "*y
-		noremap <Leader>p "*p
-	else
-		if has("unix")
-			let s:uname = system("uname")
-			if s:uname == "Darwin\n"
-
-			else
-				noremap <Leader>Y "+y
-				noremap <Leader>P "+p
-			endif
-		endif
-	endif
-endif
-
-" Display all matching files when tab-complete
-set wildmenu
-" - find by partial match
-" - * fuzzy search
-" - :b autocomplete open buffers
-
-set noshowmode
-set showcmd
-set hlsearch
-set ignorecase smartcase
-set smartcase
-set nostartofline
-set ruler
-set laststatus=2
-set confirm
-set visualbell
-set cmdheight=2
-set tabstop=2
-set incsearch
-set number
-set relativenumber
-set scrolloff=5
-set history=1000
-set noerrorbells
 
 "set autochdir
 
@@ -140,45 +99,3 @@ command FileSyn execute "vnew | r !file_sync # "
 command FormatJSON execute "%!json_pp"
 command FormatXML execute "%!python -c 'import sys; import xml.dom.minidom; s=sys.stdin.read(); print(xml.dom.minidom.parseString(s).toprettyxml())'"
 
-nmap <Leader>\ :vsplit<CR>
-nmap <Leader>- :split<CR>
-
-nnoremap <Leader><Leader>r :%s//g<Left><Left>
-xnoremap <Leader><Leader>r :s//g<Left><Left>
-
-vnoremap J :m '>+1<CR>
-" xnoremap K :m '<-2<CR>
-vnoremap K :m '<-2<CR>
-
-" Put search results in the middle of the screen
-nnoremap n nzz
-nnoremap N Nzz
-
-" Optional (so <CR> cancels prefix, selection, operator).
-nnoremap <CR> <Esc>
-vnoremap <CR> <Esc>gV
-onoremap <CR> <Esc>
-
-
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-inoremap <esc> <nop>
-inoremap jk <esc>
-
-tnoremap <Leader><Esc> <C-\><c-n>
-tnoremap <A-k> <C-\><C-n>:wincnd k<CR>
-tnoremap <A-j> <C-\><C-n>:wincmd j<CR>
-tnoremap <A-h> <C-\><C-n>:wincmd h<CR>
-tnoremap <A-l> <C-\><C-n>:wincmd l<CR>
-nmap <silent> <A-k> :wincmd k<CR>
-nmap <silent> <A-j> :wincmd j<CR>
-nmap <silent> <A-h> :wincmd h<CR>
-nmap <silent> <A-l> :wincmd l<CR>
-nmap <silent> <A-C-j> :resize -1<CR>
-nmap <silent> <A-C-h> :vertical-resize -1<CR>
-nmap <silent> <A-C-l> :vertical-resize +1<CR>
-nmap <silent> <A-C-k> :resize +1<CR>
-nmap <silent> <A-e> :tabnext<CR>
-nmap <silent> <A-q> :tabprevious<CR>

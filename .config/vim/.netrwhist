@@ -1,5 +1,7 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =4
+let g:netrw_dirhistcnt =6
+let g:netrw_dirhist_6='/home/alen/Pictures/wallpapers'
+let g:netrw_dirhist_5='/home/alen/Pictures'
 let g:netrw_dirhist_4='/home/alen/.config/nvim/lua'
 let g:netrw_dirhist_3='/home/alen/.config/.restore-setup'
 let g:netrw_dirhist_2='/home/alen/.config/polybar/xmo-bar'
