@@ -84,7 +84,7 @@ nnoremap <leader>q :q <CR>
 " ===============
 nnoremap <leader>cf :action ReformatCode<CR>
 
-inoremap <C-y> : action EditorChooseLookUpItem<CR>
+inoremap <C-y> : action EditorChooseLookupItem<CR>
 
 nmap <Leader>gm :action Git.Menu<CR>
 
