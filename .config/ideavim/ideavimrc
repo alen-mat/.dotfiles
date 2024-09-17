@@ -1,4 +1,4 @@
-source ~/.config/vim/vimrc
+source ~/.config/vim/plugin/options.vim
 " To get a list of Actions run `:actionlist `
 " let mapleader = ','
 " let mapleader = " "
@@ -6,6 +6,10 @@ let mapleader = "\<SPACE>"
 
 set ideajoin
 set sneak
+set ideastrictmode
+set dialogescape = on
+set oneline = on
+set ideavimsupport=+singleline,dialog
 
 Plug 'preservim/nerdtree'
 Plug 'tpope/vim-surround'
@@ -34,13 +38,7 @@ xnoremap <expr> k (v:count <= 1 ? 'k' : "m'" . v:count . 'k')
 "nnoremap Y y$
 
 
-" Greatest remap EVER!! 
-" Let me explain, this remap while in visiual mode
-" will delete what is currently highlighted and replace it 
-" with what is in the register BUT it will YANK (delete) it 
-" to a VOID register. Meaning I still have what I originally had
-" when I pasted. I don't loose the previous thing I YANKED!
-vnoremap <leader>p "_dP
+"vnoremap <leader>p "_dP
 
 " nmap <leader>fs :action FileStructurePopup<CR>
 
@@ -58,7 +56,7 @@ nmap <Leader><Leader>m :action ManageRecentProjects<CR>
 
 " Mapping to mimic BufferExplorer
 " nmap <Leader>be :action Switcher<CR>
-nmap <Leader>sr :action RecentFiles<CR>
+nmap <Leader><Leader> :action RecentFiles<CR>
 nmap <Leader>sf :action GotoFile<CR>
 "nmap <Leader>fg :action SearchEverywhere<CR>
 nmap <Leader>sg :action FindInPath<CR>
@@ -86,10 +84,8 @@ nnoremap <leader>q :q <CR>
 " ===============
 nnoremap <leader>cf :action ReformatCode<CR>
 
-" Git
-nmap <Leader>gb :action Annotate<CR>
-nmap <Leader>gl :action Git.Log<CR>
-nmap <Leader>gs :action Git.Branches<CR>
+inoremap <C-y> : action EditorChooseLookUpItem<CR>
+
 nmap <Leader>gm :action Git.Menu<CR>
 
 " View my customize Quicklist
@@ -109,31 +105,31 @@ nmap <Leader>rt :action Refactorings.QuickListPopupAction<CR>
 "Code Diagnostics / lsp
 nnoremap [d :action GotoPreviousError<CR>
 nnoremap ]d :action GotoNextError<CR>
-nmap lu <Action>(ShowUsages)
-nmap lt <Action>(TypeHierarchy)
-nmap lU <Action>(FindUsages)
+nmap <Leader>lu <Action>(ShowUsages)
+nmap <Leader>lt <Action>(TypeHierarchy)
+nmap <Leader>lU <Action>(FindUsages)
 "CallHierarchy
-nnoremap lc <Action>(CallHierarchyPopupMenu)
-nnoremap lb <Action>(CallHierarchy.BaseOnThisType) 
-nmap gb <Action>(Back)
-nmap ld <Action>(GotoTypeDeclaration)
-nmap gf <Action>(Forward)
-nmap lD <Action>(QuickJavaDoc)
-nmap li <Action>(QuickImplementations)
-nnoremap lI       :action GotoImplementation<CR>
-nmap ldd <Action>(ShowErrorDescription)
+nnoremap <Leader>lc <Action>(CallHierarchyPopupMenu)
+nnoremap <Leader>lb <Action>(CallHierarchy.BaseOnThisType) 
+nmap <Leader>gb <Action>(Back)
+nmap <Leader>ld <Action>(GotoTypeDeclaration)
+nmap <Leader>gf <Action>(Forward)
+nmap K <Action>(QuickJavaDoc)
+nmap <Leader>lI <Action>(QuickImplementations)
+nnoremap <Leader>li       :action GotoImplementation<CR>
+nmap <Leader>le <Action>(ShowErrorDescription)
 
 " run/debug
-nnoremap <Space>rc :action RunConfiguration<CR>
-noremap <Space>rr :action Run<CR>
-noremap <Space>rn :action RunClass<CR>
+nnoremap <Leader>rc :action RunConfiguration<CR>
+noremap <Leader>rr :action Run<CR>
+noremap <Leader>rn :action RunClass<CR>
 nnoremap <Leader>cr :action ChooseRunConfiguration<CR>
-noremap <Space>dd :action Debug<CR>
-noremap <Space>dn :action DebugClass<CR>
+noremap <Leader>dd :action Debug<CR>
+noremap <Leader>dn :action DebugClass<CR>
 nnoremap <Leader>cd :action ChooseDebugConfiguration<CR>
-noremap <Space>cc :action Coverage<CR>
-noremap <Space>cn :action RunCoverage<CR>
-noremap <Space>sp   :action Stop<CR>
+noremap <Leader>cc :action Coverage<CR>
+noremap <Leader>cn :action RunCoverage<CR>
+noremap <Leader>sp   :action Stop<CR>
 "nnoremap <Leader>rr :action Rerun<CR>
 
 " debugging
@@ -170,4 +166,5 @@ noremap <leader>5 :action GotoHarpoon5<CR>
 " nmap gh <Action>(ShowIntentionActions)
 nmap gh <Action>(ShowHoverInfo)
 
-set ideastrictmode
+
+source ~/.config/vim/plugin/keybinds.vim
