@@ -45,7 +45,7 @@ set -gx GDK_DPI_SCALE 1
 
 #set -gx TERM      xterm-color
 set -gx CLICOLOR  1
-set -gx LS_COLORS 'rs 0:di 01;34:ln 01;36:mh 00:pi 40;33'
+set -Ux LS_COLORS 'rs 0:di 01;34:ln 01;36:mh 00:pi 40;33'
 
 set -gx LANG en_US.UTF-8
 set -gx LESS "-R"

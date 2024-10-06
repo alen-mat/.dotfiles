@@ -2,6 +2,7 @@
 # VERSION: 3.0
 SETUVAR --export BAT_CONFIG_DIR:/home/alen/\x2econfig/batcat
 SETUVAR --export --path BAT_CONFIG_PATH:/home/alen/\x2econfig/batcat/batcat\x2ecfg
+SETUVAR --export LS_COLORS:rs\x200\x3adi\x2001\x3b34\x3aln\x2001\x3b36\x3amh\x2000\x3api\x2040\x3b33
 SETUVAR --export MANPAGER:sh\x20\x2dc\x20\x27col\x20\x2dbx\x20\x7c\x20bat\x20\x2dl\x20man\x20\x2dp\x27
 SETUVAR __fish_initialized:3400
 SETUVAR fish_color_autosuggestion:brblack
@@ -32,3 +33,4 @@ SETUVAR fish_pager_color_description:yellow\x1e\x2di
 SETUVAR fish_pager_color_prefix:normal\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
 SETUVAR fish_pager_color_selected_background:\x2dr
+SETUVAR fish_user_paths:/home/alen/\x2elang\x2dand\x2dbuild/zig/latest
