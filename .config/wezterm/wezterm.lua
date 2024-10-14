@@ -12,62 +12,14 @@ local font_names = {
 
 config.default_prog = { '/bin/fish' } --{ '/bin/fish', '-l' }
 config.color_scheme = 'tokyonight_night'
-config.font = wezterm.font_with_fallback(font_names, { bold = false })
+-- config.font = wezterm.font_with_fallback(font_names, { bold = false })
 config.warn_about_missing_glyphs = false
 config.font_size = 12
-config.font_rules = {
-  {
-    intensity = 'Bold',
-    italic = false,
-    font = wezterm.font_with_fallback(
-      {
-        family = 'Anonymous Pro',
-        weight = "Bold",
-        foreground = 'tomato'
-      }
-    ),
-  },
-  {
-    intensity = 'Bold',
-    italic = true,
-    font = wezterm.font_with_fallback {
-      family = 'Anonymous Pro',
-      weight = "Bold Italic",
-      italic = true,
-    },
-  },
-  {
-    intensity = 'Normal',
-    italic = true,
-    font = wezterm.font_with_fallback {
-       family = 'Wumpus Mono Pro',
-        weight = 'Regular',
-        scale = 1.1 
-    },
-  },
-  {
-    intensity = 'Half',
-    italic = true,
-    font = wezterm.font_with_fallback {
-      family = 'Operator Mono SSm Lig',
-      weight = 'Light',
-      italic = true,
-    },
-  },
-  {
-    intensity = 'Half',
-    italic = false,
-    font = wezterm.font_with_fallback {
-      family = 'Operator Mono SSm Lig',
-      weight = 'Light',
-    },
-  },
-}
 config.line_height = 1.0
 config.dpi = 96.0
 config.default_cursor_style = "BlinkingUnderline"
 config.enable_wayland = true
-config.bold_brightens_ansi_colors = true
+config.bold_brightens_ansi_colors = "BrightAndBold"
 
 config.window_background_opacity = 0.9
 -- Padding
@@ -155,7 +107,7 @@ config.keys = {
     action = wezterm.action { AdjustPaneSize = { "Right", 5 } }
   },
   {
-    key = "d",
+    key = "Backspace",
     mods = "LEADER",
     action = wezterm.action { CloseCurrentPane = { confirm = true } }
   },
@@ -182,7 +134,11 @@ config.keys = {
       end)
   },
 }
-
+table.insert(config.keys, { key = 'p', mods = 'LEADER', action = wezterm.action { ActivateTabRelative = -1 } })
+table.insert(config.keys, { key = 'n', mods = 'LEADER', action = wezterm.action { ActivateTabRelative = 1 } })
+table.insert(config.keys, { key = 'p', mods = 'LEADER|SHIFT', action = wezterm.action { MoveTabRelative = -1 } })
+table.insert(config.keys, { key = 'n', mods = 'LEADER|SHIFT', action = wezterm.action { MoveTabRelative = 1 } })
+table.insert(config.keys, { key = 'z', mods = 'LEADER', action = wezterm.action.TogglePaneZoomState, });
 return config
 
 
