@@ -9,7 +9,6 @@ wezterm.on('update-right-status', function(window, pane)
   end
   window:set_right_status(wezterm.format {
     { Text = wezterm.nerdfonts.fa_clock_o .. ' ' .. date },
-    { Text = name },
   })
 end)
 
