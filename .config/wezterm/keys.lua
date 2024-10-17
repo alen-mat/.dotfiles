@@ -74,14 +74,6 @@ local keys = {
           cwd = "$HOME",
         }
         new_tab:set_title("cht.sh!")
-        --local fp = pane:split {
-        --  args = { '$HOME/.scripts/utils/cht.sh' },
-        --  direction = "Right",
-        --  size = 0.25,
-        --  cwd = "$HOME",
-        --}
-        --fp:inject_output '\r\n\x1b[3mhello there\r\n'
-        --fp:send_text("btop\r")
       end)
   },
 }
@@ -89,7 +81,16 @@ table.insert(keys, { key = 'p', mods = 'LEADER', action = wezterm.action { Activ
 table.insert(keys, { key = 'n', mods = 'LEADER', action = wezterm.action { ActivateTabRelative = 1 } })
 table.insert(keys, { key = 'p', mods = 'LEADER|SHIFT', action = wezterm.action { MoveTabRelative = -1 } })
 table.insert(keys, { key = 'n', mods = 'LEADER|SHIFT', action = wezterm.action { MoveTabRelative = 1 } })
-table.insert(keys, { key = 'z', mods = 'LEADER', action = wezterm.action.TogglePaneZoomState, });
+table.insert(keys, { key = 'z', mods = 'LEADER', action = wezterm.action.TogglePaneZoomState, })
+
+table.insert(keys, { key = 'l', mods = 'LEADER', action = wezterm.action.ShowLauncher })
+table.insert(keys, {
+  key = 'b',
+  mods = 'LEADER|CTRL',
+  action = wezterm.action.ShowLauncherArgs {
+    flags = 'FUZZY|WORKSPACES',
+  },
+})
 
 table.insert(keys, { key = "e", mods = "LEADER", action = wezterm.action({ EmitEvent = "open_in_vim" }) })
 ----------need to tinker with this ----------
@@ -100,10 +101,11 @@ table.insert(keys, {
     function(window, pane)
       local home = wezterm.home_dir
       local workspaces = {
-        { id = home,                label = 'Home' },
-        { id = home .. '/work',     label = 'Work' },
-        { id = home .. '/personal', label = 'Personal' },
-        { id = home .. '/.config',  label = 'Config' },
+        { id = home,                     label = 'Home' },
+        { id = home .. '/work',          label = 'Work' },
+        { id = home .. '/personal',      label = 'Personal' },
+        { id = home .. '/workspace/aoc', label = 'Advent of code' },
+        { id = home .. '/.config',       label = 'Config' },
       }
 
       window:perform_action(
