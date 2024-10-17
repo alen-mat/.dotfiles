@@ -1,5 +1,6 @@
 local ruled = require("ruled")
 local awful = require("awful")
+local naughty = require("naughty")
 local beautiful = require("beautiful")
 
 ruled.client.connect_signal("request::rules", function()
@@ -11,18 +12,11 @@ ruled.client.connect_signal("request::rules", function()
             border_color         = beautiful.border_normal,
             focus                = awful.client.focus.filter,
             titlebars_enabled    = false,
-            floating             = false,
-            maximized            = false,
-            above                = false,
-            below                = false,
-            ontop                = false,
-            sticky               = false,
-            maximized_horizontal = false,
-            maximized_vertical   = false,
             raise                = true,
+            -- size_hints_honor     = false,
             screen               = awful.screen.preferred,
             placement            = awful.placement.no_overlap + awful.placement.no_offscreen,
-        }
+        },
     }
 
     ruled.client.append_rule {
@@ -57,9 +51,14 @@ ruled.client.connect_signal("request::rules", function()
                 "AlarmWindow",   -- Thunderbird's calendar.
                 "ConfigManager", -- Thunderbird's about:config.
                 "pop-up",        -- e.g. Google Chrome's (detached) Developer Tools.
+                'dialog',
+                'splash'
             }
         },
-        properties = { floating = true }
+        properties = {
+            floating  = true,
+            placement = awful.placement.centered + awful.placement.no_overlap + awful.placement.no_offscreen,
+        }
     }
 
 
@@ -67,16 +66,22 @@ ruled.client.connect_signal("request::rules", function()
         id         = 'titlebars',
         rule_any   = {
             type = {
-                -- 'normal',
                 'dialog',
                 'modal',
-                'utility'
+                'utility',
+                'splash'
             }
         },
         properties = {
             titlebars_enabled = true
         }
     }
+
+    ruled.client.append_rule {
+        rule_any   = { type = { "normal" } },
+        properties = { placement = awful.placement.no_overlap + awful.placement.no_offscreen }
+    }
+
     ruled.client.append_rule {
         id         = 'no-titlebars-float',
         rule_any   = {
@@ -111,14 +116,32 @@ ruled.client.connect_signal("request::rules", function()
 
     ruled.client.append_rule {
         id         = 'zooom',
-        rule   = {
-            name = "Zoom Workplace",
-            class = "zoom"
+        rule       = {
+            name = "zoom ",
         },
         properties = {
             floating = true,
             ontop = true,
         }
+    }
+
+    ruled.client.append_rule {
+        id = "splash screen fix",
+        rule_any = { class = { "jetbrains-%w+", "java-lang-Thread" } },
+        callback = function(jetbrains)
+            if jetbrains.skip_taskbar then jetbrains.floating = true end
+        end
+    }
+    ruled.client.append_rule {
+        rule = {
+            class = "jetbrains-.*",
+        }, properties = { focus = true, } -- buttons = clientbuttons_jetbrains }
+    }
+    ruled.client.append_rule {
+        rule = {
+            class = "jetbrains-.*",
+            name = "win.*"
+        }, properties = { titlebars_enabled = false, focusable = false, focus = true, floating = true, placement = awful.placement.restore }
     }
 
     ruled.client.append_rule {
@@ -156,10 +179,10 @@ ruled.client.connect_signal("request::rules", function()
 
     ruled.client.append_rule {
         id         = 'skype-video-popup',
-        rule   = {
-            class = "Skype" ,
-            name     = "Skype" ,
-            role     = "browser-window"
+        rule       = {
+            class = "Skype",
+            name  = "Skype",
+            role  = "browser-window"
         },
         properties = {
             floating = true,
