@@ -85,8 +85,10 @@ nnoremap <leader>q :q <CR>
 nnoremap <leader>cf :action ReformatCode<CR>
 
 inoremap <C-y> : action EditorChooseLookupItem<CR>
+inoremap <C-c> : action CodeCompletion<CR>
 
 nmap <Leader>gm :action Git.Menu<CR>
+vmap <Leader>gm :action Git.Menu<CR>
 
 " View my customize Quicklist
 nmap <Leader><leader>l :action QuickList.MyList<CR>

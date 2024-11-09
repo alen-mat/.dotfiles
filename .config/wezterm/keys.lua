@@ -83,7 +83,9 @@ table.insert(keys, { key = 'p', mods = 'LEADER|SHIFT', action = wezterm.action {
 table.insert(keys, { key = 'n', mods = 'LEADER|SHIFT', action = wezterm.action { MoveTabRelative = 1 } })
 table.insert(keys, { key = 'z', mods = 'LEADER', action = wezterm.action.TogglePaneZoomState, })
 
-table.insert(keys, { key = 'l', mods = 'LEADER', action = wezterm.action.ShowLauncher })
+table.insert(keys, { key = 'a', mods = 'LEADER', action = wezterm.action.ShowLauncher })
+table.insert(keys, { key = 'L', mods = 'CTRL', action = wezterm.action.ShowDebugOverlay })
+
 table.insert(keys, {
   key = 'b',
   mods = 'LEADER|CTRL',
@@ -93,6 +95,11 @@ table.insert(keys, {
 })
 
 table.insert(keys, { key = "e", mods = "LEADER", action = wezterm.action({ EmitEvent = "open_in_vim" }) })
+
+table.insert(keys, { key = 'PageUp', mods = '', action = wezterm.action.ScrollByPage(-1) })
+table.insert(keys, { key = 'PageDown', mods = '', action = wezterm.action.ScrollByPage(1) })
+table.insert(keys, { key = 'PageUp', mods = 'CTRL', action = wezterm.action.ScrollByLine(-1) })
+table.insert(keys, { key = 'PageDown', mods = 'CTRL', action = wezterm.action.ScrollByLine(1) })
 ----------need to tinker with this ----------
 table.insert(keys, {
   key = 'S',

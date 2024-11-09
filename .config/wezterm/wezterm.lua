@@ -1,7 +1,8 @@
 local wezterm = require('wezterm')
 
 _GT = {
-  color_scheme = 'tokyonight_night'
+  -- color_scheme = 'tokyonight_night'
+  color_scheme = 'Tomorrow Night Burns'
 }
 
 local config = {}
@@ -57,6 +58,10 @@ config.skip_close_confirmation_for_processes_named = {
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1001 }
 config.keys = require("keys")
 require("tabbar")
+--local graphics = require("graphics")
+--config.webgpu_preferred_adapter = graphics.webgpu_preferred_adapter
+--config.front_end = graphics.front_end
+--config.webgpu_power_preference = graphics.webgpu_power_preference
 require("events")
 
 return config
