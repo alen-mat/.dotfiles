@@ -21,6 +21,10 @@ _compositor(){
 	picom -f --vsync --dbus --config ~/.config/picom/picom  -b &
 }
 
+_kde_connect(){
+	/usr/bin/kdeconnectd &
+}
+
 _polkit(){
 	polkit_agents=("/usr/bin/lxqt-policykit-agent" "/usr/lib/polkit-kde-authentication-agent-1")
 	for pa in "${polkit_agents[@]}"
@@ -67,6 +71,7 @@ if [ "$XDG_SESSION_TYPE" = "x11" ];then
 		_polkit &
 		_apps &
 		_compositor &
+		_kde_connect &
 
 
 		case $DESKTOP_SESSION in
