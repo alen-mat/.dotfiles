@@ -29,21 +29,21 @@ beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 
 -- This is used later as the default terminal and editor to run.
-local terminal = env.terminal
-editor = os.getenv("EDITOR") or "nano"
-editor_cmd = terminal .. " -e " .. editor
+local terminal          = env.terminal
+editor                  = os.getenv("EDITOR") or "nano"
+editor_cmd              = terminal .. " -e " .. editor
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
 -- If you do not like this or do not have such a key,
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
-local modkey = env.keys.mod
+local modkey            = env.keys.mod
 -- }}}
 
 -- {{{ Menu
 -- Create a launcher widget and a main menu
-myawesomemenu = {
+myawesomemenu           = {
     { "hotkeys",     function() hotkeys_popup.show_help(nil, awful.screen.focused()) end },
     { "manual",      terminal .. " -e man awesome" },
     { "edit config", editor_cmd .. " " .. awesome.conffile },
@@ -51,19 +51,19 @@ myawesomemenu = {
     { "quit",        function() awesome.quit() end },
 }
 
-mymainmenu = awful.menu({
+mymainmenu              = awful.menu({
     items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
         { "open terminal", terminal }
     }
 })
 
-mylauncher = awful.widget.launcher({
+mylauncher              = awful.widget.launcher({
     image = beautiful.awesome_icon,
     menu = mymainmenu
 })
 
 -- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+menubar.utils.terminal  = terminal -- Set the terminal for applications that require it
 -- }}}
 
 -- {{{ Tag layout
@@ -75,10 +75,10 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- {{{ Wibar
 
 -- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
+mykeyboardlayout        = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
-mytextclock = wibox.widget.textclock()
+mytextclock             = wibox.widget.textclock()
 
 local tasklist_template = {
     {
@@ -106,8 +106,51 @@ local tasklist_template = {
         expand = "outside",
         layout = wibox.layout.align.horizontal,
     },
-    id     = "background_role",
-    widget = wibox.container.background
+    id              = "background_role",
+    widget          = wibox.container.background,
+
+    create_callback = function(self, c)
+        local tb = self:get_children_by_id('text_role')[1]
+        local set_markup_silently = tb.set_markup_silently
+        tb.set_markup_silently = function(slf, text)
+            local new_text = string.gsub(text, c.name, c.class:lower())
+            if c.minimized then new_text = "-" .. new_text end
+            return set_markup_silently(tb, new_text)
+        end
+    end
+}
+local layout            = {
+    spacing_widget = {
+        {
+            forced_width  = 5,
+            forced_height = 24,
+            thickness     = 1,
+            color         = "#777777",
+            widget        = wibox.widget.separator
+        },
+        valign = "center",
+        halign = "center",
+        widget = wibox.container.place,
+    },
+    spacing        = 1,
+    layout         = wibox.layout.fixed.horizontal
+}
+-- Notice that there is *NO* wibox.wibox prefix, it is a template,
+-- not a widget instance.
+local widget_template   = {
+    {
+        wibox.widget.base.make_widget(),
+        forced_height = 5,
+        id            = "background_role",
+        widget        = wibox.container.background,
+    },
+    {
+        awful.widget.clienticon,
+        margins = 5,
+        widget  = wibox.container.margin
+    },
+    nil,
+    layout = wibox.layout.align.vertical,
 }
 
 screen.connect_signal("request::desktop_decoration", function(s)
@@ -154,6 +197,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
     s.mytasklist = awful.widget.tasklist {
         screen          = s,
         filter          = awful.widget.tasklist.filter.currenttags,
+        layout          = layout,
         widget_template = tasklist_template,
         buttons         = {
             awful.button({}, 1, function(c)
@@ -162,7 +206,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
             awful.button({}, 3, function() awful.menu.client_list { theme = { width = 250 } } end),
             awful.button({}, 4, function() awful.client.focus.byidx(-1) end),
             awful.button({}, 5, function() awful.client.focus.byidx(1) end),
-        }
+        },
     }
 
     -- Create the wibox
@@ -171,6 +215,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
         screen   = s,
         widget   = {
             layout = wibox.layout.align.horizontal,
+            expand = "none",
             { -- Left widgets
                 layout = wibox.layout.fixed.horizontal,
                 mylauncher,
