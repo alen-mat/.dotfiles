@@ -24,7 +24,9 @@ _compositor(){
 _kde_connect(){
 	/usr/bin/kdeconnectd &
 }
-
+_kanata(){
+	/bin/kanata -c ~/.config/kanata/red_dragon_60.kbd 2>&1 1>/dev/null &
+}
 _polkit(){
 	polkit_agents=("/usr/bin/lxqt-policykit-agent" "/usr/lib/polkit-kde-authentication-agent-1")
 	for pa in "${polkit_agents[@]}"
@@ -72,7 +74,7 @@ if [ "$XDG_SESSION_TYPE" = "x11" ];then
 		_apps &
 		_compositor &
 		_kde_connect &
-
+		_kanata&
 
 		case $DESKTOP_SESSION in
 			awesome)
