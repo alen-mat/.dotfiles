@@ -25,6 +25,8 @@ local hotkeys_popup = require("awful.hotkeys_popup")
 -- when client with a matching name is opened:
 require("awful.hotkeys_popup.keys")
 
+local ss = require('widgets.screenshots')
+
 beautiful.init(gears.filesystem.get_themes_dir() .. "default/theme.lua")
 
 
@@ -39,6 +41,7 @@ editor_cmd              = terminal .. " -e " .. editor
 -- I suggest you to remap Mod4 to another key using xmodmap or other tools.
 -- However, you can use another modifier like Mod1, but it may interact with others.
 local modkey            = env.keys.mod
+local altkey            = env.keys.alt
 -- }}}
 
 -- {{{ Menu
@@ -157,6 +160,8 @@ screen.connect_signal("request::desktop_decoration", function(s)
     -- Each screen has its own tag table.
     s.mypromptbox = awful.widget.prompt()
     s.battery = require("widgets.battery")
+    s.pipewire = require("widgets.pipewire")
+    s.pipewire:setup({})
     -- s.network = require("widgets.network")
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
@@ -241,8 +246,9 @@ screen.connect_signal("request::desktop_decoration", function(s)
                     color = "#ffffff",
                     visible = true
                 },
-                mykeyboardlayout,
+                s.pipewire.volume_widget,
                 s.battery,
+                mykeyboardlayout,
                 mytextclock,
                 s.mylayoutbox,
             },
@@ -261,6 +267,24 @@ awful.mouse.append_global_mousebindings({
 -- }}}
 
 -- {{{ Key bindings
+
+awful.keyboard.append_global_keybindings({
+    awful.key({}, 'Print', function()
+        ss.full_screen(true)
+    end, { description = 'Save desktop screenshot to file', group = 'Screenshot' }),
+    awful.key({ 'Control' }, 'Print', function()
+        ss.full_screen(false)
+    end, { description = 'Save desktop screenshot to clipboard', group = 'Screenshot' }),
+    awful.key({ 'Control', 'Shift' }, 'Print', function()
+        ss.selection(true)
+    end, { description = 'Mark an area and screenshot it (clipboard)', group = 'Screenshot' }),
+    awful.key({ 'Control', altkey }, 'Print', function()
+        ss.aw(true)
+    end, { description = 'Screenshot active window to clipboard', group = 'Screenshot' }),
+    awful.key({ altkey }, 'Print', function()
+        ss.aw(false)
+    end, { description = 'Screenshot active window', group = 'Screenshot' }),
+})
 
 -- General Awesome keys
 awful.keyboard.append_global_keybindings({

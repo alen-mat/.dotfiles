@@ -1,15 +1,16 @@
 local awful = require("awful")
 local modkey = _G.env.keys.mod
+local pipewire = require("widgets.pipewire")
 
 awful.keyboard.append_global_keybindings({
     awful.key({}, "XF86AudioRaiseVolume", function()
-        awful.spawn('pactl set-sink-volume @DEFAULT_SINK@ +3%', false)
+        pipewire:inc_volume()
     end, { description = 'Increase Volume', group = 'Audio' }),
     awful.key({}, "XF86AudioLowerVolume", function()
-        awful.spawn('pactl set-sink-volume @DEFAULT_SINK@ -2%', false)
+        pipewire:dec_volume()
     end, { description = 'Decrease Volume', group = 'Audio' }),
     awful.key({}, "XF86AudioMute", function()
-        awful.spawn('pactl set-sink-mute @DEFAULT_SINK@ toggle', false)
+        pipewire:mute_defaut_sink()
     end, { description = 'Mute', group = 'Audio' }),
     awful.key({}, "XF86AudioMicMute", function()
         awful.spawn('pactl set-source-mute @DEFAULT_SOURCE@ toggle', false)

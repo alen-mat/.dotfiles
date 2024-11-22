@@ -3,7 +3,7 @@ local awful = require("awful")
 _G.env = {
     keys =  {
         mod = "Mod4",
-        alt = ""
+        alt = "Mod1"
     },
     terminal = "wezterm",
     theme_name = "",

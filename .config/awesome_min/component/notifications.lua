@@ -63,6 +63,9 @@ naughty.config.presets.critical = {
     shape = naughty.config.defaults.shape
 }
 
+--function naughty.config.defaults.callback(_, appname)
+--    awful.spawn("/bin/paplay  /home/alen/.local/share/audio/current")
+--endno
 
 naughty.config.presets.ok = naughty.config.presets.normal
 naughty.config.presets.info = naughty.config.presets.normal
@@ -162,6 +165,7 @@ naughty.config.notify_callback = function(args)
         end
         n.die(naughty.notificationClosedReason.dismissedByUser)
     end
+    awful.spawn("/bin/paplay  /home/alen/.local/share/audio/current")
     return args
 end
 
