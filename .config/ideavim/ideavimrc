@@ -74,10 +74,12 @@ let g:NERDTreeMapCloseDir="h"
 let NERDTreeQuitOnOpen=1
 let NERDTreeWinSize=35
 
-" Toggle ToggleDistractionFreeMode
+" Idea Minimal mode"
+" Settings > Advanced Settings > Left margin
 nmap - <Action>(ToggleDistractionFreeMode)<Action>(ToggleFullScreen)<Action>(ViewToolBar)<CR>
 nmap <Leader>- <Action>(ViewToolButtons)
-nmap - <Action>(ViewStatusBar)
+nmap = <Action>(ViewStatusBar)
+
 " Quick Quite
 nnoremap <leader>q :q <CR>
 
