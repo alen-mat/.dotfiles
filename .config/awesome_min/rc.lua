@@ -5,7 +5,6 @@ require("env")
 local env = _G.env
 
 require("component")
-require("component.scratchpad")
 require("component.keys")
 
 -- Standard awesome library
@@ -288,8 +287,8 @@ awful.keyboard.append_global_keybindings({
 
 -- General Awesome keys
 awful.keyboard.append_global_keybindings({
-    awful.key({ modkey, "Control" }, "k", toggle_splash,
-        { description = "splash term", group = "Utils" }),
+    -- awful.key({ modkey, "Control" }, "k", toggle_splash,
+    --     { description = "splash term", group = "Utils" }),
     awful.key({ modkey, }, "s", hotkeys_popup.show_help,
         { description = "show help", group = "awesome" }),
     awful.key({ modkey, }, "w", function() mymainmenu:show() end,
@@ -403,6 +402,33 @@ client.connect_signal("request::default_mousebindings", function()
             c:activate { context = "mouse_click", action = "mouse_resize" }
         end),
     })
+end)
+
+client.connect_signal("manage", function(c)
+    if c.type == "dock"         -- Plasma Panel
+        or c.type == "desktop" then -- Plasma Desktop
+        c.focusable = false
+        c:tags(c.screen.tags)   -- show on all tags from this screen.
+    end
+
+    -- Show titlebars only if enabled.
+    if c.titlebars then
+        awful.titlebar.show(c)
+    else
+        awful.titlebar.hide(c)
+    end
+
+    -- Place floating windows. Plasma widgets provide this info
+    if c.floating then
+        if c.size_hints.user_position then
+            c.x = c.size_hints.user_position.x
+            c.y = c.size_hints.user_position.y
+        end
+        if c.size_hints.user_size then
+            c.width = c.size_hints.user_size.width
+            c.height = c.size_hints.user_size.height
+        end
+    end
 end)
 
 client.connect_signal("request::default_keybindings", function()

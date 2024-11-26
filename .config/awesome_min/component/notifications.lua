@@ -1,3 +1,8 @@
+--Docs
+--https://awesomewm.org/apidoc/popups_and_bars/naughty.layout.box.html
+--https://awesomewm.org/apidoc/declarative_rules/ruled.notifications.html
+--https://awesomewm.org/apidoc/libraries/naughty.html#request::display
+
 local naughty = require("naughty")
 local beautiful = require("beautiful")
 local gears = require("gears")
@@ -6,6 +11,7 @@ local ruled = require("ruled")
 local dpi = beautiful.xresources.apply_dpi
 local menubar = require('menubar')
 local cst = require("naughty.constants")
+local wibox = require("wibox")
 
 -- Apply theme variables
 naughty.config.padding = dpi(8)
@@ -81,40 +87,25 @@ if awesome.startup_errors then
     })
 end
 
+-- overright notification draw
 naughty.connect_signal(
-    "request::display", function(notification)
-        if notification.app_name == "Spotify" then
-            notification.actions = { naughty.action {
-                program = "Spotify",
-                id = "skip-prev",
-                name = "Previous",
-                icon = gears.color.recolor_image(icondir .. "skip-prev.svg", beautiful.fg_normal)
-            }, naughty.action {
-                program = "Spotify",
-                id = "play-pause",
-                name = "Pause",
-                icon = gears.color.recolor_image(icondir .. "play-pause.svg", beautiful.fg_normal)
-            }, naughty.action {
-                program = "Spotify",
-                id = "skip-next",
-                name = "Next",
-                icon = gears.color.recolor_image(icondir .. "skip-next.svg", beautiful.fg_norma)
-            } }
-            use_image = true
-        end
+    "request::display", function(notification, args)
+        -- if notification.app_name == "Spotify" then
+        -- end
 
-        naughty.layout.box {
-            notification = notification,
-            ontop = true,
-            icon_size = dpi(32),
-            screen = awful.screen.focused(),
-            timeout = 3,
-            margin = dpi(16),
-            border_width = 0,
-            shape = function(cr, w, h)
-                gears.shape.rounded_rect(cr, w, h, dpi(12))
-            end
-        }
+        -- naughty.layout.box {
+        --     notification = notification,
+        --     ontop = true,
+        --     icon_size = dpi(32),
+        --     screen = awful.screen.focused(),
+        --     timeout = 3,
+        --     margin = dpi(16),
+        --     border_width = 0,
+        --     shape = function(cr, w, h)
+        --         gears.shape.rounded_rect(cr, w, h, dpi(12))
+        --     end
+        -- }
+        naughty.layout.box { notification = notification }
     end)
 
 naughty.connect_signal(
@@ -142,6 +133,94 @@ ruled.notification.connect_signal('request::rules', function()
             implicit_timeout = 5,
         }
     }
+    ruled.notification.append_rule {
+        rule       = { urgency = "critical" },
+        properties = { bg = "#ff0000", fg = "#ffffff", timeout = 0 }
+    }
+
+    -- Or green background for normal ones.
+    ruled.notification.append_rule {
+        rule       = { urgency = "normal" },
+        properties = { bg = "#00ff00", fg = "#000000" }
+    }
+
+    ruled.notification.append_rule {
+        rule       = { app_name = "Spotify" },
+        properties = {
+            widget_template = {
+                {
+                    {
+                        {
+                            {
+                                naughty.widget.icon,
+                                forced_height = 48,
+                                halign        = "center",
+                                valign        = "center",
+                                widget        = wibox.container.place
+                            },
+                            {
+                                halign = "center",
+                                widget = naughty.widget.title,
+                            },
+                            {
+                                halign = "center",
+                                widget = naughty.widget.message,
+                            },
+                            {
+                                orientation   = "horizontal",
+                                widget        = wibox.widget.separator,
+                                forced_height = 1,
+                            },
+                            {
+                                nil,
+                                {
+                                    wibox.widget.textbox "⏪",
+                                    wibox.widget.textbox "⏸",
+                                    wibox.widget.textbox "⏩",
+                                    spacing = 20,
+                                    layout  = wibox.layout.fixed.horizontal,
+                                },
+                                expand = "outside",
+                                nil,
+                                layout = wibox.layout.align.horizontal,
+                            },
+                            naughty.list.actions,
+                            spacing = 10,
+                            layout  = wibox.layout.fixed.vertical,
+                        },
+                        margins = beautiful.notification_margin,
+                        widget  = wibox.container.margin,
+                    },
+                    id     = "background_role",
+                    widget = naughty.container.background,
+                },
+                strategy = "max",
+                width    = 160,
+                widget   = wibox.container.constraint,
+            },
+            append_actions = {
+                naughty.action {
+                    program = "Spotify",
+                    id = "skip-prev",
+                    name = "Previous",
+                    icon = gears.color.recolor_image(icondir .. "skip-prev.svg", beautiful.fg_normal)
+                },
+                naughty.action {
+                    program = "Spotify",
+                    id = "play-pause",
+                    name = "Pause",
+                    icon = gears.color.recolor_image(icondir .. "play-pause.svg", beautiful.fg_normal)
+                },
+                naughty.action {
+                    program = "Spotify",
+                    id = "skip-next",
+                    name = "Next",
+                    icon = gears.color.recolor_image(icondir .. "skip-next.svg", beautiful.fg_norma)
+                }
+            }
+
+        }
+    }
 end)
 
 
@@ -165,7 +244,9 @@ naughty.config.notify_callback = function(args)
         end
         n.die(naughty.notificationClosedReason.dismissedByUser)
     end
-    awful.spawn("/bin/paplay  /home/alen/.local/share/audio/current")
+    if args.appname ~= "Spotify" then
+        awful.spawn("/bin/paplay  /home/alen/.local/share/audio/current")
+    end
     return args
 end
 

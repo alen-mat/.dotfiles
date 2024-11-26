@@ -1,0 +1,16 @@
+local wibox      = require("wibox")
+
+local M          = {}
+M.widget         = wibox.widget.textbox()
+M.widget_text =  {
+    on  = '% 3d%% ',
+    off = '% 3dM ',
+}
+
+function M:update_widget(setting)
+    self.widget:set_markup(
+        self.widget_text[setting.state]:format(setting.volume))
+end
+
+M:update_widget({ state = "a", volume = "A" })
+return M
