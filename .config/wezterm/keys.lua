@@ -1,4 +1,5 @@
 local wezterm = require('wezterm')
+local sessionizer = require("sessionizer")
 
 local keys = {
   {
@@ -101,50 +102,6 @@ table.insert(keys, { key = 'PageDown', mods = '', action = wezterm.action.Scroll
 table.insert(keys, { key = 'PageUp', mods = 'CTRL', action = wezterm.action.ScrollByLine(-1) })
 table.insert(keys, { key = 'PageDown', mods = 'CTRL', action = wezterm.action.ScrollByLine(1) })
 ----------need to tinker with this ----------
-table.insert(keys, {
-  key = 'S',
-  mods = 'CTRL|SHIFT',
-  action = wezterm.action_callback(
-    function(window, pane)
-      local home = wezterm.home_dir
-      local workspaces = {
-        { id = home,                     label = 'Home' },
-        { id = home .. '/work',          label = 'Work' },
-        { id = home .. '/personal',      label = 'Personal' },
-        { id = home .. '/workspace/aoc', label = 'Advent of code' },
-        { id = home .. '/.config',       label = 'Config' },
-      }
-
-      window:perform_action(
-        wezterm.action.InputSelector {
-          action = wezterm.action_callback(
-            function(inner_window, inner_pane, id, label)
-              if not id and not label then
-                wezterm.log_info 'cancelled'
-              else
-                wezterm.log_info('id = ' .. id)
-                wezterm.log_info('label = ' .. label)
-                inner_window:perform_action(
-                  wezterm.action.SwitchToWorkspace {
-                    name = label,
-                    spawn = {
-                      label = 'Workspace: ' .. label,
-                      cwd = id,
-                    },
-                  },
-                  inner_pane
-                )
-              end
-            end
-          ),
-          title = 'Choose Workspace',
-          choices = workspaces,
-          fuzzy = true,
-          fuzzy_description = 'Fuzzy find and/or make a workspace',
-        },
-        pane
-      )
-    end),
-})
+table.insert(keys, { key = "f", mods = "LEADER", action = wezterm.action_callback(sessionizer.toggle) })
 
 return keys
