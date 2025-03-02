@@ -82,6 +82,20 @@ mykeyboardlayout        = awful.widget.keyboardlayout()
 -- Create a textclock widget
 mytextclock             = wibox.widget.textclock()
 
+local create_update_cb  = function(self, c, index, objects)
+    local tb = self:get_children_by_id('text_role')[1]
+    local set_markup_silently = tb.set_markup_silently
+    tb.set_markup_silently = function(slf, text)
+        local replace_by = c.class
+        if c.class == "org.wezfurlong.wezterm" then
+            replace_by = "wezterm"
+        end
+        local new_text = string.gsub(text, c.name, replace_by:upper())
+        if c.minimized then new_text = "-" .. new_text end
+        return set_markup_silently(tb, new_text)
+    end
+end
+
 local tasklist_template = {
     {
         nil,
@@ -111,15 +125,8 @@ local tasklist_template = {
     id              = "background_role",
     widget          = wibox.container.background,
 
-    create_callback = function(self, c)
-        local tb = self:get_children_by_id('text_role')[1]
-        local set_markup_silently = tb.set_markup_silently
-        tb.set_markup_silently = function(slf, text)
-            local new_text = string.gsub(text, c.name, c.class:lower())
-            if c.minimized then new_text = "-" .. new_text end
-            return set_markup_silently(tb, new_text)
-        end
-    end
+    create_callback = create_update_cb,
+    update_callback = create_update_cb,
 }
 local layout            = {
     spacing_widget = {
@@ -161,6 +168,8 @@ screen.connect_signal("request::desktop_decoration", function(s)
     s.battery = require("widgets.battery")
     s.pipewire = require("widgets.pipewire")
     s.pipewire:setup({})
+    s.network = require("widgets.network")
+    s.network:init()
     -- s.network = require("widgets.network")
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
@@ -245,6 +254,7 @@ screen.connect_signal("request::desktop_decoration", function(s)
                     color = "#ffffff",
                     visible = true
                 },
+                s.network.widget,
                 s.pipewire.volume_widget,
                 s.battery,
                 mykeyboardlayout,
@@ -405,10 +415,10 @@ client.connect_signal("request::default_mousebindings", function()
 end)
 
 client.connect_signal("manage", function(c)
-    if c.type == "dock"         -- Plasma Panel
+    if c.type == "dock"             -- Plasma Panel
         or c.type == "desktop" then -- Plasma Desktop
         c.focusable = false
-        c:tags(c.screen.tags)   -- show on all tags from this screen.
+        c:tags(c.screen.tags)       -- show on all tags from this screen.
     end
 
     -- Show titlebars only if enabled.

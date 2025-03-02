@@ -10,6 +10,7 @@ end
 local volume_glyph       = "󰓃"
 
 local M                  = {}
+M.current_sink           = '@DEFAULT_AUDIO_SINK@'
 M.volume_widget          = wibox.widget.textbox()
 M.widget_text            = {
     on  = volume_glyph .. ' % 3d%% ',
@@ -22,13 +23,13 @@ M.volume_tooltip         = awful.tooltip({
     referred_positions = { "right", "left", "top", "bottom" }
 })
 local init_default_audio = function()
-    local default_audio = { 'wpctl', 'get-volume', '@DEFAULT_AUDIO_SINK@' }
-    watch(default_audio, 10, function(widget, std_out)
+    local default_audio = { 'wpctl', 'get-volume', M.current_sink }
+    watch(default_audio, 3, function(widget, std_out)
         local vol = string.match(std_out, 'Volume: ([%d]*[.][%d]+)')
         local state = std_out:endswith('[MUTED]') and 'off' or 'on'
         M:update_widget({ state = state, volume = tonumber(vol) * 100 })
         awful.spawn.easy_async_with_shell(
-            [[wpctl inspect  @DEFAULT_AUDIO_SINK@ | grep -e 'node.description' -e 'device.api' ]],
+            [[wpctl inspect ]]..M.current_sink..[[ | grep -e 'node.description' -e 'device.api' ]],
             function(stdout)
                 for s in stdout:gmatch("[^\r\n]+") do
                     local key, value = s:match('(.+) = "(.+)"')

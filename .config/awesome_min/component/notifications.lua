@@ -174,9 +174,7 @@ ruled.notification.connect_signal('request::rules', function()
                             {
                                 nil,
                                 {
-                                    wibox.widget.textbox "⏪",
-                                    wibox.widget.textbox "⏸",
-                                    wibox.widget.textbox "⏩",
+                                    naughty.list.actions,
                                     spacing = 20,
                                     layout  = wibox.layout.fixed.horizontal,
                                 },
@@ -184,7 +182,6 @@ ruled.notification.connect_signal('request::rules', function()
                                 nil,
                                 layout = wibox.layout.align.horizontal,
                             },
-                            naughty.list.actions,
                             spacing = 10,
                             layout  = wibox.layout.fixed.vertical,
                         },
@@ -199,6 +196,9 @@ ruled.notification.connect_signal('request::rules', function()
                 widget   = wibox.container.constraint,
             },
             append_actions = {
+                --" ⏪
+                --"⏸
+                --"⏩
                 naughty.action {
                     program = "Spotify",
                     id = "skip-prev",
