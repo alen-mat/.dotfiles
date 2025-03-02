@@ -31,7 +31,7 @@ function Global:prompt {
 
 function branch-name-prompt{
 	# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
-	$repoInfo = (git rev-parse --git-dir --is-inside-git-dir --is-bare-repository --is-inside-work-tree --show-ref-format --short HEAD ) 2> $null
+	$repoInfo = (git rev-parse --git-dir --is-inside-git-dir --is-bare-repository --is-inside-work-tree --show-ref-format --show-toplevel --short HEAD ) 2> $null
 	if (-not($?)){
 		return $false
 	}
@@ -42,7 +42,8 @@ function branch-name-prompt{
 	$gdr = $repoInfo[0]
 	$isBare = $repoInfo[2]
 	$ref_format = $repoInfo[4]
-	$short_sha = $repoInfo[5]
+	$gbd = $repoInfo[5]
+	$short_sha = $repoInfo[6]
 
 	$count = (git rev-list --count --left-right "$upstream_type"...HEAD )
 	switch -Wildcard ("$count") {
@@ -89,7 +90,7 @@ function branch-name-prompt{
 		if($ref_format -eq "files") {
 			$head = (Get-Content -Path "$gdr/HEAD" -TotalCount 1)
 			switch -Wildcard($head) {
-				"ref: *"{ $head= $head.Split("ref: ")[1];break;}
+				"ref: *"{ $head= $head.Replace("ref: ","");break;}
 				default { $head=""; break;}
 			}
 		}else{
@@ -105,7 +106,8 @@ function branch-name-prompt{
 			$b = $head
 		}
 	}
-	$b=$b.Split("refs/heads/")[1]
+	$d = $d.Replace($gbd,'')
+	$b=$b.Replace("refs/heads/","")
 	$color =  "Blue"
 	$host.UI.RawUI.ForegroundColor = $color
 	$Host.UI.Write("("+$b+")"+ " "+ $upstream +" "+ $r) 
