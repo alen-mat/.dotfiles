@@ -8,6 +8,7 @@
 -- @copyright 2020 Pavel Makhov
 -------------------------------------------------
 
+local upower = require("lgi").require "UPowerGlib"
 local awful = require("awful")
 local beautiful = require("beautiful")
 local naughty = require("naughty")

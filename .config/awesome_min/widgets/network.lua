@@ -2,15 +2,16 @@ local awful   = require("awful")
 local naughty = require("naughty")
 local wibox   = require("wibox")
 local gears   = require("gears")
+local dpi     = require("beautiful").xresources.apply_dpi
 
 local _data   = {
         devs = {},
         inet_active = false
 }
-local icons = {
-        wifi ={
+local icons   = {
+        wifi = {
                 ni = " 󱚵  ",
-                i =  "   "
+                i = "   "
         },
         ethernet = {
                 ni = " 󰈀  ",
@@ -20,7 +21,13 @@ local icons = {
 
 
 local M       = {}
-M.widget      = wibox.widget.textbox()
+M.widget      = wibox.widget {
+        align  = 'center',
+        valign = 'center',
+        widget = wibox.widget.textbox,
+        font   = "Iosevka " .. dpi(12)
+}
+
 M.widget.text = "he"
 
 
@@ -48,17 +55,20 @@ then
   echo "we have connectivity"
 fi ]]
         awful.spawn.easy_async_with_shell(bashcmd, function(stdout)
-                stdout = stdout:gsub("[\n\r]", "")
-                if "we have connectivity" == stdout then
-                        _data.inet_active = true
+                stdout             = stdout:gsub("[\n\r]", "")
+                local is_connected = "we have connectivity" == stdout
+                local text         = ""
+                if is_connected then
                         M.widget.text = icons.wifi.i
+                        text = "We are back"
                 else
-                        if not _data.inet_active then
-                                naughty.notify({ title = "Network", text = "Lost connectivity" })
-                        end
-                        _data.inet_active = false
                         M.widget.text = icons.wifi.ni
+                        text = "Lost connectivity"
                 end
+                if _data.inet_active ~= is_connected then
+                        naughty.notify({ title = "Network", text = text })
+                end
+                _data.inet_active = is_connected
         end)
 end
 

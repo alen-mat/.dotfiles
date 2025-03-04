@@ -78,6 +78,24 @@ naughty.config.presets.info = naughty.config.presets.normal
 naughty.config.presets.warn = naughty.config.presets.critical
 
 
+local function play_sound(n)
+	if n.category == "device.added" or n.category == "network.connected" then
+		awful.spawn("canberra-gtk-play -i service-login", false)
+	elseif n.category == "device.removed" or n.category == "network.disconnected" then
+		awful.spawn("canberra-gtk-play -i service-logout", false)
+	elseif
+		n.category == "device.error"
+		or n.category == "im.error"
+		or n.category == "network.error"
+		or n.category == "transfer.error"
+	then
+		awful.spawn("canberra-gtk-play -i dialog-warning", false)
+	elseif n.category == "email.arrived" then
+		awful.spawn("canberra-gtk-play -i message", false)
+	elseif n.appname ~= "Spotify" then
+		awful.spawn("canberra-gtk-play -i bell", false)
+	end
+end
 
 if awesome.startup_errors then
     naughty.notify({
@@ -244,9 +262,7 @@ naughty.config.notify_callback = function(args)
         end
         n.die(naughty.notificationClosedReason.dismissedByUser)
     end
-    if args.appname ~= "Spotify" then
-        awful.spawn("/bin/paplay  /home/alen/.local/share/audio/current")
-    end
+    play_sound(args)
     return args
 end
 
