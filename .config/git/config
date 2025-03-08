@@ -9,7 +9,7 @@
     excludesfile = ~/.gitignore_global
 [fetch]
     prune = false
-	writeCommitGraph = true
+    writeCommitGraph = true
 [alias]
     aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | sort    # list all aliases
 
@@ -18,7 +18,6 @@
     delete-local-merged = !git fetch && git branch --merged | egrep -v 'master' | xargs git branch -d
     cb = !git branch | grep ^* | cut -d' ' -f2
     st = status #status
-    ci = commit #commit
     cie = commit --allow-empty -m #empty commit
     br = branch #current branch
     pl = !git pull --rebase origin $(git cb) # git pull and rebase current branch
@@ -29,63 +28,46 @@
     purge = clean -f -d #untracked files and directories
     purge-all = clean -f -d -x #and ignored files
 
-    prune-local = !git branch --merged | grep -v master | grep -v dev | xargs -n 1 git branch -d # prune local
-    prune-all = !git remote | xargs -n 1 git remote prune # prune all
-
     push-hash = !sh -c 'git push origin $1:refs/heads/$(git cb)' -    # requires a SHA or the remote branch will be deleted!!
     serve = !git daemon --reuseaddr --verbose --base-path=. --export-all ./.git 
-    save = stash save -u # similar to git stash
+
     fixup = !sh -c 'git commit --fixup=$1' - #git ammend?
     squash = !sh -c 'git commit --squash=$1' - #squash commit
+
     ri = rebase --interactive --autosquash --rebase-merges #interactie rebase
 
     oldest-ancestor = !zsh -c 'diff --old-line-format='' --new-line-format='' <(git rev-list --first-parent "${1:-master}") <(git rev-list --first-parent "${2:-HEAD}") | head -1' -
 
-    info = !sh -c 'git-info' -    # requires https://github.com/gitbits/git-info
     submodule-list = !git ls-files --stage | grep 16000
-    fakeignore = update-index --assume-unchanged
-    ignore = update-index --assume-unchanged
-
-    undo = reset --soft --keep HEAD^
-    unstage = reset HEAD
-    fit = reset --hard
-
-    lg = log --graph --decorate --abbrev-commit
 
     ph = log --graph --pretty=pretty-history --abbrev-commit --date=relative
     standup = !sh -c 'git log --pretty=format:\"%Cred%h%Creset - %Cgreen%cr%Creset : %s\" --since=\"$(date -d yesterday \"+%Y-%m-%d 00:00:00\")\" --until=\"$(date \"+%Y-%m-%d 00:00:00\")\" --all --author=\"$(git config --get user.name)\"'
 
     first = !sh -c 'git log origin/master --pretty=format:%H  --reverse | head -1'
     lasttag = !sh -c 'git log --simplify-by-decoration --decorate=short --tags --format="%H" |head -1'
-    changes = log --oneline --decorate
-    changelog = show --name-only
-
-    bb = "!r() { refbranch=$1 count=$2; git for-each-ref --sort=-committerdate refs/heads --format='%(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)' --color=always --count=${count:-20} | while read line; do branch=$(echo \"$line\" | awk 'BEGIN { FS = \"|\" }; { print $1 }' | tr -d '*'); ahead=$(git rev-list --count \"${refbranch:-origin/master}..${branch}\"); behind=$(git rev-list --count \"${branch}..${refbranch:-origin/master}\"); colorline=$(echo \"$line\" | sed 's/^[^|]*|//'); echo \"$ahead|$behind|$colorline\" | awk -F'|' -vOFS='|' '{$5=substr($5,1,70)}1' ; done | ( echo \"ahead|behind|branch|lastcommit|message|author\n\" && cat) | column -ts'|';}; r"
-
-    svnup = svn rebase
-    svnpush = svn dcommit
-
-[pretty]
-    pretty-history = format:%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset
-    ql = format:%Cblue%h %Cred%cD %Creset%cn %Cgreen%s%Creset
 
 [rerere]
-	enabled = true
+    enabled = true
 [core]
     #editor = st -n -w    # Sublime Text
     #editor = code -n -w    # VS Code
     ignorecase = false
-    excludesfile = ~/.gitignore_global
+    excludesfile = ~/.config/git/gitignore_global
     editor = vim
-	fsmonitor = true
+    fsmonitor = true
 [branch]
     autosetuprebase = always
-	sort = -committerdate
+    sort = -committerdate
 
 [push]
     default = upstream
 [credential]
     helper = osxkeychain
+
+[commit]
+    template = ~/.config/git/gitmessage
+[column]
+    ui = auto
 
 [filter "media"]
     clean = git-media-clean %f
@@ -130,28 +112,29 @@
 [difftool]
     prompt = false
     trustExitCode = true
-[mergetool]
-    keepBackup = true
-
-
-[mergetool "vimdiff"]
-    layout = "LOCAL,BASE,REMOTE / MERGED + BASE,LOCAL + BASE,REMOTE"
-
-[difftool "sourcetree"]
-    cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-    path =
-[mergetool "sourcetree"]
-    cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-    trustExitCode = true
 
 [difftool "kitty"]
     cmd = kitty +kitten diff $LOCAL $REMOTE
 [difftool "kitty.gui"]
     cmd = kitty kitty +kitten diff $LOCAL $REMOTE
 
-[commit]
-    template = ~/.config/git/gitmessage
-[column]
-	ui = auto
+[merge]
+  tool = nvimdiff
+[mergetool]
+  prompt = false
+  keepBackup = false
+  
+[mergetool "nvimdiff"]
+  layout = "LOCAL,BASE,REMOTE / MERGED"
+
+[mergetool "vimdiff"]
+  layout = "LOCAL,BASE,REMOTE / MERGED + BASE,LOCAL + BASE,REMOTE"
+
 [format]
-	bb = %(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)
+   bb = %(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)
+
+[pretty]
+    pretty-history = format:%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset
+    ql = format:%Cblue%h %Cred%cD %Creset%cn %Cgreen%s%Creset
+
+# vim: et tw=78 ts=8 sw=4 sts=4
