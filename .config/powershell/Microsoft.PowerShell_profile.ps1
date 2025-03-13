@@ -1,3 +1,6 @@
+. $PSScriptRoot/psrl.ps1
+. $PSScriptRoot/utils.ps1
+
 function Global:prompt {
 	$rawUI = (Get-Host).UI.RawUI
 	$cp = $rawUI.CursorPosition
@@ -31,6 +34,7 @@ function Global:prompt {
 
 function branch-name-prompt{
 	# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
+	# wrapping command in () will make exit code true in some version of windows
 	$repoInfo = (git rev-parse --git-dir --is-inside-git-dir --is-bare-repository --is-inside-work-tree --show-ref-format --show-toplevel --short HEAD ) 2> $null
 	if (-not($?)){
 		return $false
