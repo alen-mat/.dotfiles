@@ -1,5 +1,15 @@
+if (-not ((Test-Path variable:global:IsLinux) -and (Test-Path variable:global:IsWindows) -and  (Test-Path variable:global:IsMacOS))){
+	switch ([System.Environment]::OSVersion.Platform) {
+	    'Win32NT' { 
+	        New-Variable -Option Constant -Name IsWindows -Value $True -ErrorAction SilentlyContinue
+	        New-Variable -Option Constant -Name IsLinux  -Value $false -ErrorAction SilentlyContinue
+	        New-Variable -Option Constant -Name IsMacOs  -Value $false -ErrorAction SilentlyContinue
+	     }
+	}
+}
 . $PSScriptRoot/psrl.ps1
 . $PSScriptRoot/utils.ps1
+. $PSScriptRoot/git.ps1
 
 function Global:prompt {
 	$rawUI = (Get-Host).UI.RawUI
@@ -12,7 +22,7 @@ function Global:prompt {
 
 	$d = ([string]$pwd)
 
-	if (-not(branch-name-prompt)){
+	if (-not(gitPS1)){
 		$Host.UI.Write([System.Net.Dns]::GetHostName() + ": ")
 	}
 
@@ -32,91 +42,6 @@ function Global:prompt {
 	return $out
 }
 
-function branch-name-prompt{
-	# https://github.com/git/git/blob/master/contrib/completion/git-prompt.sh
-	# wrapping command in () will make exit code true in some version of windows
-	$repoInfo = (git rev-parse --git-dir --is-inside-git-dir --is-bare-repository --is-inside-work-tree --show-ref-format --show-toplevel --short HEAD ) 2> $null
-	if (-not($?)){
-		return $false
-	}
-
-	$upstream_type = "@{upstream}"
-
-	$repoInfo = $repoInfo -split '\n'
-	$gdr = $repoInfo[0]
-	$isBare = $repoInfo[2]
-	$ref_format = $repoInfo[4]
-	$gbd = $repoInfo[5]
-	$short_sha = $repoInfo[6]
-
-	$count = (git rev-list --count --left-right "$upstream_type"...HEAD )
-	switch -Wildcard ("$count") {
-		""	{$upstream="" ;break;}
-		"0	0" {$upstream="|u=" ;break;}
-		"0	*" {$upstream="|u+${count#0	}" ;break;}
-		"*	0" {$upstream="|u-${count%	0}" ;break;}
-		default	{ $upstream="|u+${count#*	}-${count%	*}";break;}
-	}
-
-	if(Test-Path -Path "$gdr/rebase-merge" ){
-		$r = "|REBASE"
-	}
-	else{
-		if(Test-Path -Path "$gdr/rebase-apply"){
-			if(Test-Path -Path "$gdr/rebase-apply/rebasing"){
-				$r="|REBASE"
-			}
-			elseif(Test-Path -Path "$gdr/rebase-apply/applying"){
-				$r="|AM"
-			}
-			else{
-				$r="|AM/REBASE"
-			}
-		}
-		if(Test-Path -Path "$gdr/MERGE_HEAD"){
-			$r="|MERGING"
-		}
-		elseif(Test-Path -Path "$gdr/CHERRY_PICK_HEAD"){
-			$r="|CHERRY-PICKING"
-		}
-		elseif(Test-Path -Path "$gdr/REVERT_HEAD"){
-			$r="|REVERTING"
-		}
-		elseif(Test-Path -Path "$gdr/BISECT_LOG"){
-			$r="|BISECTING"
-		}
-	}
-
-	if ((Get-Item "$gdr/HEAD").Attributes.ToString() -match "ReparsePoint"){
-		$b=(git symbolic-ref HEAD 2>$null)
-	}
-	else{
-		if($ref_format -eq "files") {
-			$head = (Get-Content -Path "$gdr/HEAD" -TotalCount 1)
-			switch -Wildcard($head) {
-				"ref: *"{ $head= $head.Replace("ref: ","");break;}
-				default { $head=""; break;}
-			}
-		}else{
-			$head=(git symbolic-ref HEAD 2>$null)
-		}
-		if ([string]::IsNullOrEmpty($head)){
-			$detached=$true
-			$b = (git describe --tags --exact-match HEAD 2>$null)
-			if (-not($?)){
-				$b = "$short_sha..."
-			}
-		}else{
-			$b = $head
-		}
-	}
-	$d = $d.Replace($gbd,'')
-	$b=$b.Replace("refs/heads/","")
-	$color =  "Blue"
-	$host.UI.RawUI.ForegroundColor = $color
-	$Host.UI.Write("("+$b+")"+ " "+ $upstream +" "+ $r) 
-	return $true
-}
 
 function ll {
 	ls | Format-Wide Name -AutoSize
