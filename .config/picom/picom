@@ -316,6 +316,7 @@ blur-background-exclude = [
   "class_g = 'eww-lock-weather'",
   "class_g = 'zoom'",
   "class_g = 'Awesome'",
+  "name *= 'Awesome drawin'",
   "_GTK_FRAME_EXTENTS@:c",
   "name *= 'react-overlay'"
 ];
