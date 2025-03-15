@@ -8,7 +8,7 @@
 -- @copyright 2020 Pavel Makhov
 -------------------------------------------------
 
-local power_monitor = require("monitor.power.dbus")
+local upower = require("lgi").require "UPowerGlib"
 local awful = require("awful")
 local beautiful = require("beautiful")
 local naughty = require("naughty")
@@ -27,6 +27,7 @@ local function worker(user_args)
     local arc_thickness = args.arc_thickness or 2
     local show_current_level = args.show_current_level or false
     local size = args.size or 18
+    local timeout = args.timeout or 10
 
     local main_color = args.main_color or beautiful.fg_color
     local bg_color = args.bg_color or '#ffffff11'
@@ -90,11 +91,24 @@ local function worker(user_args)
         }
     end
 
-    power_monitor.obj:connect_signal("upower::update", function(self, device, data)
-        battery_popup.text =  data.time
-        batteryarc_widget.value = data.perc
+    local function update_widget(widget, stdout)
+        local charge = 0
+        local status
+        for s in stdout:gmatch("[^\r\n]+") do
+            local cur_status, charge_str, _ = string.match(s, '.+: ([%a%s]+), (%d?%d?%d)%%,?(.*)')
+            if cur_status ~= nil and charge_str ~= nil then
+                local cur_charge = tonumber(charge_str)
+                if cur_charge > charge then
+                    status = cur_status
+                    charge = cur_charge
+                end
+            end
+        end
 
-        if data.status == 'Charging' then
+        battery_popup.text =  stdout
+        widget.value = charge
+
+        if status == 'Charging' then
             text_with_background.bg = charging_color
             text_with_background.fg = '#000000'
         else
@@ -104,27 +118,29 @@ local function worker(user_args)
 
         if show_current_level == true then
             --- if battery is fully charged (100) there is not enough place for three digits, so we don't show any text
-            text.text = data.perc == 100
+            text.text = charge == 100
                 and ''
-                or string.format('%d', data.perc)
+                or string.format('%d', charge)
         else
             text.text = ''
         end
 
-        if data.perc < 15 and data.perc > 0 then
-            batteryarc_widget.colors = { low_level_color }
-            if enable_battery_warning and data.status ~= 'Charging' and os.difftime(os.time(), last_battery_check) > 300 then
+        if charge < 15 and charge > 0 then
+            widget.colors = { low_level_color }
+            if enable_battery_warning and status ~= 'Charging' and os.difftime(os.time(), last_battery_check) > 300 then
                 -- if 5 minutes have elapsed since the last warning
                 last_battery_check = os.time()
 
                 show_battery_warning()
             end
-        elseif data.perc > 15 and  data.perc < 40 then
-            batteryarc_widget.colors = { medium_level_color }
+        elseif charge > 15 and charge < 40 then
+            widget.colors = { medium_level_color }
         else
-            batteryarc_widget.colors = { main_color }
+            widget.colors = { main_color }
         end
-    end)
+    end
+
+    watch("acpi", timeout, update_widget, batteryarc_widget)
 
 
     return batteryarc_widget

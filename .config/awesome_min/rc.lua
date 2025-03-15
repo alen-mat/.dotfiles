@@ -6,6 +6,8 @@ local env = _G.env
 
 require("component")
 require("component.keys")
+local battery_widget = require("monitor.power.dbus")
+battery_widget:init()
 
 -- Standard awesome library
 local gears = require("gears")
@@ -165,7 +167,7 @@ local widget_template   = {
 screen.connect_signal("request::desktop_decoration", function(s)
     -- Each screen has its own tag table.
     s.mypromptbox = awful.widget.prompt()
-    s.battery = require("widgets.battery")
+    s.battery = require("widgets.battery"){}
     s.pipewire = require("widgets.pipewire")
     s.pipewire:setup({})
     s.network = require("widgets.network")
