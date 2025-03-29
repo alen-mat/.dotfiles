@@ -10,6 +10,9 @@ set ideastrictmode
 set dialogescape = on
 set oneline = on
 set ideavimsupport=+singleline,dialog
+set highlightedyank
+let g:highlightedyank_highlight_duration = "1000"
+let g:highlightedyank_highlight_color = "rgba(57, 197, 187, 155)"
 
 Plug 'preservim/nerdtree'
 Plug 'tpope/vim-surround'
