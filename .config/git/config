@@ -42,6 +42,10 @@
 
     first = !sh -c 'git log origin/master --pretty=format:%H  --reverse | head -1'
     lasttag = !sh -c 'git log --simplify-by-decoration --decorate=short --tags --format="%H" |head -1'
+
+    meh = !bash -c '"                                                                          \
+        git config --add remote.origin.fetch '+refs/pull//head:refs/remotes/origin/pr/'         \
+    "'
 [branch]
     autosetuprebase = always
     sort = -committerdate
