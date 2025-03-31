@@ -4,22 +4,23 @@
     signingkey = B11BE0D2D33B5131
 [init]
     defaultBranch = main
+    templatedir = ~/.config/git/template
 [core]
+    excludesfile = ~/.config/git/globignore
     ignorecase = false
-    excludesfile = ~/.gitignore_global
 [fetch]
-    prune = false
+    all = true
     writeCommitGraph = true
+[column]
+    ui = auto
+
 [alias]
     aliases = !git config --get-regexp 'alias.*' | colrm 1 6 | sed 's/[ ]/ = /' | sort    # list all aliases
 
     clone = clone --filter=blob:none # no blob clone
 
-    delete-local-merged = !git fetch && git branch --merged | egrep -v 'master' | xargs git branch -d
     cb = !git branch | grep ^* | cut -d' ' -f2
-    st = status #status
     cie = commit --allow-empty -m #empty commit
-    br = branch #current branch
     pl = !git pull --rebase origin $(git cb) # git pull and rebase current branch
     ps = !git push origin $(git cb)
     lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all #pretty log
@@ -28,7 +29,6 @@
     purge = clean -f -d #untracked files and directories
     purge-all = clean -f -d -x #and ignored files
 
-    push-hash = !sh -c 'git push origin $1:refs/heads/$(git cb)' -    # requires a SHA or the remote branch will be deleted!!
     serve = !git daemon --reuseaddr --verbose --base-path=. --export-all ./.git 
 
     fixup = !sh -c 'git commit --fixup=$1' - #git ammend?
@@ -40,75 +40,29 @@
 
     submodule-list = !git ls-files --stage | grep 16000
 
-    ph = log --graph --pretty=pretty-history --abbrev-commit --date=relative
-    standup = !sh -c 'git log --pretty=format:\"%Cred%h%Creset - %Cgreen%cr%Creset : %s\" --since=\"$(date -d yesterday \"+%Y-%m-%d 00:00:00\")\" --until=\"$(date \"+%Y-%m-%d 00:00:00\")\" --all --author=\"$(git config --get user.name)\"'
-
     first = !sh -c 'git log origin/master --pretty=format:%H  --reverse | head -1'
     lasttag = !sh -c 'git log --simplify-by-decoration --decorate=short --tags --format="%H" |head -1'
-
-[rerere]
-    enabled = true
-[core]
-    #editor = st -n -w    # Sublime Text
-    #editor = code -n -w    # VS Code
-    ignorecase = false
-    excludesfile = ~/.config/git/gitignore_global
-    editor = vim
-    fsmonitor = true
 [branch]
     autosetuprebase = always
     sort = -committerdate
-
 [push]
     default = upstream
-[credential]
-    helper = osxkeychain
-
+[tag]
+    sort = version:refname
+[help]
+    autocorrect = prompt
 [commit]
+    verbose = true
     template = ~/.config/git/gitmessage
-[column]
-    ui = auto
-
-[filter "media"]
-    clean = git-media-clean %f
-    smudge = git-media-smudge %f
-[instaweb]
-    local = false
-    port = 8080
-    httpd = webrick
-[filter "lfs"]
-    smudge = git-lfs smudge -- %f
-    process = git-lfs filter-process
-    required = true
-    clean = git-lfs clean -- %f
-
-[status]
-    short = true
-
-[color]
-    ui = auto
-    branch = auto
-    diff = auto
-    interactive = auto
-    status = auto
-[color "branch"]
-    current = yellow reverse
-    local = yellow
-    remote = green
-[color "diff"]
-    meta = blue black bold
-    frag = magenta bold
-    old = red bold
-    new = green bold
-[color "status"]
-    added = green normal
-    changed = yellow normal bold
-    untracked = magenta normal dim
-    header = white normal dim
+[rerere]
+    enabled = true
+    autoupdate = true
 
 [diff]
-    tool = 
-    guitool = 
+    algorithm = histogram
+    colorMoved = plain
+    mnemonicPrefix = true
+    renames = true
 [difftool]
     prompt = false
     trustExitCode = true
@@ -119,22 +73,25 @@
     cmd = kitty kitty +kitten diff $LOCAL $REMOTE
 
 [merge]
-  tool = nvimdiff
+    conflictstyle = zdiff3
+    tool = nvimdiff
+
 [mergetool]
-  prompt = false
-  keepBackup = false
+    prompt = false
+    keepBackup = false
   
 [mergetool "nvimdiff"]
-  layout = "LOCAL,BASE,REMOTE / MERGED"
+    layout = "LOCAL,BASE,REMOTE / MERGED"
 
 [mergetool "vimdiff"]
-  layout = "LOCAL,BASE,REMOTE / MERGED + BASE,LOCAL + BASE,REMOTE"
+    layout = "LOCAL,BASE,REMOTE / MERGED + BASE,LOCAL + BASE,REMOTE"
 
 [format]
-   bb = %(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)
+    bb = %(refname:short)|%(HEAD)%(color:yellow)%(refname:short)|%(color:bold green)%(committerdate:relative)|%(color:blue)%(subject)|%(color:magenta)%(authorname)%(color:reset)
 
 [pretty]
     pretty-history = format:%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset
     ql = format:%Cblue%h %Cred%cD %Creset%cn %Cgreen%s%Creset
+    su = format:\"%Cred%h%Creset - %Cgreen%cr%Creset : %s\" --since=\"$(date -d yesterday \"+%Y-%m-%d 00:00:00\")\" --until=\"$(date \"+%Y-%m-%d 00:00:00\")\" --all --author=\"$(git config --get user.name)\"'
 
 # vim: et tw=78 ts=8 sw=4 sts=4
