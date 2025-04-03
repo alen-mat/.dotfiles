@@ -116,7 +116,43 @@
         {
             "before": ["<leader>", "z"],
             "commands": [
-                "workbench.action.splitEditorDown",
+                "workbench.action.toggleEditorWidths",
+            ]
+
+        },
+        {
+            "before": ["<C-w>", "H"],
+            "commands": [
+                "workbench.action.moveEditorToLeftGroup",
+            ]
+
+
+        },
+        {
+            "before": ["<C-w>", "J"],
+            "commands": [
+                "workbench.action.moveEditorToBelowGroup",
+            ]
+
+        },
+        {
+            "before": ["<C-w>", "K"],
+            "commands": [
+                "workbench.action.moveEditorToAboveGroup",
+            ]
+
+        },
+        {
+            "before": ["<C-w>", "L"],
+            "commands": [
+                "workbench.action.moveEditorToRightGroup",
+            ]
+
+        },
+        {
+            "before": ["<C-w>", "W"],
+            "commands": [
+                "workbench.action.moveEditorToNewWindow",
             ]
 
         },
