@@ -88,6 +88,15 @@
     ],
     "vim.normalModeKeyBindings": [
         {
+            "before": ["<leader>","q"],
+            "commands": ["workbench.action.closeActiveEditor"]
+        },
+        {
+            "before": ["<leader>","o"],
+            "commands": ["workbench.action.file.openFile"]
+            //"commands": ["workbench.action.file.quickopen"]
+        },
+        {
             "before": ["g","c","c"],
             "commands": ["editor.action.commentLine"]
         },
