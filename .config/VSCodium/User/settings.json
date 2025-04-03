@@ -1,119 +1,181 @@
 {
-  "explorer.openEditors.visible": 0,
-  "editor.snippetSuggestions": "top",
-  "emmet.showAbbreviationSuggestions": false,
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.formatOnPaste": false,
-  "workbench.iconTheme": "material-icon-theme",
-  "editor.fontLigatures": true,
-  "terminal.integrated.fontSize": 14,
-  "files.autoSave": "off",
-  "editor.fontFamily": "Anonymous Pro",
-  "markdown.preview.fontSize": 36,
-  "editor.tabSize": 2,
-  "editor.detectIndentation": false,
-  "editor.minimap.enabled": false,
-  "eslint.enable": true,
-  // "files.exclude": { "**/.*": true },
-  "eslint.validate": [
-    {
-      "language": "vue",
-      "autoFix": true
+    "chat.commandCenter.enabled": false,
+
+    "scm.inputFontFamily": "JetBrains Mono",
+
+    "terminal.integrated.fontFamily": "JetBrains Mono",
+
+    "notebook.markup.fontFamily": "JetBrains Mono",
+    "notebook.output.fontFamily": "JetBrains Mono",
+
+    "chat.editor.fontFamily": "JetBrains Mono",
+
+    "debug.console.fontFamily": "JetBrains Mono",
+    "debug.console.fontSize": 15,
+
+    "editor.codeLensFontFamily": "JetBrains Mono",
+    "editor.inlayHints.fontFamily": "JetBrains Mono",
+    "editor.inlineSuggest.fontFamily": "JetBrains Mono",
+
+    "editor.fontFamily": "JetBrains Mono",
+    "editor.fontLigatures": true,
+    "editor.fontSize": 15,
+    "editor.lineNumbers": "relative",
+    "editor.scrollbar.horizontalScrollbarSize": 8,
+    "editor.scrollbar.verticalScrollbarSize": 8,
+    "editor.minimap.enabled": false,
+
+    //Treesitter
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "comment",
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            },
+        ]
     },
-    {
-        "language": "typescript",
-        "autoFix": true
-      },
-    {
-      "language": "html",
-      "autoFix": true
+
+    "window.autoDetectColorScheme": true,
+    "window.newWindowDimensions": "inherit",
+    "window.commandCenter": false,
+    "window.title": "${rootName}",
+    "window.menuBarVisibility": "hidden",
+
+    "workbench.list.horizontalScrolling": true,
+    "workbench.preferredDarkColorTheme": "Default Dark Modern",
+    "workbench.preferredLightColorTheme": "Default Dark Modern",
+    "workbench.tree.renderIndentGuides": "onHover",
+    "workbench.activityBar.location": "bottom",
+    "workbench.sideBar.location": "right",
+    "workbench.tips.enabled": false,
+    "workbench.startupEditor": "none", 
+    "workbench.colorCustomizations": {
+        "statusBar.noFolderBackground": "#000000",
+        "statusBar.debuggingBackground": "#000000",
+        "statusBar.debuggingForeground": "#FFFFFF",
+        "statusBar.background": "#000000",
+        "statusBar.foreground": "#FFFFFF"
     },
-    {
-      "language": "javascript",
-      "autoFix": true
-    }
-  ],
-  "workbench.startupEditor": "newUntitledFile",
-  "editor.suggestSelection": "first",
-  "[javascript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "HookyQR.beautify"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "HookyQR.beautify"
-  },
-  "[css]": {
-    "editor.defaultFormatter": "HookyQR.beautify"
-  },
-  "liveshare.featureSet": "insiders",
-  "[vue]": {
-    "editor.defaultFormatter": "octref.vetur"
-  },
-  "diffEditor.ignoreTrimWhitespace": false,
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "liveshare.anonymousGuestApproval": "accept",
-  "[typescript]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "workbench.colorCustomizations": {},
-  "[scss]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascriptreact]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "editor.tokenColorCustomizations": {
-    "textMateRules": [
-      {
-        "scope": [
-          "comment",
-          "comment.block"
-        ],
-        "settings": {
-          "fontStyle": "italic",
-          "foreground": "#11f0d2"
+
+    /*
+    * plugin stuff below
+    */
+    
+    //Vim stuff
+    "vim.leader": "<space>",
+    "vim.easymotion": true,
+    "vim.smartRelativeLine": true,
+    "editor.cursorSurroundingLines": 8,
+    "vim.incsearch": true,
+    //"vim.useSystemClipboard": true,
+    "vim.useCtrlKeys": true,
+    "vim.hlsearch": true,
+    "vim.highlightedyank.enable": true,
+    "vim.highlightedyank.color": "#a9dc7660",
+    "vim.highlightedyank.duration": 250,
+    "vim.insertModeKeyBindings": [
+        {
+            "before": [ "j", "k" ],
+            "after": [ "<Esc>" ]
+        },
+        {
+            "before": [ "<C-y" ],
+            "commands": [ "acceptSelectedSuggestion" ],
         }
-      },
-      {
-        "scope": [
-          "keyword.operator.logical",
-          "keyword.operator.arithmetic",
-          "keyword.operator.assignment",
-          "keyword.operator.bitwise"
-        ],
-        "settings": {
-          "fontStyle": ""
-        }
-      }
-    ]
-  },
-  "todo-tree.tree.showScanModeButton": false,
-  "cSpell.userWords": [
-    "deno",
-    "feathersjs",
-    "middlewares",
-    "socketio",
-    "upsert",
-    "upvote"
-  ],
-  "editor.lineHeight": 0,
-  "editor.fontSize": 18,
-  "terminal.integrated.fontFamily": "monospace",
-  "workbench.colorTheme": "Bearded Theme Vivid Black",
-  "workbench.sideBar.location": "left",
-  "window.zoomLevel": -1,
-  "editor.wrappingIndent": "deepIndent",
-	"editor.insertSpaces": false,
-	"prettier.vueIndentScriptAndStyle": true,
-	"prettier.withNodeModules": true,
-	"redhat.telemetry.enabled": false,
-	"clangd.path": "/home/alen/.config/VSCodium/User/globalStorage/llvm-vs-code-extensions.vscode-clangd/install/12.0.0/clangd_12.0.0/bin/clangd",
-	"C_Cpp.intelliSenseEngine": "Disabled"
+       //Other 
+    ],
+    "vim.normalModeKeyBindings": [
+        {
+            "before": ["g","c","c"],
+            "commands": ["editor.action.commentLine"]
+        },
+        {
+            "before": ["<leader>", "b"],
+            "commands": [
+                "workbench.action.toggleSidebarVisibility",
+               // "workbench.action.toggleMenuBar"
+            ]
+
+        },
+        {
+            "before": ["<leader>", "\\"],
+            "commands": [
+                "workbench.action.splitEditorRight",
+            ]
+
+        },
+        {
+            "before": ["<leader>", "-"],
+            "commands": [
+                "workbench.action.splitEditorDown",
+            ]
+
+        },
+        {
+            "before": ["<leader>", "z"],
+            "commands": [
+                "workbench.action.splitEditorDown",
+            ]
+
+        },
+
+        //LSP Stuff
+        {
+            "before": ["K"],
+            "commands": ["editor.action.showDefinitionPreviewHover"]
+        },
+        {
+            "before": ["g", "p", "d"],
+            "commands": ["editor.action.peekDefinition"]
+        },
+        {
+            "before": ["g", "h"],
+            "commands": ["editor.action.showDefinitionPreviewHover"]
+        },
+        {
+            "before": ["g", "i"],
+            "commands": ["editor.action.goToImplementation"]
+        },
+        {
+            "before": ["g", "p", "i"],
+            "commands": ["editor.action.peekImplementation"]
+        },
+        {
+            "before": ["g", "q"],
+            "commands": ["editor.action.quickFix"]
+        },
+        {
+            "before": ["g", "r"],
+            "commands": ["editor.action.referenceSearch.trigger"]
+        },
+        {
+            "before": ["g", "t"],
+            "commands": ["editor.action.goToTypeDefinition"]
+        },
+        {
+            "before": ["<leader>", "l", "l"],
+            "commands": ["codelens.showLensesInCurrentLine"]
+        },
+        {
+            "before": ["]", "d"],
+            "commands": ["editor.action.marker.next"]
+        },
+        {
+            "before": ["[", "d"],
+            "commands": ["editor.action.marker.prev"]
+        },
+       //Other 
+
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        {
+            "before": ["g","c"],
+            "commands": ["editor.action.blockComment"]
+        },
+       //Other 
+    ],
+
+    //Other plugins
 }
