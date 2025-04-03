@@ -93,8 +93,8 @@
         },
         {
             "before": ["<leader>","o"],
-            "commands": ["workbench.action.file.openFile"]
-            //"commands": ["workbench.action.file.quickopen"]
+            "commands": ["workbench.action.files.openFile"]
+            //"commands": ["workbench.action.files.quickopen"]
         },
         {
             "before": ["g","c","c"],
