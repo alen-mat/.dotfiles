@@ -1,7 +1,6 @@
 local awful = require("awful")
 local beautiful = require("beautiful")
 local wibox = require("wibox")
-local wallpaper = _G.env.wallpaper -- or beautiful.wallpaper
 local gears = require("gears")
 
 screen.connect_signal("request::wallpaper", function(s)
@@ -9,7 +8,7 @@ screen.connect_signal("request::wallpaper", function(s)
         screen = s,
         widget = {
             {
-                image     = wallpaper,
+                image     = beautiful.wallpaper,
                 upscale   = true,
                 downscale = true,
                 widget    = wibox.widget.imagebox,
@@ -24,5 +23,5 @@ end)
 
 
 screen.connect_signal("property::geometry",function (s)
-        gears.wallpaper.maximized(wallpaper, s, false)
+        gears.wallpaper.maximized(beautiful.wallpaper, s, false)
 end)

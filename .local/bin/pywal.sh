@@ -7,7 +7,7 @@ RFILE="$HOME/.config/rofi/styles/colors.rasi"
 WALL_LOC=$1
 # Get colors
 pywal_get() {
-	wal -i "$1" -q -t
+	wal -i "$1" -q -t --backend haishoku
 }
 
 change_waybar(){
@@ -52,24 +52,27 @@ change_xmonad(){
 }
 
 change_awesome(){
- AWESOME_MONNET="$HOME/.config/awesome/theme/monnet.lua"
- sed -i -e "s/.* hue_100 = .*/             hue_100 = \"${color0}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_200 = .*/             hue_200 = \"${color1}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_100 = .*/             hue_100 = \"${color2}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_200 = .*/             hue_200 = \"${color3}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_300 = .*/             hue_300 = \"${color4}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_400 = .*/             hue_400 = \"${color5}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_500 = .*/             hue_500 = \"${color6}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_600 = .*/             hue_600 = \"${color7}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_700 = .*/             hue_700 = \"${color8}\",/g" $AWESOME_MONNET
- sed -i -e "s/.* hue_800 = .*/             hue_800 = \"${color9}\",/g" $AWESOME_MONNET
-# sed -i -e "s/color10 = .*/color10 = \"${color10}\"/g" $XMONAD_MONNET
-# sed -i -e "s/color11 = .*/color11 = \"${color11}\"/g" $XMONAD_MONNET
-# sed -i -e "s/color12 = .*/color12 = \"${color12}\"/g" $XMONAD_MONNET
-# sed -i -e "s/color13 = .*/color13 = \"${color13}\"/g" $XMONAD_MONNET
-# sed -i -e "s/color14 = .*/color14 = \"${color14}\"/g" $XMONAD_MONNET
-# sed -i -e "s/color15 = .*/color15 = \"${color15}\"/g" $XMONAD_MONNET
+ AWESOME_MONNET="$HOME/.config/awesome/themes/monnet.lua"
+ sed -i -e "s/colorBack = .*/colorBack = \"#${BG}\",/g" $AWESOME_MONNET
+ sed -i -e "s/colorFore = .*/colorFore = \"#${FG}\",/g" $AWESOME_MONNET
+ sed -i -e "s/accent = .*/accent = \"${AC}\",/g" $AWESOME_MONNET
 
+ sed -i -e "s/color0 = .*/color0 = \"${color0}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color1 = .*/color1 = \"${color1}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color2 = .*/color2 = \"${color2}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color3 = .*/color3 = \"${color3}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color4 = .*/color4 = \"${color4}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color5 = .*/color5 = \"${color5}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color6 = .*/color6 = \"${color6}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color7 = .*/color7 = \"${color7}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color8 = .*/color8 = \"${color8}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color9 = .*/color9 = \"${color9}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color10 = .*/color10 = \"${color10}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color11 = .*/color11 = \"${color11}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color12 = .*/color12 = \"${color12}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color13 = .*/color13 = \"${color13}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color14 = .*/color14 = \"${color14}\",/g" $AWESOME_MONNET
+ sed -i -e "s/color15 = .*/color15 = \"${color15}\",/g" $AWESOME_MONNET
 }
 
 # Change colors

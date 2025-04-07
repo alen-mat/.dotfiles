@@ -11,5 +11,4 @@ _G.env = {
     config_dir = awful.util.getdir("config")
 }
 _G.env.wallpaper_folder = _G.env.user_home .. "/Pictures/arch-linux"
-_G.env.wallpaper = _G.env.user_home .. "/Pictures/arch-linux/solar.jpg"
 

@@ -11,7 +11,7 @@ ruled.client.connect_signal("request::rules", function()
             border_width         = beautiful.border_width,
             border_color         = beautiful.border_normal,
             focus                = awful.client.focus.filter,
-            titlebars_enabled    = false,
+            titlebars_enabled    = true,
             raise                = true,
             -- size_hints_honor     = false,
             screen               = awful.screen.preferred,
