@@ -142,10 +142,10 @@ menubar.utils.terminal  = terminal -- Set the terminal for applications that req
 -- {{{ Wibar
 
 -- Keyboard map indicator and switcher
-mykeyboardlayout        = awful.widget.keyboardlayout()
+local mykeyboardlayout        = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
-mytextclock             = wibox.widget.textclock()
+local mytextclock             = wibox.widget.textclock()
 
 local create_update_cb  = function(self, c, index, objects)
     local tb = self:get_children_by_id('text_role')[1]
@@ -155,7 +155,8 @@ local create_update_cb  = function(self, c, index, objects)
         if c.class == "org.wezfurlong.wezterm" then
             replace_by = "wezterm"
         end
-        local new_text = string.gsub(text, c.name, replace_by:upper())
+        --local new_text = string.gsub(text, c.name, replace_by:upper())
+        local new_text =  replace_by:upper()
         if c.minimized then new_text = "-" .. new_text end
         return set_markup_silently(tb, new_text)
     end
