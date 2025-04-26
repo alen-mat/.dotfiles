@@ -27,8 +27,6 @@ naughty.config.icon_dirs = {
 }
 naughty.config.icon_formats = { 'svg', 'png', 'jpg', 'gif' }
 
-local icondir = awful.util.getdir("config") .. "/assets/icons/notifications/"
-
 naughty.config.defaults.ontop = true
 naughty.config.defaults.icon_size = dpi(32)
 naughty.config.defaults.screen = awful.screen.focused()
@@ -221,19 +219,19 @@ ruled.notification.connect_signal('request::rules', function()
                     program = "Spotify",
                     id = "skip-prev",
                     name = "Previous",
-                    icon = gears.color.recolor_image(icondir .. "skip-prev.svg", beautiful.fg_normal)
+                    icon = gears.color.recolor_image(beautiful.player_prev, beautiful.fg_normal)
                 },
                 naughty.action {
                     program = "Spotify",
                     id = "play-pause",
                     name = "Pause",
-                    icon = gears.color.recolor_image(icondir .. "play-pause.svg", beautiful.fg_normal)
+                    icon = gears.color.recolor_image(beautiful.player_play, beautiful.fg_normal)
                 },
                 naughty.action {
                     program = "Spotify",
                     id = "skip-next",
                     name = "Next",
-                    icon = gears.color.recolor_image(icondir .. "skip-next.svg", beautiful.fg_norma)
+                    icon = gears.color.recolor_image(beautiful.player_next, beautiful.fg_normal)
                 }
             }
 

@@ -142,10 +142,10 @@ menubar.utils.terminal  = terminal -- Set the terminal for applications that req
 -- {{{ Wibar
 
 -- Keyboard map indicator and switcher
-local mykeyboardlayout        = awful.widget.keyboardlayout()
+local mykeyboardlayout  = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
-local mytextclock             = wibox.widget.textclock()
+local mytextclock       = wibox.widget.textclock()
 
 local create_update_cb  = function(self, c, index, objects)
     local tb = self:get_children_by_id('text_role')[1]
@@ -156,7 +156,7 @@ local create_update_cb  = function(self, c, index, objects)
             replace_by = "wezterm"
         end
         --local new_text = string.gsub(text, c.name, replace_by:upper())
-        local new_text =  replace_by:upper()
+        local new_text = replace_by:upper()
         if c.minimized then new_text = "-" .. new_text end
         return set_markup_silently(tb, new_text)
     end
@@ -230,12 +230,14 @@ local widget_template   = {
 
 screen.connect_signal("request::desktop_decoration", function(s)
     -- Each screen has its own tag table.
-    s.mypromptbox = awful.widget.prompt()
-    s.battery = require("widgets.battery") {}
-    s.pipewire = require("widgets.pipewire")
-    s.pipewire:setup({})
-    s.network = require("widgets.network")
-    s.network:init()
+    if s == screen.primary then
+        s.mypromptbox = awful.widget.prompt()
+        s.battery = require("widgets.battery") {}
+        s.pipewire = require("widgets.pipewire")
+        s.pipewire:setup({})
+        s.network = require("widgets.network")
+        s.network:init()
+    end
     -- s.network = require("widgets.network")
 
     -- Create an imagebox widget which will contain an icon indicating which layout we're using.
@@ -572,34 +574,20 @@ client.connect_signal("request::titlebars", function(c)
         end),
     }
 
-    awful.titlebar(c).widget = {
-        {
-            {
-                {
-                    id     = "index_role",
-                    widget = wibox.widget.textbox,
-                },
-                margins = 4,
-                widget  = wibox.container.margin,
-            },
-            margins = 14,
-            bg      = "#ff0000",
-            shape   = gears.shape.rounded_rect,
-            widget  = wibox.container.background,
-        },
-        {
-            {
-                margins = 14,
-                bg      = "#ff0099",
-                shape   = function(cr, width, height)
-                    gears.shape.rounded_rect(cr, width, height / 2, 0)
-                end,
-                widget  = wibox.container.background,
-            },
-            widget = wibox.container.place,
-        },
-        layout = wibox.layout.flex.horizontal
-    }
+    local wid = wibox.widget.base.make_widget()
+
+    function wid:draw(context, cr, width, height)
+        local w1 = math.floor(width / 1.9)
+        local w2 = math.floor(width / 1.2)
+	cr:set_source(gears.color(beautiful.monnet.color6))
+        cr:rectangle(dpi(6) , dpi(4) , dpi(w1), dpi(6))
+        cr:rectangle(dpi(w1) + dpi(10) , dpi(4) , dpi(w2-w1) - dpi(14), dpi(6))
+        cr:rectangle(dpi(w2)  , dpi(4) , dpi(width-w2) - dpi(6), dpi(6))
+	cr:fill()
+    end
+
+    local at = awful.titlebar(c, { size = beautiful.title_bar_size })
+    at.widget = wid
 end)
 
 client.connect_signal("mouse::enter", function(c)
