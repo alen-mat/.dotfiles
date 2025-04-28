@@ -117,11 +117,12 @@ ruled.client.connect_signal("request::rules", function()
     ruled.client.append_rule {
         id         = 'zooom',
         rule       = {
-            name = "zoom ",
+            class = "[Zz]oom",
         },
         properties = {
             floating = true,
             ontop = true,
+            tag = "9",
         }
     }
 
@@ -173,7 +174,7 @@ ruled.client.connect_signal("request::rules", function()
     }
 
     ruled.client.append_rule {
-        rule       = { class = "Firefox" },
+        rule       = { class = {"Firefox","zen"} },
         properties = { screen = 1, tag = "2" }
     }
 
