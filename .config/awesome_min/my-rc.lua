@@ -15,6 +15,7 @@ local naughty = require("naughty")
 
 local battery_widget = require("monitor.power.dbus")
 battery_widget:init()
+require("monitor.network.network")
 
 -- Standard awesome library
 require("awful.autofocus")
@@ -64,6 +65,9 @@ local mymainmenu   = awful.menu({
             end },
             { "Sleep", function()
                 awful.spawn.with_shell("systemctl suspend")
+            end },
+            { "Reboot", function()
+                awful.spawn.with_shell("systemctl reboot")
             end },
             { "Shutdown", function()
                 awful.spawn.with_shell("systemctl poweroff")

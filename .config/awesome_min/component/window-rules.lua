@@ -8,14 +8,14 @@ ruled.client.connect_signal("request::rules", function()
         id         = "global",
         rule       = {},
         properties = {
-            border_width         = beautiful.border_width,
-            border_color         = beautiful.border_normal,
-            focus                = awful.client.focus.filter,
-            titlebars_enabled    = true,
-            raise                = true,
+            border_width      = beautiful.border_width,
+            border_color      = beautiful.border_normal,
+            focus             = awful.client.focus.filter,
+            titlebars_enabled = true,
+            raise             = true,
             -- size_hints_honor     = false,
-            screen               = awful.screen.preferred,
-            placement            = awful.placement.no_overlap + awful.placement.no_offscreen,
+            screen            = awful.screen.preferred,
+            placement         = awful.placement.no_overlap + awful.placement.no_offscreen,
         },
     }
 
@@ -174,8 +174,42 @@ ruled.client.connect_signal("request::rules", function()
     }
 
     ruled.client.append_rule {
-        rule       = { class = {"Firefox","zen"} },
+        id = "tg-client",
+        rule = { class = "TelegramDesktop" },
+        properties = {
+            floating = true,
+            ontop = true,
+            tag = "6",
+        },
+        callback = function(client)
+            client:geometry({ width = 100, height = 1200 })
+            local app = function(c)
+                return ruled.client.match(c, { class = 'TelegramDesktop' })
+            end
+
+            local app_count = 0
+            for _ in awful.client.iterate(app) do
+                app_count = app_count + 1
+            end
+
+            if app_count > 1 then
+                client:kill()
+                for c in awful.client.iterate(app) do
+                    c:jump_to(false)
+                end
+            end
+        end
+    }
+
+    ruled.client.append_rule {
+        id         = "zen-fire",
+        rule       = { class = { "Firefox", "zen" } },
         properties = { screen = 1, tag = "2" }
+    }
+    ruled.client.append_rule {
+        id         = "citrix",
+        rule       = { class = { "[Ww]fica" } },
+        properties = { screen = 1, tag = "4" }
     }
 
     ruled.client.append_rule {

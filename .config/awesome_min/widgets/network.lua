@@ -1,14 +1,15 @@
-local awful   = require("awful")
-local naughty = require("naughty")
-local wibox   = require("wibox")
-local gears   = require("gears")
-local dpi     = require("beautiful").xresources.apply_dpi
+local awful     = require("awful")
+local naughty   = require("naughty")
+local wibox     = require("wibox")
+local gears     = require("gears")
+local nwmonitor = require('monitor.network.network')
+local dpi       = require("beautiful").xresources.apply_dpi
 
-local _data   = {
+local _data     = {
         devs = {},
         inet_active = false
 }
-local icons   = {
+local icons     = {
         wifi = {
                 ni = " 󱚵  ",
                 i = "   "
@@ -41,9 +42,21 @@ local function refresh_devs()
                                 end
                         end
                 end
+                collectgarbage()
         end)
 end
 
+nwmonitor.obj:connect_signal("Network::connstate", function(self, state)
+        local text = ''
+        if state == 'FULL' then
+                M.widget.text = icons.wifi.i
+                text = "We are back"
+        else
+                M.widget.text = icons.wifi.ni
+                text = "Lost connectivity"
+        end
+        naughty.notify({ title = "Network", text = text })
+end)
 local function check_inet()
         local bashcmd = [[
 test=google.com
@@ -70,6 +83,7 @@ fi ]]
                 end
                 _data.inet_active = is_connected
         end)
+        collectgarbage()
 end
 
 
@@ -77,12 +91,6 @@ function M:check_conn()
 end
 
 function M:init()
-        gears.timer {
-                timeout   = 5,
-                call_now  = true,
-                autostart = true,
-                callback  = check_inet
-        }
         gears.timer {
                 timeout   = 30,
                 call_now  = true,

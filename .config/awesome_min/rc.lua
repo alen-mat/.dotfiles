@@ -9,6 +9,7 @@ local w = gfs.get_random_file_from_dir (os.getenv("HOME") .. "/Pictures/wallpape
 
 --- very dangerous
 os.execute(os.getenv("HOME").."/.local/bin/pywal.sh " .. w)
+collectgarbage()
 
 local theme = require("themes.default.theme")
 theme.wallpaper = w
