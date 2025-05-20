@@ -1,60 +1,70 @@
-
-android-studio
-ani-cli
-aura-bin
-auto-cpufreq
-brave-bin
-buku-git
-cava
-eww-git
-gstreamer0.10-base
-gstreamer0.10-base-plugins
-gstreamer0.10
-gstreamer0.10-base
-gstreamer0.10-base-plugins
-gstreamer0.10-base-plugins
-hdx-realtime-media-engine
-hopscotch-map
-hypr-git
-i3lock-color
-icaclient
-lightdm-webkit2-theme-glorious
-masterpdfeditor-free
-metis
-openoffice-bin
-openrgb
-otf-material-icons-git
-picom-jonaburg-git
-poweralertd-git
-python-colorthief
-python-convertdate
-python-dateparser
-python-haishoku
-python-hijri-converter
-python-pure-protobuf
-python2
-
-
-r-base64enc
-r-digest
-r-ellipsis
-r-rlang
-ryzen-controller-bin
-ryzenadj-git
-siji-ttf
-skypeforlinux-stable-bin
-sleep-inhibitor
-spicetify-cli
-spicetify-cli
-spotify
-teamviewer
-tiramisu-git
-tor-browser
-touchegg
-ttf-comic-mono-git
-ttf-icomoon-feather
-ttf-malayalam-font-rachana
-ttf-material-icons-git
-xmonad-log
-zellij-git
-zoom
+7-zip 24.09-1
+android-studio 2024.3.1.13-1
+ani-cli 4.10-1
+anyrun-git r203.005333a-1
+auto-cpufreq 2.5.0-1
+awesome-git 4.3.1684.gf009815cb-1
+buku-git 5.0.r4.gb8cbe77-1
+debtap 3.5.1-1
+eclipse-jee 2:4.32-1
+eww-git 0.6.0.r86.g98c2201-1
+exercism 3.5.4-1
+galaxybudsclient-bin 5.1.2-1
+ghcup-hs-bin 0.1.50.2-1
+google-chrome 136.0.7103.113-1
+grub-customizer 5.2.5-2
+gstreamer0.10 0.10.36-20
+gstreamer0.10-base 0.10.36-13
+gstreamer0.10-base-plugins 0.10.36-13
+gtkglext 1.2.0-20
+i3lock-color-git r913.7d337d9-1
+icaclient 25.03.0.66-1
+jackett-bin 0.22.1917-1
+jamesdsp 2.7.0-4
+jdk18-openjdk 18.0.2.u1-3
+jre18-openjdk 18.0.2.u1-3
+jre18-openjdk-headless 18.0.2.u1-3
+kanata-bin 1.8.1-1
+libmp3splt 0.9.3.1519+r5+g4b48268-4
+libva-vdpau-driver 0.7.4-7
+libvisual 0.4.2-2
+light 1.2.2-5
+lightdm-webkit2-theme-glorious 2.0.5-3
+logseq-desktop-bin 0.10.9-2
+masterpdfeditor-free 4.3.89-1
+mp3splt-bin 2.6.2-4
+msi-ec-git 1-1
+neofetch 7.1.0-2
+open-in-mpv 2.4.3-1
+openjdk18-doc 18.0.2.u1-3
+openjdk18-src 18.0.2.u1-3
+otf-material-icons-git 4.0.0.r94.gf2c8df1-2
+paru 2.0.4-1
+paru-debug 2.0.4-1
+pnglatex r142.48cc55d-1
+popcorntime-bin 0.5.1-2
+poweralertd-git r44.2b54c64-1
+powershell-bin 7.5.1-1
+python-haishoku 1.1.8-1
+ryzen-controller-bin 2.6.0-2
+ryzenadj-git 0.16.0.r19.g0c837f2-1
+siji-ttf r22.14e7da9-1
+sioyek-git 2.0.0.r1034.geb03410-1
+skypeforlinux-stable-bin 8.109.0.209-1
+sleep-inhibitor 1.24-1
+spotify 1:1.2.60.564-2
+teamviewer 15.64.3-1
+tiramisu-git r162.c839902-1
+tor-browser 12.5.4-1
+ttf-comic-mono-git r30.6a133be-1
+ttf-icomoon-feather 1.0-2
+ttf-malayalam-font-rachana 7.0.3-1
+ttf-material-icons-git 4.0.0.r119.gc51274e9-1
+ungoogled-chromium-bin 136.0.7103.113-1
+vscodium-bin 1.99.32704-1
+wired 0.10.6-1
+xmonad-log 0.1.0-3
+zen-browser-bin 1.12.5b-2
+zoom 6.4.6-1
+zoom-citrix-plugin 6.0.15-1
+zoom-citrix-plugin-debug 6.0.12-1

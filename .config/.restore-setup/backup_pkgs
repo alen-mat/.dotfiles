@@ -1,0 +1,3 @@
+pacman -Qqe | grep -v "(pacman -Qqm)" > $HOME/.config/.restore-setup/pacman_packages
+pacman -Qm > $HOME/.config/.restore-setup/aur_packages
+
