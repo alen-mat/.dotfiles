@@ -18,7 +18,7 @@ _touch_bar_ges(){
 }
 
 _compositor(){
-	picom -f --vsync --dbus --config ~/.config/picom/picom  -b &
+	picom -f --vsync --dbus --config ~/.config/picom/picom.conf -b --backend glx
 }
 
 _kde_connect(){
