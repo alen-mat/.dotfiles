@@ -421,7 +421,7 @@ awful.keyboard.append_global_keybindings({
         end,
         { description = "focus previous by index", group = "client" }
     ),
-    awful.key({ modkey, }, "Tab",
+    awful.key({ modkey, }, "Esc",
         function()
             awful.client.focus.history.previous()
             if client.focus then
@@ -494,11 +494,6 @@ client.connect_signal("manage", function(c)
     end
 
     -- Show titlebars only if enabled.
-    if c.titlebars then
-        awful.titlebar.show(c)
-    else
-        --awful.titlebar.hide(c)
-    end
 
     -- Place floating windows. Plasma widgets provide this info
     if c.floating then
@@ -511,6 +506,22 @@ client.connect_signal("manage", function(c)
             c.height = c.size_hints.user_size.height
         end
     end
+
+    -- local s = awful.screen.focused()
+    -- c.x, c.y = s.geometry.x, s.geometry.y
+    if c.fullscreen then
+        c:geometry(c.screen.geometry)
+    end
+end)
+
+client.connect_signal("fullscreen", function(c)
+  if c.fullscreen then
+    gears.timer.delayed_call(function()
+      if c.valid then
+        c:geometry(c.screen.geometry)
+      end
+    end)
+  end
 end)
 
 client.connect_signal("request::default_keybindings", function()
@@ -583,11 +594,11 @@ client.connect_signal("request::titlebars", function(c)
     function wid:draw(context, cr, width, height)
         local w1 = width - math.floor(width / 1.9)
         local w2 = width - math.floor(width / 1.2)
-	cr:set_source(gears.color(beautiful.monnet.color6))
-        cr:rectangle(dpi(6) , dpi(4) , dpi(w1), dpi(6))
-        cr:rectangle(dpi(w1) + dpi(10) , dpi(4) , dpi(w2-w1) - dpi(14), dpi(6))
-        cr:rectangle(dpi(w2)  , dpi(4) , dpi(width-w2) - dpi(6), dpi(6))
-	cr:fill()
+        cr:set_source(gears.color(beautiful.monnet.color6))
+        cr:rectangle(dpi(6), dpi(4), dpi(w1), dpi(6))
+        cr:rectangle(dpi(w1) + dpi(10), dpi(4), dpi(w2 - w1) - dpi(14), dpi(6))
+        cr:rectangle(dpi(w2), dpi(4), dpi(width - w2) - dpi(6), dpi(6))
+        cr:fill()
     end
 
     local at = awful.titlebar(c, { size = beautiful.title_bar_size })

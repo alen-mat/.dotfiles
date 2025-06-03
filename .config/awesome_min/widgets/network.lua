@@ -48,14 +48,17 @@ end
 
 nwmonitor.obj:connect_signal("Network::connstate", function(self, state)
         local text = ''
+        local category = 'network.error'
         if state == 'FULL' then
                 M.widget.text = icons.wifi.i
+                category = 'network.connected'
                 text = "We are back"
         else
                 M.widget.text = icons.wifi.ni
+                category = 'network.disconnected'
                 text = "Lost connectivity"
         end
-        naughty.notify({ title = "Network", text = text })
+        naughty.notify({ title = "Network", text = text ,category = category})
 end)
 local function check_inet()
         local bashcmd = [[

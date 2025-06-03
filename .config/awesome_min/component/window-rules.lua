@@ -11,9 +11,8 @@ ruled.client.connect_signal("request::rules", function()
             border_width      = beautiful.border_width,
             border_color      = beautiful.border_normal,
             focus             = awful.client.focus.filter,
-            titlebars_enabled = true,
+--            titlebars_enabled = true,
             raise             = true,
-            -- size_hints_honor     = false,
             screen            = awful.screen.preferred,
             placement         = awful.placement.no_overlap + awful.placement.no_offscreen,
         },
@@ -211,7 +210,14 @@ ruled.client.connect_signal("request::rules", function()
         rule       = { class = { "[Ww]fica" } },
         properties = { screen = 1, tag = "4" }
     }
-
+    ruled.client.append_rule {
+        id         = "notes",
+        rule       = {
+            class = { "obsidian" },
+            role  = "browser-window",
+        },
+        properties = { screen = 1, tag = "3" }
+    }
     ruled.client.append_rule {
         id         = 'skype-video-popup',
         rule       = {

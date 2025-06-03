@@ -42,4 +42,5 @@ local device_state_change_id = bus:signal_subscribe('org.freedesktop.NetworkMana
 gtimer.delayed_call(function()
 	network.obj:emit_signal("Network::connstate", nm_client:check_connectivity())
 end)
+
 return network

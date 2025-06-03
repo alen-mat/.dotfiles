@@ -88,7 +88,7 @@ local function play_sound(n)
 		or n.category == "transfer.error"
 	then
 		awful.spawn("canberra-gtk-play -i dialog-warning", false)
-	elseif n.category == "email.arrived" then
+	elseif n.appname == "WhatsApp" or n.category == "email.arrived" then
 		awful.spawn("canberra-gtk-play -i message", false)
 	elseif n.appname ~= "Spotify" then
 		awful.spawn("canberra-gtk-play -i bell", false)
