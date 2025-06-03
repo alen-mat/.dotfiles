@@ -105,6 +105,9 @@ ruled.client.connect_signal("request::rules", function()
             name = {
                 "Picture-in-Picture",
             },
+            class = {
+                "Wfica_Splash"
+            }
         },
         properties = {
             floating = true,
@@ -207,7 +210,7 @@ ruled.client.connect_signal("request::rules", function()
     }
     ruled.client.append_rule {
         id         = "citrix",
-        rule       = { class = "wfica" },
+        rule       = { class = "Wfica" },
         properties = { screen = 1, tag = "4" }
     }
     ruled.client.append_rule {
@@ -216,7 +219,9 @@ ruled.client.connect_signal("request::rules", function()
             class = "obsidian",
             role  = "browser-window",
         },
-        properties = { screen = 1, tag = "3" }
+        properties = {
+            sticky = true
+        }
     }
     ruled.client.append_rule {
         id         = 'skype-video-popup',
