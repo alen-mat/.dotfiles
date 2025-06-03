@@ -8,13 +8,13 @@ ruled.client.connect_signal("request::rules", function()
         id         = "global",
         rule       = {},
         properties = {
-            border_width      = beautiful.border_width,
-            border_color      = beautiful.border_normal,
-            focus             = awful.client.focus.filter,
---            titlebars_enabled = true,
-            raise             = true,
-            screen            = awful.screen.preferred,
-            placement         = awful.placement.no_overlap + awful.placement.no_offscreen,
+            border_width = beautiful.border_width,
+            border_color = beautiful.border_normal,
+            focus        = awful.client.focus.filter,
+            --            titlebars_enabled = true,
+            raise        = true,
+            screen       = awful.screen.preferred,
+            placement    = awful.placement.no_overlap + awful.placement.no_offscreen,
         },
     }
 
@@ -207,13 +207,13 @@ ruled.client.connect_signal("request::rules", function()
     }
     ruled.client.append_rule {
         id         = "citrix",
-        rule       = { class = { "[Ww]fica" } },
+        rule       = { class = "wfica" },
         properties = { screen = 1, tag = "4" }
     }
     ruled.client.append_rule {
         id         = "notes",
         rule       = {
-            class = { "obsidian" },
+            class = "obsidian",
             role  = "browser-window",
         },
         properties = { screen = 1, tag = "3" }
