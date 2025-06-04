@@ -36,6 +36,7 @@ theme.wibar_bg                                  = t.color11..'49'
 theme.wibar_height                              = dpi(27)
 
 theme.title_bar_size = dpi(14)
+theme.gap_single_client   = false
 -- There are other variable sets
 -- overriding the default one when
 -- defined, the sets are:
