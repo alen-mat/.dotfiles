@@ -12,7 +12,7 @@ wezterm.on('update-right-status', function(window, pane)
 		{ Text = wezterm.nerdfonts.fa_clock_o .. ' ' .. date },
 		'ResetAttributes',
 		{ Attribute = { Underline = 'Single' } },
-		{ Text = ":: " .. window:active_workspace() },
+		{ Text = "::" .. window:active_workspace() },
 	})
 end)
 

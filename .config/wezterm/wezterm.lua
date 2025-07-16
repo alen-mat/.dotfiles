@@ -2,7 +2,7 @@ local wezterm = require('wezterm')
 
 _GT = {
   -- color_scheme = 'tokyonight_night'
-  color_scheme = 'Tomorrow Night Burns'
+  color_scheme = '3024 Night'
 }
 
 local config = {}
@@ -11,19 +11,26 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
+if os.getenv("XDG_SESSION_TYPE") == "wayland" then
+  config.enable_wayland = true
+end
+
 local font_names = {
   { family = 'Wumpus Mono Pro', weight = 'Regular', scale = 1.1 }
   , 'JetBrains Mono', "Anonymous Pro" }
 
-config.default_prog = { '/bin/fish' } --{ '/bin/fish', '-l' }
+if wezterm.target_triple:find("windows") then
+  config.default_prog = { "pwsh" }
+else
+  config.default_prog = { '/bin/fish' } --{ '/bin/fish', '-l' }
+end
+
 config.color_scheme = _GT.color_scheme
 -- config.font = wezterm.font_with_fallback(font_names, { bold = false })
 config.warn_about_missing_glyphs = false
 config.font_size = 12
 config.line_height = 1.0
 config.dpi = 96.0
-config.default_cursor_style = "BlinkingUnderline"
-config.enable_wayland = true
 config.bold_brightens_ansi_colors = "BrightAndBold"
 
 config.window_background_opacity = 0.9
@@ -55,6 +62,7 @@ config.skip_close_confirmation_for_processes_named = {
   'fish',
 }
 
+-- local wmod = wezterm.target_triple:find("windows") and "SHIFT|CTRL" or "SHIFT|SUPER"
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1001 }
 config.keys = require("keys")
 require("tabbar")

@@ -1,3 +1,4 @@
+-- [[@as Wezterm]]
 local wezterm = require('wezterm')
 local sessionizer = require("sessionizer")
 
