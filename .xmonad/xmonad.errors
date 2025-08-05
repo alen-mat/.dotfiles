@@ -1,0 +1,31 @@
+$ ghc --make xmonad.hs -i -ilib -fforce-recomp -main-is main -dynamic -v0 -outputdir /home/alen/.xmonad/build-x86_64-linux -o /home/alen/.xmonad/xmonad-x86_64-linux
+
+xmonad.hs:4:1: warning: [-Wdeprecations]
+    Module ‘XMonad.Hooks.DynamicProperty’ is deprecated:
+      "Use \"XMonad.Hooks.OnPropertyChange\" instead."
+  |
+4 | import XMonad.Hooks.DynamicProperty
+  | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+xmonad.hs:14:1: warning: [-Wdeprecations]
+    Module ‘XMonad.Util.Ungrab’ is deprecated:
+      "Use XMonad.Operations.unGrab instead"
+   |
+14 | import XMonad.Util.Ungrab
+   | ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+xmonad.hs:51:25: warning: [-Wdeprecations]
+    In the use of ‘dynamicPropertyChange’
+    (imported from XMonad.Hooks.DynamicProperty):
+    Deprecated: "Use "XMonad.Hooks.OnPropertyChange" instead."
+   |
+51 |     , handleEventHook = dynamicPropertyChange "WM_NAME" myDynamicManageHook <>  myHandleEventHook 
+   |                         ^^^^^^^^^^^^^^^^^^^^^
+
+xmonad.hs:125:7: warning: [-Wdeprecations]
+    In the use of ‘dynamicTitle’
+    (imported from XMonad.Hooks.DynamicProperty):
+    Deprecated: "Use "XMonad.Hooks.OnPropertyChange" instead."
+    |
+125 |     [ dynamicTitle manageZoomHook
+    |       ^^^^^^^^^^^^
