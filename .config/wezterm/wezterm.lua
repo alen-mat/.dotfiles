@@ -11,9 +11,7 @@ if wezterm.config_builder then
   config = wezterm.config_builder()
 end
 
-if os.getenv("XDG_SESSION_TYPE") == "wayland" then
-  config.enable_wayland = true
-end
+config.enable_wayland = false ----os.getenv("XDG_SESSION_TYPE") == "wayland" -- default true
 
 local font_names = {
   { family = 'Wumpus Mono Pro', weight = 'Regular', scale = 1.1 }
@@ -33,7 +31,7 @@ config.line_height = 1.0
 config.dpi = 96.0
 config.bold_brightens_ansi_colors = "BrightAndBold"
 
-config.window_background_opacity = 0.9
+config.window_background_opacity = 0.7
 -- Padding
 config.window_padding = {
   left = 5,
@@ -66,10 +64,6 @@ config.skip_close_confirmation_for_processes_named = {
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1001 }
 config.keys = require("keys")
 require("tabbar")
---local graphics = require("graphics")
---config.webgpu_preferred_adapter = graphics.webgpu_preferred_adapter
---config.front_end = graphics.front_end
---config.webgpu_power_preference = graphics.webgpu_power_preference
 require("events")
 
 return config

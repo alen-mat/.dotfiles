@@ -1,7 +1,6 @@
 local wezterm = require('wezterm')
 
 wezterm.on('update-right-status', function(window, pane)
-	local date = wezterm.strftime '%a %b %-d %H:%M '
 
 	local name = window:active_key_table()
 	if name then
@@ -9,7 +8,6 @@ wezterm.on('update-right-status', function(window, pane)
 	end
 	window:set_right_status(wezterm.format {
 		{ Foreground = { AnsiColor = 'Fuchsia' } },
-		{ Text = wezterm.nerdfonts.fa_clock_o .. ' ' .. date },
 		'ResetAttributes',
 		{ Attribute = { Underline = 'Single' } },
 		{ Text = "::" .. window:active_workspace() },

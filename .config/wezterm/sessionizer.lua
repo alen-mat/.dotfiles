@@ -5,6 +5,7 @@ local M = {}
 
 local fd = "/usr/bin/fd"
 local rootPath = os.getenv("HOME") .. "/workspace"
+local maked_projects = {}
 
 M.toggle = function(window, pane)
   local projects = {}
