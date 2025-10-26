@@ -21,15 +21,22 @@ local icons     = {
 }
 
 
-local M       = {}
-M.widget      = wibox.widget {
+local M         = {}
+M.widget        = wibox.widget {
         align  = 'center',
         valign = 'center',
         widget = wibox.widget.textbox,
         font   = "Iosevka " .. dpi(12)
 }
 
-M.widget.text = "he"
+M.widget.text   = "he"
+
+M.network_popup = awful.tooltip({
+        objects = { M.widget },
+        mode = "outside",
+        align = "left",
+        referred_positions = { "right", "left", "top", "bottom" }
+})
 
 
 local function refresh_devs()
@@ -49,6 +56,7 @@ end
 nwmonitor.obj:connect_signal("Network::connstate", function(self, state)
         local text = ''
         local category = 'network.error'
+        M.network_popup.text = state
         if state == 'FULL' then
                 M.widget.text = icons.wifi.i
                 category = 'network.connected'
@@ -58,7 +66,7 @@ nwmonitor.obj:connect_signal("Network::connstate", function(self, state)
                 category = 'network.disconnected'
                 text = "Lost connectivity"
         end
-        naughty.notify({ title = "Network", text = text ,category = category})
+        naughty.notify({ title = "Network", text = text, category = category })
 end)
 local function check_inet()
         local bashcmd = [[
@@ -94,12 +102,6 @@ function M:check_conn()
 end
 
 function M:init()
-        gears.timer {
-                timeout   = 30,
-                call_now  = true,
-                autostart = true,
-                callback  = refresh_devs
-        }
 end
 
 return M

@@ -1,6 +1,6 @@
 local awful = require("awful")
 
-_G.env = {
+local M = {
     keys =  {
         mod = "Mod4",
         alt = "Mod1"
@@ -8,7 +8,11 @@ _G.env = {
     terminal = "wezterm",
     theme_name = "",
     user_home = os.getenv("HOME"),
-    config_dir = awful.util.getdir("config")
+    config_dir = awful.util.getdir("config"),
+    editor = 'nvim'
 }
-_G.env.wallpaper_folder = _G.env.user_home .. "/Pictures/arch-linux"
+function M:init ()
+    self.wallpaper_folder = self.user_home .. "/Pictures/arch-linux"
+end
 
+return M
