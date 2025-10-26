@@ -25,22 +25,45 @@ function M:manage(name)
         local artUrl = data["mpris:artUrl"] or ""
         local album = data["xesam:album"] or ""
         local last_status = self.last_player_status[player_instance.player_name]
-        if last_status.title ~= title or last_status.artist ~= artist or last_status.artUrl ~= artUrl or last_status.album ~= album then
-            if title ~= "" then
-                naughty.notification {
-                    -- app_icon = icons,
-                    -- app_name = app_name,
-                    -- font_icon = font_icon,
-                    -- icon = icon,
-                    title = title,
-                    text = artist --text,
-                    -- actions = { previous, play_pause, next }
-                }
-            end
-            last_status.title                             = title
-            last_status.artist                            = artist
-            last_status.artUrl                            = artUrl
-            last_status.album                             = album
+        if title ~= "" and last_status.title ~= title then
+            local previous = naughty.action {
+                name = "Previous"
+            }
+            local play_pause = naughty.action {
+                name = "Play/Pause"
+            }
+            local next = naughty.action {
+                name = "Next"
+            }
+
+            previous:connect_signal("invoked", function()
+                player:previous()
+            end)
+
+            play_pause:connect_signal("invoked", function()
+                player:play_pause()
+            end)
+
+            next:connect_signal("invoked", function()
+                player:next()
+            end)
+
+
+
+            naughty.notification {
+                -- app_icon = icons,
+                -- app_name = app_name,
+                -- font_icon = font_icon,
+                -- icon = artUrl,
+                title = title,
+                text = artist,
+                actions = { previous, play_pause, next },
+                category =  "silent-notification"
+            }
+            last_status.title                                    = title
+            last_status.artist                                   = artist
+            last_status.artUrl                                   = artUrl
+            last_status.album                                    = album
             self.last_player_status[player_instance.player_name] = last_status
         end
     end
@@ -59,7 +82,6 @@ function M:init()
     function self.lgi._player_manager:on_name_vanished(name)
         print("Player vanished:", name)
     end
-
 end
 
 return M

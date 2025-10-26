@@ -104,7 +104,7 @@ menubar.utils.terminal = env.terminal -- Set the terminal for applications that 
 local mykeyboardlayout  = awful.widget.keyboardlayout()
 
 -- Create a textclock widget
-local mytextclock       = wibox.widget.textclock()
+local mytextclock       = wibox.widget.textclock('%H:%M')
 
 local create_update_cb  = function(self, c, index, objects)
     local tb = self:get_children_by_id('text_role')[1]
@@ -208,10 +208,14 @@ screen.connect_signal("request::desktop_decoration", function(s)
                 if layout_popup.visible then
                     layout_popup.visible = not layout_popup.visible
                 else
+                    mainmenu:hide()
                     layout_popup:move_next_to(mouse.current_widget_geometry)
                 end
             end),
-            awful.button({}, 3, function() mainmenu:toggle() end),
+            awful.button({}, 3, function()
+                if layout_popup.visible then layout_popup.visible = false end
+                mainmenu:toggle()
+            end),
             awful.button({}, 4, function() awful.layout.inc(-1) end),
             awful.button({}, 5, function() awful.layout.inc(1) end),
         }

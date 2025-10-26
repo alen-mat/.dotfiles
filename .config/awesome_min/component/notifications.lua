@@ -90,7 +90,7 @@ local function play_sound(n)
 		awful.spawn("canberra-gtk-play -i dialog-warning", false)
 	elseif n.appname == "WhatsApp" or n.category == "email.arrived" then
 		awful.spawn("canberra-gtk-play -i message", false)
-	elseif n.appname ~= "Spotify" then
+	elseif n.category ~= "silent-notification" then
 		awful.spawn("canberra-gtk-play -i bell", false)
 	end
 end
@@ -154,11 +154,11 @@ ruled.notification.connect_signal('request::rules', function()
         properties = { bg = "#ff0000", fg = "#ffffff", timeout = 0 }
     }
 
-    -- Or green background for normal ones.
-    ruled.notification.append_rule {
-        rule       = { urgency = "normal" },
-        properties = { bg = "#00ff00", fg = "#000000" }
-    }
+    -- -- Or green background for normal ones.
+    -- ruled.notification.append_rule {
+    --     rule       = { urgency = "normal" },
+    --     properties = { bg = "#00ff00", fg = "#000000" }
+    -- }
 
     ruled.notification.append_rule {
         rule       = { app_name = "Spotify" },
