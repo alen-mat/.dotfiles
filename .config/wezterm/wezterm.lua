@@ -30,6 +30,14 @@ config.font_size = 12
 config.line_height = 1.0
 config.dpi = 96.0
 config.bold_brightens_ansi_colors = "BrightAndBold"
+config.use_fancy_tab_bar = false
+config.tab_bar_at_bottom = true
+config.window_decorations = "RESIZE"
+config.colors = {}
+config.colors.tab_bar = {}
+config.colors.tab_bar.background = '#000000'
+config.show_new_tab_button_in_tab_bar = false
+
 
 config.window_background_opacity = 0.7
 -- Padding
@@ -43,8 +51,6 @@ config.window_padding = {
 config.enable_tab_bar = true
 config.hide_tab_bar_if_only_one_tab = false
 config.show_tab_index_in_tab_bar = false
-config.tab_bar_at_bottom = true
-config.use_fancy_tab_bar = false
 
 config.window_close_confirmation = "NeverPrompt"
 config.disable_default_key_bindings = true
