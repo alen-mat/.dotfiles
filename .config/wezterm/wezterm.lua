@@ -69,7 +69,6 @@ config.skip_close_confirmation_for_processes_named = {
 -- local wmod = wezterm.target_triple:find("windows") and "SHIFT|CTRL" or "SHIFT|SUPER"
 config.leader = { key = 'b', mods = 'CTRL', timeout_milliseconds = 1001 }
 config.keys = require("keys")
-require("tabbar")
 require("events")
 
 return config
