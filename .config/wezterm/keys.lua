@@ -92,7 +92,7 @@ table.insert(keys, {
   key = 'b',
   mods = 'LEADER|CTRL',
   action = wezterm.action.ShowLauncherArgs {
-    flags = 'FUZZY|WORKSPACES',
+    flags = 'FUZZY|WORKSPACES|TABS',
   },
 })
 

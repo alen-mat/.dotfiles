@@ -1,4 +1,5 @@
 local wezterm = require('wezterm')
+local utf8 = require("utf8")
 
 wezterm.on("open_in_vim", function(window, pane)
   local file = io.open("/tmp/wezterm_buf", "w")
@@ -47,6 +48,106 @@ local function left_status_padding(window, contents)
   return max_left
 end
 
+--- @param str string
+local function gap_statusline(str)
+  local lo = 0;
+  local hi = 0;
+  local best_lo = 0;
+  local best_hi = 0;
+
+  local isspace = function(s) return s:match("%s") ~= nil end
+
+  for i = 1, #str do
+    local ch = str:sub(i, i);
+
+    if not isspace(ch) then
+      lo = i;
+      hi = i;
+      goto continue;
+    end
+
+    hi = hi + 1;
+
+    if hi - lo > best_hi - best_lo then
+      best_hi = hi;
+      best_lo = lo;
+    end
+
+    ::continue::
+  end
+
+  return best_lo, best_hi
+end
+
+---@class Group
+---@field fg? string|number
+---@field bold? boolean
+
+---@class Highlight
+---@field group Group
+---@field start number
+
+---@class StatusLine
+---@field str string
+---@field width number Display width of the statusline.
+---@field highlights Highlight[]
+
+---@param group Group
+---@param text string
+local function parse_item(group, text)
+  -- TODO: parse all attributes https://neovim.io/doc/user/builtin.html#synIDattr()
+  local format_item = { 'ResetAttributes' };
+
+  if group.fg then
+    local fg = type(group.fg) == 'number' and string.format('#%x', group.fg) or group.fg;
+    table.insert(format_item, { Foreground = { Color = fg } });
+  end
+
+  if group.bold then
+    table.insert(format_item, { Attribute = { Intensity = 'Bold' } });
+  end
+
+  table.insert(format_item, { Text = text });
+
+  return format_item
+end
+
+---@param lhs table
+---@param rhs table
+function table.merge(lhs, rhs)
+  local copy = lhs;
+  for i = 1, #rhs do
+    copy[#copy + 1] = rhs[i];
+  end
+  return copy;
+end
+
+---@param stl StatusLine
+---@param right_lo number
+---@param max_left number
+local function parse(stl, right_lo, max_left)
+  local left = {}
+  local right = {}
+  local cnt = 0;
+  local truncated = false;
+
+  for i, hilit in ipairs(stl.highlights) do
+    local next = i == #stl.highlights and stl.str:len() or stl.highlights[i + 1].start;
+    local segment = string.sub(stl.str, hilit.start + 1, next);
+    local text = segment;
+    if cnt + utf8.len(segment) >= max_left and not truncated then
+      text = wezterm.truncate_right(segment, max_left - cnt);
+      truncated = true;
+    end
+    cnt = cnt + utf8.len(text);
+
+    local target = hilit.start + 1 <= right_lo and left or right;
+    table.merge(target, parse_item(hilit.group, text));
+  end
+
+  return left, right
+end
+
 local function is_exe_name(pane, exe_name)
   local info = pane:get_foreground_process_info()
   return info and info.executable:gsub('(.*[/\\])(.*)', '%2') == exe_name
@@ -62,17 +163,24 @@ wezterm.on('update-status', function(window, pane)
   local left_status_tbl = {}
   local right_status_tbl = {}
   local t = 'Your custom left status here'
-  local date = wezterm.strftime '%Y-%m-%d %H:%M:%S'
+  local max_left = left_status_padding(window, left_status_tbl)
   if is_exe_name(pane, 'nvim') and pane:get_user_vars().nvimStatusLine and pane:get_user_vars().nvimStatusLine ~= 'null' then
-    t = pane:get_user_vars().nvimStatusLine
+    local statusline = wezterm.json_parse(pane:get_user_vars().nvimStatusLine or 'null')
+
+    -- local left_hi, right_lo = gap_statusline(statusline.str);
+    -- left_status_tbl, right_status_tbl = parse(statusline, right_lo, max_left);
+    local first, rest = statusline.str:match("[^\r\n]+")
     left_status_tbl = {
-      { Text = t },
+      { Text = first },
+    }
+    right_status_tbl = {
+      { Text = rest },
     }
   else
-    date = wezterm.strftime '%Y-%m-%d %H:%M:%S'
     left_status_tbl = {
       { Text = t },
     }
+    left_status_tbl[#left_status_tbl + 1] = { Text = wezterm.pad_left(' ', max_left) }
     right_status_tbl = {
       { Attribute = { Underline = 'Single' } },
       { Attribute = { Italic = true } },
@@ -81,11 +189,8 @@ wezterm.on('update-status', function(window, pane)
       { Attribute = { Underline = 'Single' } },
       { Text = "::" .. window:active_workspace() },
       'ResetAttributes',
-      { Text = date },
     }
   end
-  local max_left = left_status_padding(window, left_status_tbl)
-  left_status_tbl[#left_status_tbl + 1] = { Text = wezterm.pad_left(' ', max_left) }
 
   window:set_left_status(wezterm.format(left_status_tbl))
   window:set_right_status(wezterm.format(right_status_tbl))
@@ -97,27 +202,31 @@ wezterm.on(
     local background = '#1b1032'
     local foreground = '#808080'
 
-    if tab.is_active then
-      background = '#2b2042'
-      foreground = '#c0c0c0'
-    elseif hover then
-      background = '#3b3052'
-      foreground = '#909090'
-    end
 
+    background            = '#2b2042'
+    foreground            = '#c0c0c0'
     local edge_foreground = background
 
     local title           = tab_title(tab)
     title                 = wezterm.truncate_right(title, max_width - 2)
 
     local elements        = {
-      { Background = { Color = edge_background } },
-      { Foreground = { Color = edge_foreground } },
-      { Text = wezterm.nerdfonts.pl_right_hard_divider },
-      { Background = { Color = background } },
+      { Background = { Color = '#000000' } },
+      { Foreground = { Color = '#000000' } },
+      { Text = ' ' },
+      { Background = { Color = '#000000' } },
       { Foreground = { Color = foreground } },
-      { Text = title },
     }
+
+    if tab.is_active then
+      elements[#elements + 1] = {Attribute={Underline="Single"}}
+    elseif hover then
+      background = '#3b3052'
+      foreground = '#909090'
+    end
+
+    elements[#elements + 1] =  { Text = title }
+    elements[#elements + 1] =  'ResetAttributes'
 
     local progress        = tab.active_pane and tab.active_pane.progress or nil
     if progress ~= 'None' then
@@ -136,13 +245,13 @@ wezterm.on(
         status = wezterm.serde.json_encode(progress)
       end
 
-      elements[#elements+1]= { Foreground = { Color = color } }
-      elements[#elements+1]= { Text = " " .. status }
-      elements[#elements+1]= { Foreground = 'Default' }
+      elements[#elements + 1] = { Foreground = { Color = color } }
+      elements[#elements + 1] = { Text = " " .. status }
+      elements[#elements + 1] = { Foreground = 'Default' }
     end
-    elements[#elements+1]={ Background = { Color = edge_background } }
-    elements[#elements+1]={ Foreground = { Color = edge_foreground } }
-    elements[#elements+1]={ Text = wezterm.nerdfonts.pl_left_hard_divider }
+    elements[#elements + 1] = { Background = { Color = edge_background } }
+    elements[#elements + 1] = { Foreground = { Color = edge_foreground } }
+    -- elements[#elements+1]={ Text = wezterm.nerdfonts.pl_left_hard_divider }
     return elements
   end
 )
