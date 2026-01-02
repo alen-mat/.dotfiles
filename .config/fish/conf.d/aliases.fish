@@ -36,6 +36,7 @@ alias mkd="mkdir -pv"
 alias yt="_yt --add-metadata -i"
 alias yta="yt -x -f bestaudio/best"
 alias ytmp3="yt -x --audio-format mp3"
+alias yt-opus-best="yt -f 'bestaudio/best' -ciw -o '%(title)s.%(ext)s' -v --extract-audio"
 
 alias ffmpeg="ffmpeg -hide_banner"
 
