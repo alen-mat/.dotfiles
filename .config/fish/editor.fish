@@ -19,9 +19,16 @@ function nv
         set args .
     end
 
-    if set -q HYPRLAND_INSTANCE_SIGNATURE
-        hyprctl dispatch exec -- neovide $args
-    else
-        neovide $args
+    set first $args[1]
+    if test -d $first
+        # set args "--cmd 'cd $first'" $args
+        set args[1] " -c 'cd $first' "
+        echo $args
+    else if test -f $first
+        set parent (dirname $first)
+        set args " -c 'cd $parent' " $args
+        echo $args
     end
+
+    eval "nohup neovide --  $args >/dev/null 2>&1 &"
 end
