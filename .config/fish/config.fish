@@ -10,3 +10,4 @@ end
 test -r "$HOME/.opam/opam-init/init.fish" && source "$HOME/.opam/opam-init/init.fish" > /dev/null 2> /dev/null; or true
 # END opam configuration
 test -r "$HOME/.config/fish/editor.fish" && source "$HOME/.config/fish/editor.fish" > /dev/null 2> /dev/null; or true
+mise activate fish | source

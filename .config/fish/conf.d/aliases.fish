@@ -3,6 +3,7 @@
 if type -q nvim 
     alias vim="nvim" 
     alias vimdiff="nvim -d"
+    alias bvim="NVIM_APPNAME=nvim_12 ~/workspace/bin/nvim-linux-x86_64/bin/nvim"
 end
 
 alias ls="ls -hN --color=auto --group-directories-first"
@@ -20,9 +21,6 @@ end
 
 
 alias clear="clear && printf '\e[3J'"
-
-alias emct="emacsclient -nw -c"
-alias emc="emacsclient -c --no-wait"
 
 alias la='ls -a'
 alias ll='ls -la'
@@ -47,6 +45,4 @@ alias YT="youtube-viewer"
 alias sdn="sudo shutdown -h now"
 
 alias reveal-md="reveal-md --theme night --highlight-theme hybrid --port 1337"
-
-alias j!=jbang
 
