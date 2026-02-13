@@ -53,10 +53,10 @@ Scope {
                             fill: parent
                             margins: 0 //Config.options.bar.cornerStyle === 1 ? (Appearance.sizes.hyprlandGapsOut) : 0 // idk why but +1 is needed
                         }
-                        color: "#120f96"//showBarBackground ? Appearance.colors.colLayer0 : "transparent"
+                        color: "#66663600"//showBarBackground ? Appearance.colors.colLayer0 : "transparent"
                         radius: 1// Config.options.bar.cornerStyle === 1 ? Appearance.rounding.windowRounding : 0
                         border.width: 1 //Config.options.bar.cornerStyle === 1 ? 1 : 0
-                        border.color: "#12ff90" //Appearance.m3colors.m3outlineVariant
+                        border.color: "#ffff9090" //Appearance.m3colors.m3outlineVariant
                     }
 
                     Item {
