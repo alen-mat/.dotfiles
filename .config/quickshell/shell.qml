@@ -2,6 +2,7 @@
 
 import Quickshell
 import qs.modules.bar
+import qs.services
 import qs.widgets.desktop
 
 ShellRoot {

@@ -1,7 +1,3 @@
-
-// warning my notification implementation WORKS but it has a feww rough edges here and there
-// do NOT steal blindly, understand the need for each component and maybe you'll have a better
-// notifcation Server impl
 pragma Singleton
 import QtQuick
 import Quickshell
@@ -20,6 +16,11 @@ Singleton {
       elem.dismiss();
     });
   }
+
+  function dummyInit() {
+      console.log("[Notifications] Loaded server");
+  }
+    
 
   NotificationServer {
     id: notifServer

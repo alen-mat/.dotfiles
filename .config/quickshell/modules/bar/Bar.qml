@@ -4,6 +4,8 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick.Layouts
 import qs.modules.bar
+import qs.widgets.common
+import qs.services
 
 Scope {
     id: bar
@@ -98,9 +100,12 @@ Scope {
                             RowLayout {
                                 spacing: 2
                                 Tray {}
+				StyledText {
+					id: bleep
+					text: Math.floor(SystemAudio.volume * 100)
+				}
                                 TimeWidget {}
                                 BatteryIndicator {}
-
                             }
                         }
                     }
