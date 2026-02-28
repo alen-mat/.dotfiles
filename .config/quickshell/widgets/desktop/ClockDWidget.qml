@@ -6,43 +6,47 @@ import qs.services
 import qs.widgets.common
 
 ShellRoot {
-	Variants {
-		// Create the panel once on each monitor.
-		model: Quickshell.screens
+    Variants {
+        // Create the panel once on each monitor.
+        model: Quickshell.screens
 
-		PanelWindow {
-			id: w
+        PanelWindow {
+            id: w
 
-			property var modelData
-			screen: modelData
+            property var modelData
 
-			anchors {
-				right: true
-				bottom: true
-			}
+            screen: modelData
+            implicitWidth: content.width
+            implicitHeight: content.height
+            color: "transparent"
+            WlrLayershell.layer: WlrLayer.Bottom
 
-			margins {
-				right: 50
-				bottom: 50
-			}
+            anchors {
+                right: true
+                bottom: true
+            }
 
-			implicitWidth: content.width
-			implicitHeight: content.height
+            margins {
+                right: 50
+                bottom: 50
+            }
 
-			color: "transparent"
+            ColumnLayout {
+                id: content
 
-			mask: Region {}
-			WlrLayershell.layer: WlrLayer.Bottom
+                Text {
+                    text: Time.time
+                    color: "#50ffffff"
+                    font.pointSize: 23
+                }
 
-			ColumnLayout {
-				id: content
+            }
 
-				Text {
-					text: Time.time
-					color: "#50ffffff"
-					font.pointSize: 23
-				}
-			}
-		}
-	}
+            mask: Region {
+            }
+
+        }
+
+    }
+
 }

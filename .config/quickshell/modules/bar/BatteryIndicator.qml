@@ -1,19 +1,20 @@
-import qs.modules
-import qs.widgets.common
-import qs.services
 import QtQuick
 import QtQuick.Layouts
+import qs.modules
+import qs.services
+import qs.widgets.common
 
 Item {
     id: batteryIndicatorRoot
+
     property bool borderless: false // Config.options.bar.borderless
     readonly property var chargeState: SystemBattery.chargeState
     readonly property bool isCharging: SystemBattery.isCharging
     readonly property bool isPluggedIn: SystemBattery.isPluggedIn
     readonly property real percentage: SystemBattery.percentage
-    readonly property bool isLow: percentage <=  15/100 //Config.options.battery.low / 100
-    readonly property color batteryLowBackground: "#ff0000"//Appearance.m3colors.darkmode ? Appearance.m3colors.m3error : Appearance.m3colors.m3errorContainer
-    readonly property color batteryLowOnBackground: "#00ff00"//Appearance.m3colors.darkmode ? Appearance.m3colors.m3errorContainer : Appearance.m3colors.m3error
+    readonly property bool isLow: percentage <= 15 / 100 //Config.options.battery.low / 100
+    readonly property color batteryLowBackground: "#ff0000" //Appearance.m3colors.darkmode ? Appearance.m3colors.m3error : Appearance.m3colors.m3errorContainer
+    readonly property color batteryLowOnBackground: "#00ff00" //Appearance.m3colors.darkmode ? Appearance.m3colors.m3errorContainer : Appearance.m3colors.m3error
 
     implicitWidth: rowLayout.implicitWidth + rowLayout.spacing * 2
     implicitHeight: 3
@@ -22,10 +23,10 @@ Item {
         id: rowLayout
 
         spacing: 4
-        anchors{
+
+        anchors {
             centerIn: parent
         }
-        
 
         CircularProgress {
             Layout.alignment: Qt.AlignVCenter

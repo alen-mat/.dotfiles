@@ -1,8 +1,8 @@
 // From https://github.com/rafzby/circular-progressbar with modifications
 // License: LGPL-3.0 - A copy can be found in `licenses` folder of repo
+//import "root:/modules/common"
 
 import QtQuick
-//import "root:/modules/common"
 
 /**
  * Material 3 circular progress. See https://m3.material.io/components/progress-indicators/specs
@@ -13,19 +13,18 @@ Item {
     property int size: 6
     property int lineWidth: 2
     property real value: 0
-    property color primaryColor: "#ff0000"//Appearance.m3colors.m3onSecondaryContainer
-    property color secondaryColor: "#00ff00"//Appearance.colors.colSecondaryContainer
+    property color primaryColor: "#ff0000" //Appearance.m3colors.m3onSecondaryContainer
+    property color secondaryColor: "#00ff00" //Appearance.colors.colSecondaryContainer
     property real gapAngle: Math.PI / 9
     property bool fill: false
     property int fillOverflow: 2
     property int animationDuration: 1000
     property var easingType: Easing.OutCubic
 
+    signal animationFinished()
+
     width: size
     height: size
-
-    signal animationFinished();
-
     onValueChanged: {
         canvas.degree = value * 360;
     }
@@ -43,11 +42,9 @@ Item {
 
         anchors.fill: parent
         antialiasing: true
-
         onDegreeChanged: {
             requestPaint();
         }
-
         onPaint: {
             var ctx = getContext("2d");
             var x = root.width / 2;
@@ -57,7 +54,6 @@ Item {
             var fullAngle = (Math.PI / 180) * (270 + 360);
             var progressAngle = (Math.PI / 180) * (270 + degree);
             var epsilon = 0.01; // Small angle in radians
-            
             ctx.reset();
             if (root.fill) {
                 ctx.fillStyle = root.secondaryColor;
@@ -67,13 +63,11 @@ Item {
             }
             ctx.lineCap = 'round';
             ctx.lineWidth = root.lineWidth;
-
             // Secondary
             ctx.beginPath();
             ctx.arc(x, y, radius, progressAngle + root.gapAngle, fullAngle - root.gapAngle);
             ctx.strokeStyle = root.secondaryColor;
             ctx.stroke();
-
             // Primary (value indication)
             var endAngle = progressAngle + (root.value > 0 ? 0 : epsilon);
             ctx.beginPath();

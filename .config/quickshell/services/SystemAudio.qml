@@ -12,10 +12,22 @@ Singleton {
     readonly property bool muted: defaultAudioSink?.audio?.muted ?? false
     readonly property real volume: defaultAudioSink?.audio?.volume ?? 0
 
+    readonly property bool micmuted: defaultAudioSource?.audio?.muted ?? false
+
     function setVolume(volume: real): void {
         if (defaultAudioSink?.ready && defaultAudioSink?.audio) {
             defaultAudioSink.audio.muted = false;
             defaultAudioSink.audio.volume = volume;
+        }
+    }
+    function toggleMute(): void {
+        if (defaultAudioSink?.ready && defaultAudioSink?.audio) {
+            defaultAudioSink.audio.muted = !defaultAudioSink.audio.muted;
+        }
+    }
+    function toggleMicMute(): void {
+        if (defaultAudioSink?.ready && defaultAudioSink?.audio) {
+            defaultAudioSink.audio.muted = !defaultAudioSink.audio.muted;
         }
     }
 
