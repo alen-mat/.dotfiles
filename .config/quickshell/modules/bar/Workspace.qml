@@ -89,7 +89,7 @@ MouseArea {
                 Image {
                     anchors.fill: parent
                     smooth: false
-                    source: "/home/zac/assets/workspace.png"
+                    // source: "/home/zac/assets/workspace.png"
                 }
                 MultiEffect {
                     source: fill

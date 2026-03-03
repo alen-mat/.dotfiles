@@ -19,9 +19,9 @@ ShellRoot {
     }
 
     LazyLoader {
-        active: root.enableBar
+        active: true
 
-        component: ClockDWidget {
+        component: Background {
         }
 
     }

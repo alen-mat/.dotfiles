@@ -99,6 +99,7 @@ Scope {
                             RowLayout {
                                 spacing: 2
                                 Tray {}
+				BluetoothIndicator{}
 				VolumeIndicator{}
                                 TimeWidget {}
                                 BatteryIndicator {}
