@@ -28,7 +28,10 @@ MouseArea {
         id: menu
 
         menu: root.modelData.menu
-        anchor.window: this.QsWindow.window
+	anchor {
+		window: this.QsWindow.window
+		item : root
+	}
     }
 
     IconImage {
