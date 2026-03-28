@@ -1,8 +1,3 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
-SETUVAR --export BAT_CONFIG_DIR:/home/alen/\x2econfig/batcat
-SETUVAR --export --path BAT_CONFIG_PATH:/home/alen/\x2econfig/batcat/batcat\x2ecfg
-SETUVAR --export LS_COLORS:rs\x200\x3adi\x2001\x3b34\x3aln\x2001\x3b36\x3amh\x2000\x3api\x2040\x3b33
-SETUVAR --export MANPAGER:nvim\x20\x2bMan\x21
 SETUVAR __fish_initialized:4300
-SETUVAR fish_user_paths:/usr/lib/jvm/java\x2d17\x2dopenjdk/bin
