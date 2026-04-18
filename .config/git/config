@@ -61,9 +61,18 @@
     colorMoved = plain
     mnemonicPrefix = true
     renames = true
+    tool = nvimdiff
+
+[difftool "nvimdiff"]
+    cmd = nvim -d \"$LOCAL\" \"$REMOTE\"
 
 [merge]
+    tool = nvimdiff
     conflictstyle = zdiff3
+
+[mergetool "nvimdiff"]
+    cmd = nvim -d -c "wincmd J" "$LOCAL" "$BASE" "$REMOTE" "$MERGED"
+
 
 [credential "https://github.com"]
     helper = 
@@ -71,5 +80,4 @@
 [credential "https://gist.github.com"]
     helper = 
     helper = !/usr/bin/gh auth git-credential
-
 # vim: et tw=78 ts=8 sw=4 sts=4
