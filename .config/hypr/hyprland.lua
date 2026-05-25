@@ -83,15 +83,9 @@ hl.config({
   dwindle = {
     preserve_split = true,
   },
-})
-
-hl.config({
   master = {
     new_status = "master",
   },
-})
-
-hl.config({
   scrolling = {
     fullscreen_on_one_column = true,
     column_width = 0.4
@@ -112,6 +106,7 @@ hl.config({
 hl.on("hyprland.start", function()
   hl.exec_cmd('qs -c noctalia-shell')
   hl.exec_cmd('hypridle')
+  hl.exec_cmd('kanata -c ~/workspace/.dotfiles/.config/kanata/red_dragon_60.kbd')
 end)
 require('binds')
 -- vim: ts=2 sts=2 sw=2 et

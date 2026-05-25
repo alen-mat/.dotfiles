@@ -27,7 +27,6 @@ for i = 1, 10 do
   hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
   hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
 end
-
 local function switch_layout(direction)
   local layout_map = { master = 1, scrolling = 2, dwindle = 3, monocle = 4 }
   local layout_list = { "master", "scrolling", "dwindle", "monocle" }
@@ -50,6 +49,12 @@ hl.bind(mainMod .. " + SHIFT + Space", function()
   switch_layout('down')
 end)
 
+hl.bind(mainMod..' + q', hl.dsp.focus({ monitor = 'mon:-1' }))
+hl.bind(mainMod..' + e', hl.dsp.focus({ monitor = 'mon:+1' }))
+hl.bind(mainMod..' + CTRL + h', hl.dsp.focus({ monitor = 'left' }))
+hl.bind(mainMod..' + CTRL + l', hl.dsp.focus({ monitor = 'right' }))
+hl.bind(mainMod..' + CTRL + k', hl.dsp.focus({ monitor = 'up' }))
+hl.bind(mainMod..' + CTRL + j', hl.dsp.focus({ monitor = 'down' }))
 -- Example special workspace (scratchpad)
 -- hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 -- hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
@@ -68,7 +73,6 @@ hl.define_submap("resize", function()
   hl.bind("left", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
   hl.bind("up", hl.dsp.window.resize({ x = 0, y = 10, relative = true }), { repeating = true })
   hl.bind("down", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
-
   hl.bind("escape", hl.dsp.submap("reset"))
 end)
 
