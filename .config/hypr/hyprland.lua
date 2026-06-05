@@ -114,5 +114,22 @@ hl.on("hyprland.start", function()
   hl.exec_cmd('hypridle')
   hl.exec_cmd('kanata -c ~/workspace/.dotfiles/.config/kanata/red_dragon_60.kbd')
 end)
+hl.on('window.urgent', function(win)
+  hl.notification.create({
+    text ='Window ' .. win..'  requires focus',
+    timeout = 1000,
+    icon = "ok",
+    color="#ff0000"
+  })
+end)
+hl.on('keybinds.submap', function(name)
+  hl.notification.create({
+    text ='Submap '..(#name>0 and name or 'Default'),
+    timeout = 900,
+    icon = "ok",
+    color="#90f066"
+  })
+end)
+
 require('binds')
 -- vim: ts=2 sts=2 sw=2 et

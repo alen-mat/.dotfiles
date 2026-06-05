@@ -86,9 +86,13 @@ hl.bind(mainMod .. " + f", function()
   })
 end)
 
-hl.bind(mainMod .. '+ Y', hl.dsp.submap("clean"))
-hl.define_submap("clean", function()
-  hl.bind("escape", hl.dsp.submap("reset"))
+hl.bind(mainMod .. " + SHIFT  + f", function()
+  hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+end)
+
+hl.bind(mainMod .. '+ Y', hl.dsp.submap("Clean/Forward all"))
+hl.define_submap("Clean/Forward all", function()
+  hl.bind(mainMod.." + escape", hl.dsp.submap("reset"))
 end)
 require('binds.noctalia')
 
