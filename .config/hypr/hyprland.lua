@@ -110,18 +110,18 @@ hl.config({
 
 
 hl.on("hyprland.start", function()
-  hl.exec_cmd('qs -c noctalia-shell')
+  hl.exec_cmd('noctalia')
   hl.exec_cmd('hypridle')
   hl.exec_cmd('kanata -c ~/workspace/.dotfiles/.config/kanata/red_dragon_60.kbd')
 end)
-hl.on('window.urgent', function(win)
-  hl.notification.create({
-    text ='Window ' .. win..'  requires focus',
-    timeout = 1000,
-    icon = "ok",
-    color="#ff0000"
-  })
-end)
+-- hl.on('window.urgent', function(win)
+--   hl.notification.create({
+--     text ='Window ' .. win..'  requires focus',
+--     timeout = 1000,
+--     icon = "ok",
+--     color="#ff0000"
+--   })
+-- end)
 hl.on('keybinds.submap', function(name)
   hl.notification.create({
     text ='Submap '..(#name>0 and name or 'Default'),

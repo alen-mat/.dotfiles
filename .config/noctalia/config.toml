@@ -1,0 +1,85 @@
+[bar.main]
+position = "top"
+margin_ends = 1
+margin_edge = 3
+start  = ["control-center", "workspaces"]
+center = ["taskbar"]
+end    = ["media", "tray", "notifications", "clipboard", "network", "bluetooth",
+"volume", "brightness", "clock","battery", "session"]
+
+[widget.network]
+show_label = false
+
+[widget.volume]
+show_label = false
+
+[widget.brightness]
+show_label = false
+
+[widget.battery]
+display_mode = "graphic"
+show_label = false
+
+[widget.taskbar]
+group_by_workspace = false
+show_all_outputs = false
+only_active_workspace = true
+show_workspace_label = true
+
+[wallpaper]
+enabled             = true
+fill_mode           = "crop"
+fill_color          = "#111111"
+#transition          = ["fade", "wipe", "disc", "stripes", "zoom", "honeycomb"]
+transition_duration = 1500
+edge_smoothness     = 0.3
+transition_on_startup = false
+directory     = "/home/alen/Pictures/wallpapers"
+#directory_light     = "/home/user/Wallpapers/Light"
+#directory_dark      = "/home/user/Wallpapers/Dark"
+per_monitor_directories = false
+
+#[wallpaper.default]
+#path = "/home/user/Wallpapers/default.png"
+
+[wallpaper.automation]
+enabled                      = false
+interval_seconds             = 1800
+order                        = "random"
+recursive                    = true
+
+[theme]
+mode              = "dark"        # dark | light | auto
+source            = "wallpaper"
+wallpaper_scheme  = "m3-content"
+
+[shell.panel]
+open_near_click_control_center = true
+open_near_click_launcher       = true
+open_near_click_clipboard      = true
+open_near_click_wallpaper      = true
+open_near_click_session        = true
+
+[weather]
+enabled         = true
+refresh_minutes = 30
+unit            = "metric"
+effects         = true
+
+[location]
+auto_locate = false
+address     = "Bengaluru, IN"
+sunset    = "19:00"
+sunrise   = "06:30"
+
+[nightlight]
+enabled              = true
+force                = false
+
+temperature_day   = 6500
+temperature_night = 4000
+
+[widget.media]
+max_length = 60
+title_scroll = "on_hover"
+hide_when_no_media = true

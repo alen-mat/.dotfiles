@@ -236,7 +236,7 @@ hl.window_rule { float = true, no_initial_focus = true, workspace = 4, match = {
 hl.window_rule { float = true, workspace = 9, match = { class = "[Zz]oom" } }
 
 -- anki
-hl.window_rule { float = true, match = { class = '[Aa]nki ', title = "[Aa]dd" } }
+hl.window_rule { float = true, center = true, match = { class = '^(anki)$', title = "^(Add|Browse|Preferences|Options|Export|Import|Statistics)$" } }
 
 -- Android Studio
 hl.window_rule {
