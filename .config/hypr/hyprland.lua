@@ -113,6 +113,14 @@ hl.on("hyprland.start", function()
   hl.exec_cmd('noctalia')
   hl.exec_cmd('hypridle')
   hl.exec_cmd('kanata -c ~/workspace/.dotfiles/.config/kanata/red_dragon_60.kbd')
+
+  local monitors = hl.get_monitors()
+
+  for _, monitor in ipairs(monitors) do
+    for i = 1, 5 do
+      hl.workspace_rule({ workspace = tostring(i), monitor = monitor.name, persistent = true })
+    end
+  end
 end)
 -- hl.on('window.urgent', function(win)
 --   hl.notification.create({
@@ -124,10 +132,10 @@ end)
 -- end)
 hl.on('keybinds.submap', function(name)
   hl.notification.create({
-    text ='Submap '..(#name>0 and name or 'Default'),
+    text = 'Submap ' .. (#name > 0 and name or 'Default'),
     timeout = 900,
     icon = "ok",
-    color="#90f066"
+    color = "#90f066"
   })
 end)
 
