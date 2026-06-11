@@ -130,6 +130,12 @@ end)
 --     color="#ff0000"
 --   })
 -- end)
+--
+hl.on('monitor.added', function(monitor)
+  for i = 1, 5 do
+    hl.workspace_rule({ workspace = tostring(i), monitor = monitor.name, persistent = true })
+  end
+end)
 hl.on('keybinds.submap', function(name)
   hl.notification.create({
     text = 'Submap ' .. (#name > 0 and name or 'Default'),
