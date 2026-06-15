@@ -1,12 +1,7 @@
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
--- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd('ghostty'))
-local closeWindowBind = hl.bind(mainMod .. " + BackSpace", hl.dsp.window.close())
---closeWindowBind:set_enabled(false)
---hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
---hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
---hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
+hl.bind(mainMod .. " + BackSpace", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
 hl.bind(mainMod .. " + l", hl.dsp.focus({ direction = "right" }))
@@ -18,10 +13,10 @@ hl.bind(mainMod .. " + ALT + l", hl.dsp.window.move({ direction = "right" }))
 hl.bind(mainMod .. " + ALT + k", hl.dsp.window.move({ direction = "up" }))
 hl.bind(mainMod .. " + ALT + j", hl.dsp.window.move({ direction = "down" }))
 
-hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.resize({ x = -10, y = 0, relative = true }))
-hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.resize({ x = 10, y = 0, relative = true }))
-hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.resize({ x = 0, y = -10, relative = true }))
-hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.resize({ x = -10, y = 10, relative = true }))
+hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.resize({ x = -10, y = 0, relative = true }),{repeating = true})
+hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.resize({ x = 10, y = 0, relative = true }),{repeating = true})
+hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.resize({ x = 0, y = -10, relative = true }),{repeating = true})
+hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.resize({ x = -10, y = 10, relative = true }),{repeating = true})
 for i = 1, 10 do
   local key = i % 10 -- 10 maps to key 0
   hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
@@ -76,17 +71,20 @@ hl.define_submap("resize", function()
   hl.bind("escape", hl.dsp.submap("reset"))
 end)
 
-hl.bind(mainMod .. " + f", function()
-  local window = hl.get_active_window()
-  -- hl.dsp.window.fullscreen_state({(window.fullscreen+1 % 4)})
+-- o.bind("SUPER + CTRL + F", "Tiled full screen", hl.dsp.window.fullscreen_state({ internal = 0, client = 2 }))
+-- o.bind("SUPER + ALT + F", "Full width", hl.dsp.window.fullscreen({ mode = "maximized" }))
+hl.bind(mainMod .. " + f ", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
+hl.bind(mainMod .. " + SHIFT + f ", hl.dsp.window.fullscreen({ mode = "maximized" }))
+hl.bind(mainMod .. " + CTRL + f ",function()
   hl.notification.create({
-    text ='place holder for fullscreen',
+    text ="placeholder fullscreen",
     timeout = 4000,
     icon = "ok"
   })
 end)
 
-hl.bind(mainMod .. " + SHIFT  + f", function()
+
+hl.bind(mainMod .. " + ALT + f", function()
   hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
 end)
 
