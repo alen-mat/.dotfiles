@@ -15,6 +15,12 @@ hl.window_rule {
 }
 
 hl.window_rule {
+  name = "windowrule-2",
+  float = true,
+  match = { class = "^(foot-cliamp)$" },
+  size = { 700, 500}
+}
+hl.window_rule {
   name = "windowrule-3",
   float = true,
   match = { class = "^(steam)$", }
