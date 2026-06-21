@@ -101,7 +101,17 @@ hl.define_submap("Launcher", function()
       [[sh -c 'PATH=$PATH:]] ..
       os.getenv("HOME") ..
       [[/.local/bin;ghostty --confirm-close-surface=false --keybind="clear" --gtk-single-instance=false --class=cliamp.cliamp -e "cliamp-linux-amd64"']],
-      { float = true, workspace = 6, size = { 940, 570 } }))
+      { float = true, workspace = 6, size = { 940, 57, 0 } }))
+    hl.dispatch(hl.dsp.submap("reset"))
+  end)
+
+
+  hl.bind("w", function()
+    hl.dispatch(hl.dsp.exec_cmd(
+      [[sh -c "/opt/Citrix/ICAClient/wfica \"$(find ]] ..
+      os.getenv("HOME") ..
+      [[/Downloads -type f -name '*.ica' -printf '%T@ %p\n' | sort -n | tail -n 1 | cut -d' ' -f2-)\""]]
+    ))
     hl.dispatch(hl.dsp.submap("reset"))
   end)
   hl.bind(mainMod .. " + escape", hl.dsp.submap("reset"))
