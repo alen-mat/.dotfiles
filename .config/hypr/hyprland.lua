@@ -22,7 +22,8 @@ hl.config({
     follow_mouse = 0,
 
     sensitivity  = 0, -- -1.0 - 1.0, 0 means no modification.
-
+    scroll_button = 274,
+    scroll_button_lock =true,
     touchpad     = {
       natural_scroll = false,
     },

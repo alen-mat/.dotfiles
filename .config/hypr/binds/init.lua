@@ -13,10 +13,10 @@ hl.bind(mainMod .. " + ALT + l", hl.dsp.window.move({ direction = "right" }))
 hl.bind(mainMod .. " + ALT + k", hl.dsp.window.move({ direction = "up" }))
 hl.bind(mainMod .. " + ALT + j", hl.dsp.window.move({ direction = "down" }))
 
-hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.resize({ x = -10, y = 0, relative = true }),{repeating = true})
-hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.resize({ x = 10, y = 0, relative = true }),{repeating = true})
-hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.resize({ x = 0, y = -10, relative = true }),{repeating = true})
-hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.resize({ x = -10, y = 10, relative = true }),{repeating = true})
+hl.bind(mainMod .. " + SHIFT + h", hl.dsp.window.resize({ x = -10, y = 0, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + l", hl.dsp.window.resize({ x = 10, y = 0, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + k", hl.dsp.window.resize({ x = 0, y = -10, relative = true }), { repeating = true })
+hl.bind(mainMod .. " + SHIFT + j", hl.dsp.window.resize({ x = -10, y = 10, relative = true }), { repeating = true })
 for i = 1, 10 do
   local key = i % 10 -- 10 maps to key 0
   hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
@@ -44,12 +44,12 @@ hl.bind(mainMod .. " + SHIFT + Space", function()
   switch_layout('down')
 end)
 
-hl.bind(mainMod..' + q', hl.dsp.focus({ monitor = 'mon:-1' }))
-hl.bind(mainMod..' + e', hl.dsp.focus({ monitor = 'mon:+1' }))
-hl.bind(mainMod..' + CTRL + h', hl.dsp.focus({ monitor = 'left' }))
-hl.bind(mainMod..' + CTRL + l', hl.dsp.focus({ monitor = 'right' }))
-hl.bind(mainMod..' + CTRL + k', hl.dsp.focus({ monitor = 'up' }))
-hl.bind(mainMod..' + CTRL + j', hl.dsp.focus({ monitor = 'down' }))
+hl.bind(mainMod .. ' + q', hl.dsp.focus({ monitor = 'mon:-1' }))
+hl.bind(mainMod .. ' + e', hl.dsp.focus({ monitor = 'mon:+1' }))
+hl.bind(mainMod .. ' + CTRL + h', hl.dsp.focus({ monitor = 'left' }))
+hl.bind(mainMod .. ' + CTRL + l', hl.dsp.focus({ monitor = 'right' }))
+hl.bind(mainMod .. ' + CTRL + k', hl.dsp.focus({ monitor = 'up' }))
+hl.bind(mainMod .. ' + CTRL + j', hl.dsp.focus({ monitor = 'down' }))
 -- Example special workspace (scratchpad)
 -- hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
 -- hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
@@ -75,9 +75,9 @@ end)
 -- o.bind("SUPER + ALT + F", "Full width", hl.dsp.window.fullscreen({ mode = "maximized" }))
 hl.bind(mainMod .. " + f ", hl.dsp.window.fullscreen({ mode = "fullscreen" }))
 hl.bind(mainMod .. " + SHIFT + f ", hl.dsp.window.fullscreen({ mode = "maximized" }))
-hl.bind(mainMod .. " + CTRL + f ",function()
+hl.bind(mainMod .. " + CTRL + f ", function()
   hl.notification.create({
-    text ="placeholder fullscreen",
+    text = "placeholder fullscreen",
     timeout = 4000,
     icon = "ok"
   })
@@ -90,7 +90,22 @@ end)
 
 hl.bind(mainMod .. '+ Y', hl.dsp.submap("Clean/Forward all"))
 hl.define_submap("Clean/Forward all", function()
-  hl.bind(mainMod.." + escape", hl.dsp.submap("reset"))
+  hl.bind(mainMod .. " + escape", hl.dsp.submap("reset"))
+end)
+
+
+hl.bind(mainMod .. ' + SHIFT + P', hl.dsp.submap("Launcher"))
+hl.define_submap("Launcher", function()
+  hl.bind("c", function()
+    hl.dispatch(hl.dsp.exec_cmd(
+      [[sh -c 'PATH=$PATH:]] ..
+      os.getenv("HOME") ..
+      [[/.local/bin;ghostty --confirm-close-surface=false --keybind="clear" --gtk-single-instance=false --class=cliamp.cliamp -e "cliamp-linux-amd64"']],
+      { float = true, workspace = 6, size = { 700, 500 } }))
+    hl.dispatch(hl.dsp.submap("reset"))
+  end)
+  hl.bind(mainMod .. " + escape", hl.dsp.submap("reset"))
+  hl.bind("escape", hl.dsp.submap("reset"))
 end)
 require('binds.noctalia')
 

@@ -15,12 +15,6 @@ hl.window_rule {
 }
 
 hl.window_rule {
-  name = "windowrule-2",
-  float = true,
-  match = { class = "^(foot-cliamp)$" },
-  size = { 700, 500}
-}
-hl.window_rule {
   name = "windowrule-3",
   float = true,
   match = { class = "^(steam)$", }
@@ -78,12 +72,6 @@ hl.window_rule {
   name = "windowrule-11",
   float = true,
   match = { title = ".*Welcome", }
-}
-
-hl.window_rule {
-  name = "windowrule-12",
-  float = true,
-  match = { title = "^(illogical-impulse Settings)$", }
 }
 
 hl.window_rule {
