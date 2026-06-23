@@ -21,6 +21,14 @@ hl.window_rule {
 }
 
 hl.window_rule {
+  workspace = 9,
+  name = "windowrule-localsend",
+  float = true,
+  match = { class = "^(localsend)$", title = "^(LocalSend)$" },
+  size = { 408, 683 }
+}
+
+hl.window_rule {
   name = "windowrule-4",
   float = true,
   match = { class = "^(guifetch)$", }

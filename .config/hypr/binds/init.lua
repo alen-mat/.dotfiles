@@ -1,3 +1,4 @@
+local utils = require('utils')
 local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd('ghostty'))
@@ -97,11 +98,13 @@ end)
 hl.bind(mainMod .. ' + SHIFT + P', hl.dsp.submap("Launcher"))
 hl.define_submap("Launcher", function()
   hl.bind("c", function()
-    hl.dispatch(hl.dsp.exec_cmd(
+    utils.run_or_raise(
+      "cliamp.cliamp",
       [[sh -c 'PATH=$PATH:]] ..
       os.getenv("HOME") ..
       [[/.local/bin;ghostty --confirm-close-surface=false --keybind="clear" --gtk-single-instance=false --class=cliamp.cliamp -e "cliamp-linux-amd64"']],
-      { float = true, workspace = 6, size = { 940, 570 } }))
+      { float = true, workspace = 6, size = { 940, 570 } })
+
     hl.dispatch(hl.dsp.submap("reset"))
   end)
 
