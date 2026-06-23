@@ -1,5 +1,5 @@
 local utils = require('utils')
-local mainMod = "SUPER" -- Sets "Windows" key as main modifier
+local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd('ghostty'))
 hl.bind(mainMod .. " + BackSpace", hl.dsp.window.close())
@@ -108,6 +108,16 @@ hl.define_submap("Launcher", function()
     hl.dispatch(hl.dsp.submap("reset"))
   end)
 
+  hl.bind("b", function()
+    utils.run_or_raise(
+      "bookokrat.bookokrat",
+      [[sh -c 'PATH=$PATH:]] ..
+      os.getenv("HOME") ..
+      [[/.local/bin;ghostty --confirm-close-surface=false --keybind="clear" --gtk-single-instance=false --class=bookokrat.bookokrat -e "bookokrat"']],
+      { float = true, workspace = 7, size = { 1210, 690 } })
+
+    hl.dispatch(hl.dsp.submap("reset"))
+  end)
 
   hl.bind("w", function()
     hl.dispatch(hl.dsp.exec_cmd(
