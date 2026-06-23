@@ -13,18 +13,18 @@ hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencop
 require('rules')
 hl.config({
   input = {
-    kb_layout    = "us",
-    kb_variant   = "",
-    kb_model     = "",
-    kb_options   = "",
-    kb_rules     = "",
+    kb_layout          = "us",
+    kb_variant         = "",
+    kb_model           = "",
+    kb_options         = "",
+    kb_rules           = "",
 
-    follow_mouse = 0,
+    follow_mouse       = 0,
 
-    sensitivity  = 0, -- -1.0 - 1.0, 0 means no modification.
-    scroll_button = 274,
-    scroll_button_lock =true,
-    touchpad     = {
+    sensitivity        = 0, -- -1.0 - 1.0, 0 means no modification.
+    scroll_button      = 274,
+    scroll_button_lock = true,
+    touchpad           = {
       natural_scroll = false,
     },
   },
@@ -106,6 +106,37 @@ hl.config({
     hide_on_key_press = true,
     no_warps = true
   }
+})
+
+
+
+
+
+hl.config({
+
+  group = {
+    col = {
+      border_active = "rgba(d8a657ee)",
+      border_inactive = "rgba(222222ee)",
+      border_locked_active = "rgba(b22222ee)",
+      border_locked_inactive = "rgba(222222ee)",
+    },
+
+    groupbar = {
+      enabled = true,
+      font_family = "Sans",
+      font_size = 17,
+      height = 17,
+      scrolling = false,
+      text_color = "rgba(fff4d2ee)",
+      col = {
+        active = "rgba(d8a657ee)",
+        inactive = "rgba(222222ee)",
+        locked_active = "rgba(b22222ee)",
+        locked_inactive = "rgba(222222ee)",
+      },
+    },
+  },
 })
 
 
