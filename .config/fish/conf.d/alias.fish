@@ -39,5 +39,5 @@ alias ffmpeg="ffmpeg -hide_banner"
 alias grep="grep --color=auto"
 alias diff="diff --color=auto"
 
-
-
+alias claude="~/.local/bin/claude"
+alias opencode="~/.opencode/bin/opencode"
