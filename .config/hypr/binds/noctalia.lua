@@ -1,6 +1,7 @@
 local nshell_ipc_call = 'noctalia msg'
 
 hl.bind("SUPER + p", hl.dsp.exec_cmd(nshell_ipc_call .. " panel-toggle launcher "), { locked = true, repeating = false })
+hl.bind("SUPER + CTRL + SHIFT + p", hl.dsp.exec_cmd(nshell_ipc_call .. " panel-toggle session "), { locked = true, repeating = false })
 
 hl.bind("XF86AudioRaiseVolume", hl.dsp.exec_cmd(nshell_ipc_call .. ' volume-up '), { locked = true, repeating = true })
 hl.bind("XF86AudioLowerVolume", hl.dsp.exec_cmd(nshell_ipc_call .. ' volume-down'), { locked = true, repeating = true })

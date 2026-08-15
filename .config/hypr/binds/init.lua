@@ -2,6 +2,7 @@ local utils = require('utils')
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + Return", hl.dsp.exec_cmd('ghostty'))
+hl.bind(mainMod .. " + SHIFT + Return", hl.dsp.exec_cmd('foot'))
 hl.bind(mainMod .. " + BackSpace", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + h", hl.dsp.focus({ direction = "left" }))
@@ -132,6 +133,31 @@ hl.define_submap("Launcher", function()
   hl.bind(mainMod .. " + escape", hl.dsp.submap("reset"))
   hl.bind("escape", hl.dsp.submap("reset"))
 end)
+
+---- screenshot ----
+local function screenShotHelper(mode) 
+  local cmd = ''
+  if mode == "region" then
+    cmd = 'grim -g "$(slurp)" - | wl-copy'
+  elseif mode == "window" then
+    local jq_filter = '\'.[] | select(.workspace.id != -1) | "\\(.at[0]),\\(.at[1]) \\(.size[0])x\\(.size[1])"\''
+    cmd = string.format('grim -g "$(hyprctl clients -j | jq -r %s | slurp)" - | wl-copy', jq_filter)
+  elseif mode == "output" then
+    cmd = 'grim -g "$(slurp -o)" - | wl-copy'
+  elseif mode == "screen" then
+    cmd = 'grim - | wl-copy'
+  end
+  hl.dispatch(hl.dsp.exec_cmd(cmd))
+end
+hl.bind("Print", function()
+  screenShotHelper('screen')
+end, { locked = true })
+hl.bind("CTRL + Print", function()
+  screenShotHelper('screen')
+end, { locked = true })
+--hl.bind("Print", hl.dsp.exec_cmd(nshell_ipc_call .. " media next"), { locked = true })
+--------------------
+
 require('binds.noctalia')
 
 -- vim: ts=2 sts=2 sw=2 et

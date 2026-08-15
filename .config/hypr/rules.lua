@@ -9,6 +9,11 @@ hl.window_rule {
 
 -- Floating
 hl.window_rule {
+  name = "windowrule-2-satty",
+  float = true,
+  match = { class = "^(com.gabm.satty)$" },
+}
+hl.window_rule {
   name = "windowrule-2",
   float = true,
   match = { class = "^(blueberry\\.py)$" },
@@ -26,6 +31,21 @@ hl.window_rule {
   float = true,
   match = { class = "^(localsend)$", title = "^(LocalSend)$" },
   size = { 408, 683 }
+}
+hl.window_rule {
+  workspace = 7,
+  name = "windowrule-steam",
+  float = true,
+  match = { class = "steam", title = "Friends List" },
+  size = { 460, 800 }
+}
+hl.window_rule {
+  workspace = 7,
+  name = "windowrule-steam-fl",
+  float = true,
+  match = { class = "steam", title = "Steam" },
+  center = true,
+  size = { 1100, 700 }
 }
 
 hl.window_rule {
