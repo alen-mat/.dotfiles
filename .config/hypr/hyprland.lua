@@ -6,7 +6,6 @@ hl.config({
     enforce_permissions = true,
   },
 })
-
 hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
 hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
 -- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
@@ -38,9 +37,9 @@ hl.gesture({
 
 hl.config({
   general = {
-    gaps_in          = 2,
-    gaps_out         = 3,
-    border_size      = 2,
+    gaps_in          = 10,
+    gaps_out         = 20,
+    border_size      = 4,
     col              = {
       active_border   = {
         colors = { "rgba(33ccffee)", "rgba(00ff99ee)" }, angle = 45 },
@@ -57,7 +56,7 @@ hl.config({
 
     -- Change transparency of focused and unfocused windows
     active_opacity   = 1.0,
-    inactive_opacity = 1.0,
+    inactive_opacity = 0.94,
 
     shadow           = {
       enabled      = true,
@@ -109,6 +108,11 @@ hl.config({
 })
 
 
+-- hl.config({
+--   layout = {
+--     single_window_aspect_ratio = { 1, 0.75 },
+--   },
+-- })
 
 
 
@@ -179,3 +183,6 @@ end)
 
 require('binds')
 -- vim: ts=2 sts=2 sw=2 et
+
+-- For Noctalia Color templates
+require("noctalia").apply_theme()

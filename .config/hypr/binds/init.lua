@@ -46,6 +46,42 @@ hl.bind(mainMod .. " + SHIFT + Space", function()
   switch_layout('down')
 end)
 
+-- Helper to safely compare float numbers with small tolerance
+local function is_near(val, target, eps)
+  eps = eps or 0.001
+  return type(val) == "number" and math.abs(val - target) < eps
+end
+
+hl.bind(mainMod .. " + b", function()
+  local a = hl.get_config("layout.single_window_aspect_ratio")
+  local txt = "Single window mode : "
+
+  -- Direct array index check with float tolerance
+  local is_one_by_one = type(a) == "table"
+      and is_near(a[1], 1.0)
+      and is_near(a[2], 1.0)
+
+  if is_one_by_one then
+    hl.config({
+      layout = {
+        single_window_aspect_ratio = { 0.0, 0.0 },
+      },
+    })
+    txt = txt .. "disabled"
+  else
+    hl.config({
+      layout = {
+        single_window_aspect_ratio = { 1.0, 1.0 },
+      },
+    })
+    txt = txt .. "enabled"
+  end
+  hl.notification.create({
+    text = txt,
+    timeout = 4000,
+    icon = "ok"
+  })
+end)
 hl.bind(mainMod .. ' + q', hl.dsp.focus({ monitor = 'mon:-1' }))
 hl.bind(mainMod .. ' + e', hl.dsp.focus({ monitor = 'mon:+1' }))
 hl.bind(mainMod .. ' + CTRL + h', hl.dsp.focus({ monitor = 'left' }))
@@ -135,7 +171,7 @@ hl.define_submap("Launcher", function()
 end)
 
 ---- screenshot ----
-local function screenShotHelper(mode) 
+local function screenShotHelper(mode)
   local cmd = ''
   if mode == "region" then
     cmd = 'grim -g "$(slurp)" - | wl-copy'

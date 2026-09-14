@@ -34,7 +34,7 @@ hl.window_rule {
 }
 hl.window_rule {
   workspace = 7,
-  name = "windowrule-steam",
+  name = "windowrule-steammmm",
   float = true,
   match = { class = "steam", title = "Friends List" },
   size = { 460, 800 }
@@ -217,8 +217,6 @@ hl.window_rule {
   no_shadow = true,
   match = { float = "0", }
 }
-hl.workspace_rule({ workspace = "2", layout = "scrolling" })
-hl.workspace_rule({ workspace = "s[true]", no_rounding = true, decorate = false })
 
 -- xwayland video bridge
 hl.window_rule { match = { class = "^(xwaylandvideobridge)$" }, opacity = "0.0" }
@@ -300,4 +298,7 @@ hl.window_rule({
   move  = "20 monitor_h-120",
   float = true,
 })
+
+hl.window_rule({ match = { content = "game", fullscreen = true }, confine_pointer = true })
+require('rules.workspace')
 -- vim: ts=2 sts=2 sw=2 et
