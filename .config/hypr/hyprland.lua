@@ -8,6 +8,9 @@ hl.config({
 })
 hl.permission("/usr/(bin|local/bin)/grim", "screencopy", "allow")
 hl.permission("/usr/(lib|libexec|lib64)/xdg-desktop-portal-hyprland", "screencopy", "allow")
+hl.permission(".*sunshine.*", "screencopy", "allow", {
+  match = "steam_app_.*|steam"
+})
 -- hl.permission("/usr/(bin|local/bin)/hyprpm", "plugin", "allow")
 require('rules')
 hl.config({
@@ -186,3 +189,4 @@ require('binds')
 
 -- For Noctalia Color templates
 require("noctalia").apply_theme()
+require('quake')
