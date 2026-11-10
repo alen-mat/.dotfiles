@@ -82,8 +82,11 @@ hl.bind(mainMod .. " + b", function()
     icon = "ok"
   })
 end)
-hl.bind(mainMod .. ' + q', hl.dsp.focus({ monitor = 'mon:-1' }))
-hl.bind(mainMod .. ' + e', hl.dsp.focus({ monitor = 'mon:+1' }))
+hl.bind(mainMod .. ' + q', hl.dsp.focus({ monitor = 'left' }))
+hl.bind(mainMod .. ' + e', hl.dsp.focus({ monitor = 'right' }))
+hl.bind(mainMod .. ' + SHIFT + q', hl.dsp.window.move({ monitor = 'left' }))
+hl.bind(mainMod .. ' + SHIFT + e', hl.dsp.window.move({ monitor = 'right' }))
+
 hl.bind(mainMod .. ' + CTRL + h', hl.dsp.focus({ monitor = 'left' }))
 hl.bind(mainMod .. ' + CTRL + l', hl.dsp.focus({ monitor = 'right' }))
 hl.bind(mainMod .. ' + CTRL + k', hl.dsp.focus({ monitor = 'up' }))
@@ -191,7 +194,6 @@ end, { locked = true })
 hl.bind("CTRL + Print", function()
   screenShotHelper('screen')
 end, { locked = true })
---hl.bind("Print", hl.dsp.exec_cmd(nshell_ipc_call .. " media next"), { locked = true })
 --------------------
 
 require('binds.noctalia')

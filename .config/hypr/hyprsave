@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+
+# State tracking file to record startup timestamp for debounce/lockout
+TIMESTAMP_FILE="/tmp/hyprsave_last_started"
+
+start_screensaver() {
+
+   hyprctl eval "require('utils').screensaver.start()"
+}
+
+stop_screensaver() {
+   hyprctl eval "require('utils').screensaver.stop()"
+}
+
+case "$1" in
+    start)
+        start_screensaver
+        ;;
+    stop)
+        stop_screensaver
+        ;;
+    *)
+        echo "Usage: $0 {start|stop}"
+        exit 1
+        ;;
+esac

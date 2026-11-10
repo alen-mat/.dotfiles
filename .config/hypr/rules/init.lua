@@ -20,12 +20,6 @@ hl.window_rule {
 }
 
 hl.window_rule {
-  name = "windowrule-3",
-  float = true,
-  match = { class = "^(steam)$", }
-}
-
-hl.window_rule {
   workspace = 9,
   name = "windowrule-localsend",
   float = true,
@@ -33,20 +27,38 @@ hl.window_rule {
   size = { 408, 683 }
 }
 hl.window_rule {
+  name = "windowrule-steam-1",
+  float = true,
+  match = { class = "^(steam)$", }
+}
+hl.window_rule {
+  name = "windowrule-steam-2",
+  immediate = true,
+  match = { class = "^(steam_app)", }
+}
+hl.window_rule {
   workspace = 7,
-  name = "windowrule-steammmm",
+  name = "windowrule-steam-3",
   float = true,
   match = { class = "steam", title = "Friends List" },
   size = { 460, 800 }
 }
 hl.window_rule {
   workspace = 7,
-  name = "windowrule-steam-fl",
+  name = "windowrule-steam-4",
   float = true,
   match = { class = "steam", title = "Steam" },
   center = true,
   size = { 1100, 700 }
 }
+hl.window_rule({
+  name = "windowrule-steam-5",
+  match = {
+    class = "^(steam_app_.*)$",
+    title = "negative:.*(Launcher|launcher).*",
+  },
+  workspace = 9,
+})
 
 hl.window_rule {
   name = "windowrule-4",
@@ -204,11 +216,6 @@ hl.window_rule {
   match = { title = ".*minecraft.*", }
 }
 
-hl.window_rule {
-  name = "windowrule-26",
-  immediate = true,
-  match = { class = "^(steam_app)", }
-}
 
 
 -- No shadow for tiled windows (matches windows that are not floating).
@@ -250,7 +257,7 @@ hl.window_rule {
 hl.window_rule { float = true, workspace = 6, no_initial_focus = true, size = { 1038, 622 }, match = { class = 'com.github.th_ch.youtube_music', }, }
 
 -- Citrix
-hl.window_rule { float = true, no_initial_focus = true, workspace = 4, match = { class = "Wfica" } }
+hl.window_rule { no_initial_focus = true, workspace = 4, match = { class = "Wfica" } }
 
 -- Zoom
 hl.window_rule { float = true, workspace = 9, match = { class = "[Zz]oom" } }
@@ -298,6 +305,19 @@ hl.window_rule({
   move  = "20 monitor_h-120",
   float = true,
 })
+
+hl.window_rule({
+  name      = "whatsapp-web",
+  workspace = 8,
+  match     = {
+    class = "^chrome-.*",
+    title = "WhatsApp Web",
+  },
+  move      = "20 monitor_h-120",
+  size = { 1168, 800 },
+  float     = true,
+})
+
 
 hl.window_rule({ match = { content = "game", fullscreen = true }, confine_pointer = true })
 require('rules.workspace')

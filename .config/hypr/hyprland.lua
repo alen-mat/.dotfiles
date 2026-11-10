@@ -151,6 +151,9 @@ hl.config({
 hl.on("hyprland.start", function()
   hl.exec_cmd('noctalia')
   hl.exec_cmd('hypridle')
+  hl.exec_cmd('tailscale systray')
+  hl.exec_cmd('/usr/lib/libexec/kdeconnectd')
+  hl.exec_cmd('kdeconnect-indicator')
   hl.exec_cmd('kanata -c ~/workspace/.dotfiles/.config/kanata/red_dragon_60.kbd')
 
   local monitors = hl.get_monitors()
@@ -170,11 +173,6 @@ end)
 --   })
 -- end)
 --
-hl.on('monitor.added', function(monitor)
-  for i = 1, 5 do
-    hl.workspace_rule({ workspace = tostring(i), monitor = monitor.name, persistent = true })
-  end
-end)
 hl.on('keybinds.submap', function(name)
   hl.notification.create({
     text = 'Submap ' .. (#name > 0 and name or 'Default'),
@@ -190,3 +188,4 @@ require('binds')
 -- For Noctalia Color templates
 require("noctalia").apply_theme()
 require('quake')
+--hl.plugin.load("workspace/repos/hyprland/hyprspan/hyprspan.so")
